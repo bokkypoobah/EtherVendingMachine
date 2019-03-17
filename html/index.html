@@ -208,8 +208,18 @@
 
 <script type="text/javascript">
 
-// network id => settings
-// var networks = {"a": {"b": "c"}};
+// Network    Network Id   Chain Id
+// Mainnet             1          1
+// Ropsten             3          3
+// Rinkeby             4          4
+// Kovan              42         42
+// Görli               5          5
+// Testnet   | Explorers                     | Testnet ETH Faucets
+// :-------- |:----------------------------- |:-------------------------
+// Ropsten   | https://ropsten.etherscan.io/ | https://faucet.metamask.io/<br />https://twitter.com/BokkyPooBah/status/1099498823699714048
+// Kovan     | https://kovan.etherscan.io/   | https://faucet.kovan.network/<br />https://github.com/kovan-testnet/faucet<br />https://faucet.kovan.radarrelay.com/
+// Rinkeby   | https://rinkeby.etherscan.io/ | https://faucet.metamask.io/<br />https://faucet.rinkeby.io/
+// Görli     | https://goerli.etherscan.io/  | https://faucet.goerli.mudit.blog/<br />https://goerli-faucet.slock.it/<br />https://bridge.goerli.com/
 
 var networks = {
   "-1" : { "network": "(unknown)", "explorer": "(unknown)", "faucets": "(unknown)" },
@@ -236,6 +246,104 @@ var decimalsNote = "A number between 0 and " + decimalsMax + ", inclusive";
 var totalSupplyNote = "A number greater than 0 and less than or equals to " + totalSupplyMax;
 
 var txSent = false;
+var lastNetworkId;
+var lastFactoryAddress;
+var lastNumberOfChildren;
+
+const promisify = (inner) =>
+  new Promise((resolve, reject) =>
+    inner((err, res) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(res);
+      }
+    })
+  );
+
+async function getData(usersSymbol, usersName, usersDecimals, usersTotalSupply, inputFilled, inputError) {
+  var _networkId = promisify(cb => web3.version.getNetwork(cb));
+  var _block = promisify(cb => web3.eth.getBlock("latest", cb));
+  var _accounts = promisify(cb => web3.eth.getAccounts(cb));
+  try {
+    var networkId = await _networkId;
+    $("#network").html(networkId);
+    var network = networks[networkId];
+    if (network == null) {
+      network = networks[-1];
+    }
+    $("#network").html(network.network);
+    $("#faucets").html(network.faucets);
+
+    $("#factoryAddress").html(factoryAddress + ' <a href="'+ network.explorer + 'address/' + factoryAddress + '#code" target="_blank">🔗</a>');
+
+    var block = await _block;
+    var blockNumber = block.number;
+    var timestamp = block.timestamp;
+    var now = new Date() / 1000;
+    var diff = timestamp - now;
+    $("#blockNumber").html(blockNumber + ' <a href="'+ network.explorer + 'block/' + blockNumber + '" target="_blank">🔗</a>');
+    $("#blockTime").html(diff.toFixed(2) + " seconds " + new Date(timestamp * 1000).toUTCString());
+
+    var accounts = await _accounts;
+    var account = accounts[0];
+    $("#account").html(account + ' <a href="' + network.explorer + 'address/' + account + '#code" target="_blank">🔗</a>');
+
+    var _balance = promisify(cb => web3.eth.getBalance(account, cb));
+    var balance = await _balance;
+    $("#accountbalance").html(balance.shift(-18).toString() + " ethers");
+
+    var factory = web3.eth.contract(factoryAbi).at(factoryAddress);
+    var _minimumFee = promisify(cb => factory.minimumFee(cb));
+    var minimumFee = await _minimumFee;
+    $("#minimumFee").html(new BigNumber(minimumFee).shift(-18).toString() + " ethers");
+
+    var _numberOfChildren = promisify(cb => factory.numberOfChildren(cb));
+    var numberOfChildren = await _numberOfChildren;
+
+    var deployedContractsList = $('#deployedContractsList');
+    deployedContractsList.empty();
+    var child = numberOfChildren - 1;
+    while (child >= 0) {
+      var _childAddress = promisify(cb => factory.children(child, cb));
+      var childAddress = await _childAddress;
+      var token = web3.eth.contract(tokenAbi).at(childAddress);
+      var _symbol = promisify(cb => token.symbol(cb));
+      var _name = promisify(cb => token.name(cb));
+      var _decimals = promisify(cb => token.decimals(cb));
+      var _totalSupply = promisify(cb => token.totalSupply(cb));
+      var symbol = await _symbol;
+      var name = await _name;
+      var decimals = await _decimals;
+      var totalSupply = await _totalSupply;
+      deployedContractsList.append("<li><a href=\"" + network.explorer + "token/" + childAddress + "\">" + symbol + "</a>, " + name + ", " + decimals + ", " + new BigNumber(totalSupply).shift(-decimals) + " @ " + childAddress + " <a href=\""+ network.explorer + "address/" + childAddress + "#code\" target=\"_blank\">🔗</a></li>")
+      child--;
+    }
+
+    if (inputFilled && !inputError && parametersContainKey("deploy")) {
+      if (!txSent) {
+        $("#deployNote").html('Deploying ...');
+        var gas = 1200000;
+        if (balance > minimumFee) {
+          factory.deployTokenContract(usersSymbol, usersName, usersDecimals, usersTotalSupply.shift(usersDecimals).toString(), {from: account, gas: gas, value: minimumFee}, function(error, tx) {
+            if (!error) {
+              $("#deployNote").html('Deployed ' + tx + ' <a href="' + network.explorer + 'tx/' + tx + '" target="_blank">🔗</a>');
+            } else {
+              $("#deployNote").html('Deployment cancelled. Click Check again before deploying');
+              $("#deploy").prop("disabled", true);
+            }
+          });
+        } else {
+          $("#deployNote").html('Insufficient funds in your account ' + balance.shift(-18) + ' ethers to pay the minimum fee of ' + minimumFee.shift(-18) + " ethers");
+        }
+        txSent = true;
+      }
+    }
+
+  } catch (error) {
+    $("#network").html(error);
+  }
+}
 
 window.addEventListener('load', async () => {
 
@@ -360,150 +468,144 @@ window.addEventListener('load', async () => {
             await ethereum.enable();
             // Accounts now exposed
 
+            getData(symbolText, nameText, decimals, totalSupply, inputFilled, inputError);
             setInterval(function () {
-              // Network    Network Id   Chain Id
-              // Mainnet             1          1
-              // Ropsten             3          3
-              // Rinkeby             4          4
-              // Kovan              42         42
-              // Görli               5          5
+              getData(symbolText, nameText, decimals, totalSupply, inputFilled, inputError);
+            }, 10000);
 
-              // Testnet   | Explorers                     | Testnet ETH Faucets
-              // :-------- |:----------------------------- |:-------------------------
-              // Ropsten   | https://ropsten.etherscan.io/ | https://faucet.metamask.io/<br />https://twitter.com/BokkyPooBah/status/1099498823699714048
-              // Kovan     | https://kovan.etherscan.io/   | https://faucet.kovan.network/<br />https://github.com/kovan-testnet/faucet<br />https://faucet.kovan.radarrelay.com/
-              // Rinkeby   | https://rinkeby.etherscan.io/ | https://faucet.metamask.io/<br />https://faucet.rinkeby.io/
-              // Görli     | https://goerli.etherscan.io/  | https://faucet.goerli.mudit.blog/<br />https://goerli-faucet.slock.it/<br />https://bridge.goerli.com/
-              web3.version.getNetwork((error, netId) => {
-                if (!error) {
-                  var network = networks[netId];
-                  if (network == null) {
-                    network = networks[-1];
-                  }
-                  $("#network").html(network.network);
-                  $("#faucets").html(network.faucets);
-
-                  $("#factoryAddress").html(factoryAddress + ' <a href="'+ network.explorer + 'address/' + factoryAddress + '#code" target="_blank">🔗</a>');
-                  var deployedContractsList = $('#deployedContractsList');
-                  deployedContractsList.empty();
-
-                  web3.eth.getBlockNumber((error1, blockNumber) => {
-                    if (!error1) {
-                      $("#blockNumber").html(blockNumber + ' <a href="'+ network.explorer + 'block/' + blockNumber + '" target="_blank">🔗</a>');
-                      web3.eth.getBlock(blockNumber, (error2, block) => {
-                        if (!error2) {
-                          $("#blockTime").html(new Date(block.timestamp * 1000).toUTCString());
-                        } else {
-                          $("#blockTime").html('ERROR ' + error);
-                        }
-                      });
-                    } else {
-                      $("#blockNumber").html('ERROR ' + error);
-                    }
-                  });
-
-                  web3.eth.getAccounts((error, account) => {
-                    if (!error) {
-                      address = account[0];
-                      $("#account").html(account[0] + ' <a href="' + network.explorer + 'address/' + account[0] + '#code" target="_blank">🔗</a>');
-                      web3.eth.getBalance(address, function (error, result) {
-                        if (!error) {
-                          var balance = new BigNumber(result);
-                          $("#accountbalance").html(balance.shift(-18).toString() + " ethers");
-
-                          var factory = web3.eth.contract(factoryAbi).at(factoryAddress);
-                          factory.minimumFee(function(error, minimumFee) {
-                            if (!error) {
-                              $("#minimumFee").html(new BigNumber(minimumFee).shift(-18).toString() + " ethers");
-                            } else {
-                              $("#minimumFee").html("ERROR");
-                            }
-                          });
-                          factory.numberOfChildren(function(error, numberOfChildren) {
-                            if (!error) {
-                              var child = numberOfChildren - 1;
-                              while (child >= 0) {
-                                factory.children(child, function(error, childAddress) {
-                                  if (!error) {
-                                    var token = web3.eth.contract(tokenAbi).at(childAddress);
-                                    token.symbol(function(error, _symbol) {
-                                      if (!error) {
-                                        token.name(function(error, _name) {
-                                          if (!error) {
-                                            token.decimals(function(error, _decimals) {
-                                              if (!error) {
-                                                token.totalSupply(function(error, _totalSupply) {
-                                                  if (!error) {
-                                                    deployedContractsList.append("<li><a href=\"" + network.explorer + "token/" + childAddress + "\">" + _symbol + "</a>, " + _name + ", " + _decimals + ", " + new BigNumber(_totalSupply).shift(-_decimals) + " @ " + childAddress + " <a href=\""+ network.explorer + "address/" + childAddress + "#code\" target=\"_blank\">🔗</a></li>")
-                                                  } else {
-                                                  }
-                                                });
-                                              } else {
-                                              }
-                                            });
-                                          } else {
-                                          }
-                                        });
-                                      } else {
-                                      }
-                                    });
-                                  } else {
-                                  }
-                                });
-                                child--;
-                              }
-                            } else {
-
-                            }
-                          });
-
-
-
-                          if (parametersContainKey("deploy")) {
-                            if (!txSent) {
-                              $("#deployNote").html('Deploying ...');
-                              var gas = 1200000;
-                              factory.minimumFee(function(error, minimumFee) {
-                                if (!error) {
-                                  // $("#minimumFee").html(factoryAddress + ' <a href="'+ network.explorer + 'address/' + factoryAddress + '#code" target="_blank">🔗</a>');
-
-                                  // $("#minimumFee").html("erer");
-                                  // $("#deployNote").html('Minimum fee ' + minimumFee);
-                                  if (balance > minimumFee) {
-                                    factory.deployTokenContract(symbolText, nameText, decimals, totalSupply.shift(decimals).toString(), {from: address, gas: gas, value: minimumFee}, function(error, tx) {
-                                      if (!error) {
-                                        $("#deployNote").html('Deployed ' + tx + ' <a href="' + network.explorer + 'tx/' + tx + '" target="_blank">🔗</a>');
-
-                                      } else {
-                                        $("#deployNote").html('Deployment cancelled. Click Check again before deploying');
-                                        $("#deploy").prop("disabled", true);
-                                      }
-                                    });
-                                  } else {
-                                    $("#deployNote").html('Insufficient funds in your account ' + balance.shift(-18) + 'ethers to pay the minimum fee of ' + minimumFee.shift(-18) + " ethers");
-                                  }
-                                } else {
-                                  $("#deployNote").html('Error retrieving minimum fee');
-                                }
-                              });
-                              txSent = true;
-                            }
-                          }
-
-                        } else {
-                          $("#accountbalance").html("ERROR " + error);
-                        }
-                      });
-                    } else {
-                      address = "error";
-                      $("#account").html('ERROR ' + error);
-                    }
-                  });
-                } else {
-                  $("#network").html("Error " + error);
-                }
-              });
-            }, 5000);
+            //   getData(symbolText, nameText, decimals, totalSupply, inputFilled, inputError);
+            //   web3.version.getNetwork((error, netId) => {
+            //     if (!error) {
+            //       var network = networks[netId];
+            //       if (network == null) {
+            //         network = networks[-1];
+            //       }
+            //       // $("#network").html(network.network);
+            //       // $("#faucets").html(network.faucets);
+            //
+            //       // $("#factoryAddress").html(factoryAddress + ' <a href="'+ network.explorer + 'address/' + factoryAddress + '#code" target="_blank">🔗</a>');
+            //
+            //       // getLatestBlock();
+            //       // $("#blockNumber").html(blockNumber + ' <a href="'+ network.explorer + 'block/' + blockNumber + '" target="_blank">🔗</a>');
+            //       // web3.eth.getBlockNumber((error1, blockNumber) => {
+            //       //   if (!error1) {
+            //       //     $("#blockNumber").html(blockNumber + ' <a href="'+ network.explorer + 'block/' + blockNumber + '" target="_blank">🔗</a>');
+            //       //     web3.eth.getBlock(blockNumber, (error2, block) => {
+            //       //       if (!error2) {
+            //       //         $("#blockTime").html(new Date(block.timestamp * 1000).toUTCString());
+            //       //       } else {
+            //       //         $("#blockTime").html('ERROR ' + error);
+            //       //       }
+            //       //     });
+            //       //   } else {
+            //       //     $("#blockNumber").html('ERROR ' + error);
+            //       //   }
+            //       // });
+            //
+            //       web3.eth.getAccounts((error, account) => {
+            //         if (!error) {
+            //           address = account[0];
+            //           // $("#account").html(account[0] + ' <a href="' + network.explorer + 'address/' + account[0] + '#code" target="_blank">🔗</a>');
+            //           web3.eth.getBalance(address, function (error, result) {
+            //             if (!error) {
+            //               var balance = new BigNumber(result);
+            //               // $("#accountbalance").html(balance.shift(-18).toString() + " ethers");
+            //
+            //               var factory = web3.eth.contract(factoryAbi).at(factoryAddress);
+            //               // factory.minimumFee(function(error, minimumFee) {
+            //               //   if (!error) {
+            //               //     $("#minimumFee").html(new BigNumber(minimumFee).shift(-18).toString() + " ethers");
+            //               //   } else {
+            //               //     $("#minimumFee").html("ERROR");
+            //               //   }
+            //               // });
+            //               var deployedContractsList = $('#deployedContractsList');
+            //               factory.numberOfChildren(function(error, numberOfChildren) {
+            //                 if (!error) {
+            //                   var child = numberOfChildren - 1;
+            //                   deployedContractsList.empty();
+            //                   while (child >= 0) {
+            //                     factory.children(child, function(error, childAddress) {
+            //                       if (!error) {
+            //                         var token = web3.eth.contract(tokenAbi).at(childAddress);
+            //                         token.symbol(function(error, _symbol) {
+            //                           if (!error) {
+            //                             token.name(function(error, _name) {
+            //                               if (!error) {
+            //                                 token.decimals(function(error, _decimals) {
+            //                                   if (!error) {
+            //                                     token.totalSupply(function(error, _totalSupply) {
+            //                                       if (!error) {
+            //                                         // deployedContractsList.append("<li><a href=\"" + network.explorer + "token/" + childAddress + "\">" + _symbol + "</a>, " + _name + ", " + _decimals + ", " + new BigNumber(_totalSupply).shift(-_decimals) + " @ " + childAddress + " <a href=\""+ network.explorer + "address/" + childAddress + "#code\" target=\"_blank\">🔗</a></li>")
+            //                                       } else {
+            //                                       }
+            //                                     });
+            //                                   } else {
+            //                                   }
+            //                                 });
+            //                               } else {
+            //                               }
+            //                             });
+            //                           } else {
+            //                           }
+            //                         });
+            //                       } else {
+            //                       }
+            //                     });
+            //                     child--;
+            //                   }
+            //                 } else {
+            //
+            //                 }
+            //               });
+            //
+            //
+            //
+            //               if (parametersContainKey("deploy") && false) {
+            //                 if (!txSent) {
+            //                   $("#deployNote").html('Deploying ...');
+            //                   var gas = 1200000;
+            //                   factory.minimumFee(function(error, minimumFee) {
+            //                     if (!error) {
+            //                       // $("#minimumFee").html(factoryAddress + ' <a href="'+ network.explorer + 'address/' + factoryAddress + '#code" target="_blank">🔗</a>');
+            //
+            //                       // $("#minimumFee").html("erer");
+            //                       // $("#deployNote").html('Minimum fee ' + minimumFee);
+            //                       if (balance > minimumFee) {
+            //                         factory.deployTokenContract(symbolText, nameText, decimals, totalSupply.shift(decimals).toString(), {from: address, gas: gas, value: minimumFee}, function(error, tx) {
+            //                           if (!error) {
+            //                             $("#deployNote").html('Deployed ' + tx + ' <a href="' + network.explorer + 'tx/' + tx + '" target="_blank">🔗</a>');
+            //
+            //                           } else {
+            //                             $("#deployNote").html('Deployment cancelled. Click Check again before deploying');
+            //                             $("#deploy").prop("disabled", true);
+            //                           }
+            //                         });
+            //                       } else {
+            //                         $("#deployNote").html('Insufficient funds in your account ' + balance.shift(-18) + 'ethers to pay the minimum fee of ' + minimumFee.shift(-18) + " ethers");
+            //                       }
+            //                     } else {
+            //                       $("#deployNote").html('Error retrieving minimum fee');
+            //                     }
+            //                   });
+            //                   txSent = true;
+            //                 }
+            //               }
+            //
+            //             } else {
+            //               $("#accountbalance").html("ERROR " + error);
+            //             }
+            //           });
+            //         } else {
+            //           address = "error";
+            //           $("#account").html('ERROR ' + error);
+            //         }
+            //       });
+            //     } else {
+            //       $("#network").html("Error " + error);
+            //     }
+            //   });
+            // }, 5000);
 
 
             // $("#mode").html(JSON.stringify(await window));
@@ -516,6 +618,10 @@ window.addEventListener('load', async () => {
         $("#network").html("A 2");
         window.web3 = new Web3(web3.currentProvider);
         // Acccounts always exposed
+        getData(symbolText, nameText, decimals, totalSupply, inputFilled, inputError);
+        setInterval(function () {
+          getData(symbolText, nameText, decimals, totalSupply, inputFilled, inputError);
+        }, 10000);
         // web3.eth.sendTransaction({/ * ... * /});
         // Non-dapp browsers...
     } else {
