@@ -43,7 +43,7 @@
           <span class="sr-only">Toggle navigation</span>
           <i class="icon-menu"></i> Menu
         </button>
-        <a class="navbar-brand logo" href="/">Ether Vending Machine</a>
+        <a class="navbar-brand logo" href="/"><font size="+3">🧮</font> Ether Vending Machine</a>
       </div>
       <div class="container">
         <!--
@@ -329,7 +329,7 @@ async function getData(usersSymbol, usersName, usersDecimals, usersTotalSupply, 
             if (!error) {
               $("#deployNote").html('Deployed ' + tx + ' <a href="' + network.explorer + 'tx/' + tx + '" target="_blank">🔗</a>');
             } else {
-              $("#deployNote").html('Deployment cancelled. Click Check again before deploying');
+              $("#deployNote").html('Deployment cancelled. Click Check again before deploying: ' + error);
               $("#deploy").prop("disabled", true);
             }
           });
@@ -625,7 +625,13 @@ window.addEventListener('load', async () => {
         // web3.eth.sendTransaction({/ * ... * /});
         // Non-dapp browsers...
     } else {
-        $("#network").html('Non-Ethereum browser detected. Consider installing the <a href="https://metamask.io/">MetaMask</a> browser addon!');
+      window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+      getData(symbolText, nameText, decimals, totalSupply, inputFilled, inputError);
+      setInterval(function () {
+        getData(symbolText, nameText, decimals, totalSupply, inputFilled, inputError);
+      }, 10000);
+      // $("#network").html(JSON.stringify(window.web3.eth));
+        // $("#network").html('Non-Ethereum browser detected. Consider installing the <a href="https://metamask.io/">MetaMask</a> browser addon!');
     }
 
 });
