@@ -154,31 +154,36 @@
         <div class="row" id="symbolDiv">
           <div class="col-sm-3 text-right">Symbol:</div>
           <div class="col-sm-3"><input type="text" class="form-control" id="symbol" name="symbol" placeholder="e.g. 'BEANIE'" size="12"></div>
-          <span class="help-block" id="symbolNote">Something may have gone wrong</span>
+          <span class="help-block" id="symbolNote"></span>
         </div>
         <div class="row has-error" id="nameDiv">
           <div class="col-sm-3 text-right">Name:</div>
           <div class="col-sm-3"><input type="text" class="form-control" id="name" name="name" placeholder="e.g. 'Beanie Things'" size="36"></div>
-          <span class="help-block" id="nameNote">Something may have gone wrong</span>
+          <span class="help-block" id="nameNote"></span>
         </div>
         <div class="row has-error" id="decimalsDiv">
           <div class="col-sm-3 text-right">Decimals:</div>
           <div class="col-sm-3"><input type="text" class="form-control" id="decimals" name="decimals" placeholder="0..18" size="5"></div>
-          <span class="help-block" id="decimalsNote">Something may have gone wrong</span>
+          <span class="help-block" id="decimalsNote"></span>
         </div>
         <div class="row has-error" id="totalSupplyDiv">
           <div class="col-sm-3 text-right">Total Supply:</div>
           <div class="col-sm-3"><input type="text" class="form-control" id="totalSupply" name="totalSupply" placeholder=">0 and <= 1 trillion" size="27"></div>
-          <span class="help-block" id="totalSupplyNote">Something may have gone wrong</span>
+          <span class="help-block" id="totalSupplyNote"></span>
         </div>
         <div class="row">
           <div class="col-sm-3 text-right">&nbsp</div>
-          <div class="col-sm-3"><button type="submit" class="btn btn-default" name="check" id="check">Check</button></div>
+          <div class="col-sm-3"><button type="button" class="btn btn-default" name="check" id="check">Check</button></div>
         </div>
         <div class="row">
           <div class="col-sm-3 text-right">&nbsp</div>
           <div class="col-sm-3"><button type="submit" class="btn btn-default" name="deploy" id="deploy" disabled>Deploy</button></div>
           <span class="help-block" id="deployNote"></span>
+        </div>
+        <div class="row">
+          <div class="col-sm-3 text-right">&nbsp</div>
+          <div class="col-sm-3"><button type="button" class="btn btn-default" name="doIt" id="doIt">Do It</button></div>
+          <span class="help-block" id="doItNote"></span>
         </div>
       </form>
 
@@ -207,6 +212,16 @@
     </div>
 
 <script type="text/javascript">
+// ----------------------------------------------------------------------------
+// BokkyPooBah's Ether Vending Machine v0.90
+//
+// FixedSupplyTokenFactory deployment address
+//   0xA550114ee3688601006b8b9f25e64732eF774934
+//
+// https://github.com/bokkypoobah/EtherVendingMachine
+//
+// Enjoy. (c) BokkyPooBah / Bok Consulting Pty Ltd 2019. The MIT Licence.
+// ----------------------------------------------------------------------------
 
 // Network    Network Id   Chain Id
 // Mainnet             1          1
@@ -235,20 +250,19 @@ var factoryAddress = "0xA550114ee3688601006b8b9f25e64732eF774934";
 var factoryAbi = [{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"tokens","type":"uint256"}],"name":"recoverTokens","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_minimumFee","type":"uint256"}],"name":"setMinimumFee","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"minimumFee","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"numberOfChildren","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"children","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"acceptOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"newAddress","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"symbol","type":"string"},{"name":"name","type":"string"},{"name":"decimals","type":"uint8"},{"name":"totalSupply","type":"uint256"}],"name":"deployTokenContract","outputs":[{"name":"token","type":"address"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"newOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newAddress","type":"address"}],"name":"deprecateFactory","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"isChild","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_newAddress","type":"address"}],"name":"FactoryDeprecated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldFee","type":"uint256"},{"indexed":false,"name":"newFee","type":"uint256"}],"name":"MinimumFeeUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"token","type":"address"},{"indexed":false,"name":"symbol","type":"string"},{"indexed":false,"name":"name","type":"string"},{"indexed":false,"name":"decimals","type":"uint8"},{"indexed":false,"name":"totalSupply","type":"uint256"}],"name":"TokenDeployed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"}],"name":"OwnershipTransferred","type":"event"}];
 var tokenAbi = [{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"tokens","type":"uint256"}],"name":"recoverTokens","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_owner","type":"address"}],"name":"init","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"tokenOwner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"acceptOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"symbol","type":"string"},{"name":"name","type":"string"},{"name":"decimals","type":"uint8"},{"name":"fixedSupply","type":"uint256"}],"name":"init","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"},{"name":"data","type":"bytes"}],"name":"approveAndCall","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"newOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"tokens","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"tokenOwner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"tokens","type":"uint256"}],"name":"Approval","type":"event"}];
 
-var symbolMaxLength = 3;
-var nameMaxLength = 10;
-var decimalsMax = 18;
-var totalSupplyMax = new BigNumber("1").shift(12);
+var SYMBOLMAXLENGTH = 3;
+var NAMEMAXLENGTH = 10;
+var DECIMALSMAX = 18;
+var TOTALSUPPLYMAX = new BigNumber("1").shift(12);
 
-var symbolNote = "Normally a short uppercase character string like 'BEANIE'. Max length " + symbolMaxLength;
-var nameNote = "Normally a mixed case character string like 'Beanie Things'. Max length " + nameMaxLength;
-var decimalsNote = "A number between 0 and " + decimalsMax + ", inclusive";
-var totalSupplyNote = "A number greater than 0 and less than or equals to " + totalSupplyMax;
+var SYMBOLNOTE = "Normally a short uppercase character string like 'BEANIE'. Max length " + SYMBOLMAXLENGTH;
+var NAMENOTE = "Normally a mixed case character string like 'Beanie Things'. Max length " + NAMEMAXLENGTH;
+var DECIMALSNOTE = "A number between 0 and " + DECIMALSMAX + ", inclusive";
+var TOTALSUPPLYNOTE = "A number greater than 0 and less than or equals to " + TOTALSUPPLYMAX;
 
 var txSent = false;
-var lastNetworkId;
-var lastFactoryAddress;
-var lastNumberOfChildren;
+var lastNetworkId = -123;
+var lastNumberOfChildren = new BigNumber(-123);
 
 const promisify = (inner) =>
   new Promise((resolve, reject) =>
@@ -261,21 +275,28 @@ const promisify = (inner) =>
     })
   );
 
-async function getData(usersSymbol, usersName, usersDecimals, usersTotalSupply, inputFilled, inputError) {
+async function renderEthData(data, action) {
   var _networkId = promisify(cb => web3.version.getNetwork(cb));
   var _block = promisify(cb => web3.eth.getBlock("latest", cb));
   var _accounts = promisify(cb => web3.eth.getAccounts(cb));
+  var networkId = -1;
   try {
-    var networkId = await _networkId;
-    $("#network").html(networkId);
+    networkId = await _networkId;
+    var networkChanged = false;
+    if (lastNetworkId != networkId) {
+      $("#network").html(networkId);
+      networkChanged = true;
+      lastNetworkId = networkId;
+    }
     var network = networks[networkId];
     if (network == null) {
       network = networks[-1];
     }
-    $("#network").html(network.network);
-    $("#faucets").html(network.faucets);
-
-    $("#factoryAddress").html(factoryAddress + ' <a href="'+ network.explorer + 'address/' + factoryAddress + '#code" target="_blank">🔗</a>');
+    if (networkChanged) {
+      $("#network").html(network.network);
+      $("#faucets").html(network.faucets);
+      $("#factoryAddress").html(factoryAddress + ' <a href="'+ network.explorer + 'address/' + factoryAddress + '#code" target="_blank">🔗</a>');
+    }
 
     var block = await _block;
     var blockNumber = block.number;
@@ -299,33 +320,41 @@ async function getData(usersSymbol, usersName, usersDecimals, usersTotalSupply, 
     $("#minimumFee").html(new BigNumber(minimumFee).shift(-18).toString() + " ethers");
 
     var _numberOfChildren = promisify(cb => factory.numberOfChildren(cb));
-    var numberOfChildren = await _numberOfChildren;
-
-    var deployedContractsList = $('#deployedContractsList');
-    deployedContractsList.empty();
-    var child = numberOfChildren - 1;
-    while (child >= 0) {
-      var _childAddress = promisify(cb => factory.children(child, cb));
-      var childAddress = await _childAddress;
-      var token = web3.eth.contract(tokenAbi).at(childAddress);
-      var _symbol = promisify(cb => token.symbol(cb));
-      var _name = promisify(cb => token.name(cb));
-      var _decimals = promisify(cb => token.decimals(cb));
-      var _totalSupply = promisify(cb => token.totalSupply(cb));
-      var symbol = await _symbol;
-      var name = await _name;
-      var decimals = await _decimals;
-      var totalSupply = await _totalSupply;
-      deployedContractsList.append("<li><a href=\"" + network.explorer + "token/" + childAddress + "\">" + symbol + "</a>, " + name + ", " + decimals + ", " + new BigNumber(totalSupply).shift(-decimals) + " @ " + childAddress + " <a href=\""+ network.explorer + "address/" + childAddress + "#code\" target=\"_blank\">🔗</a></li>")
-      child--;
+    var numberOfChildren = new BigNumber(await _numberOfChildren);
+    var factoryUpdated = false;
+    if (!lastNumberOfChildren.equals(numberOfChildren)) {
+      console.log(loopCounter + " [renderEthData] " + action + ": lastNumberOfChildren: " + lastNumberOfChildren + ", numberOfChildren: " + numberOfChildren);
+      factoryUpdated = true;
+      lastNumberOfChildren = numberOfChildren;
+    }
+    console.log(loopCounter + " [renderEthData] " + action + ": networkChanged: " + networkChanged + ", factoryUpdated: " + factoryUpdated);
+    if (networkChanged || factoryUpdated) {
+      var deployedContractsList = $('#deployedContractsList');
+      deployedContractsList.empty();
+      var child = numberOfChildren - 1;
+      while (child >= 0) {
+        var _childAddress = promisify(cb => factory.children(child, cb));
+        var childAddress = await _childAddress;
+        var token = web3.eth.contract(tokenAbi).at(childAddress);
+        var _symbol = promisify(cb => token.symbol(cb));
+        var _name = promisify(cb => token.name(cb));
+        var _decimals = promisify(cb => token.decimals(cb));
+        var _totalSupply = promisify(cb => token.totalSupply(cb));
+        var symbol = await _symbol;
+        var name = await _name;
+        var decimals = await _decimals;
+        var totalSupply = await _totalSupply;
+        deployedContractsList.append("<li><a href=\"" + network.explorer + "token/" + childAddress + "\">" + symbol + "</a>, " + name + ", " + decimals + ", " + new BigNumber(totalSupply).shift(-decimals) + " @ " + childAddress + " <a href=\""+ network.explorer + "address/" + childAddress + "#code\" target=\"_blank\">🔗</a></li>")
+        child--;
+      }
     }
 
-    if (inputFilled && !inputError && parametersContainKey("deploy")) {
+    if (data.inputFilled && !data.inputError && parametersContainKey("deploy")) {
       if (!txSent) {
         $("#deployNote").html('Deploying ...');
         var gas = 1200000;
         if (balance > minimumFee) {
-          factory.deployTokenContract(usersSymbol, usersName, usersDecimals, usersTotalSupply.shift(usersDecimals).toString(), {from: account, gas: gas, value: minimumFee}, function(error, tx) {
+          factory.deployTokenContract(data.symbol, data.name, data.decimals, data.totalSupply.shift(data.decimals).toString(), {from: account, gas: gas, value: minimumFee}, function(error, tx) {
             if (!error) {
               $("#deployNote").html('Deployed ' + tx + ' <a href="' + network.explorer + 'tx/' + tx + '" target="_blank">🔗</a>');
             } else {
@@ -345,418 +374,277 @@ async function getData(usersSymbol, usersName, usersDecimals, usersTotalSupply, 
   }
 }
 
+
+var LOOPPERIOD = 10000;
+var loopCounter = 0;
+var connectionOk = false;
+var lastNetworkId = -999;
+
+// ----------------------------------------------------------------------------
+// Try to establish a web3 connection
+// ----------------------------------------------------------------------------
+async function establishConnection() {
+  console.log(loopCounter + " [establishConnection] connectionOk: " + connectionOk);
+
+  // Modern dapp browsers...
+  if (window.ethereum) {
+    window.web3 = new Web3(ethereum);
+    try {
+      // Request account access if needed
+      await ethereum.enable();
+      console.log(loopCounter + " [establishConnection] await ethereum.enable() completed");
+      // Accounts now exposed
+      connectionOk = true;
+    } catch (error) {
+      // User denied account access...
+    }
+  // Legacy dapp browsers...
+  } else if (window.web3) {
+    try {
+      window.web3 = new Web3(web3.currentProvider);
+      // Acccounts always exposed
+      console.log(loopCounter + " [establishConnection] Legacy dapp browsers completed");
+      connectionOk = true;
+    } catch (error) {
+    }
+  // Non-dapp browsers...
+  } else {
+    try {
+      window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+      console.log(loopCounter + " [establishConnection] Web3 connection");
+      connectionOk = true;
+    } catch (error) {
+    }
+  }
+}
+
+
+// ----------------------------------------------------------------------------
+// Main process loop, using load to call initially, then setTimeout to trigger
+// ----------------------------------------------------------------------------
+async function processLoop(loadFromUrl) {
+  console.log(loopCounter + " [processLoop] connectionOk: " + connectionOk);
+  if (!connectionOk) {
+    console.log(loopCounter + " [processLoop] calling establishConnection");
+    await establishConnection();
+    console.log(loopCounter + " [processLoop] called establishConnection");
+  }
+  if (connectionOk) {
+    try {
+      process(loadFromUrl);
+    } catch (error) {
+      console.log(loopCounter + " [processLoop] connectionOk: " + connectionOk + " - process() error " + error);
+    }
+  } else {
+    console.log(loopCounter + " [processLoop] connectionOk: " + connectionOk + " - Skipping process()");
+  }
+  loopCounter = parseInt(loopCounter) + 1;
+  setTimeout(function() { processLoop(false) }, LOOPPERIOD);
+}
 window.addEventListener('load', async () => {
+  console.log(loopCounter + " [load]");
+  processLoop(true);
+});
 
-  var inputFilled = true;
-  var inputError = false;
 
-  var symbolText = getSearchParameter('symbol');
-  var symbolError = false;
-  if (symbolText.length == 0) {
-    inputFilled = false;
+function getInputData(loadFromUrl) {
+  var data = {
+    "inputFilled": true,
+    "inputError": false,
+    "symbol": "",
+    "symbolError": false,
+    "name": "",
+    "nameError": false,
+    "decimals": 0,
+    "decimalsError": false,
+    "totalSupply": 0,
+    "totalSupplyError": false,
+  };
+
+  data.symbol = loadFromUrl ? getSearchParameter('symbol') : $('#symbol').val();
+  console.log(loopCounter + " [getInputData] symbol: " + data.symbol);
+  if (data.symbol.length == 0) {
+    data.inputFilled = false;
   } else {
-    if (symbolText.length > symbolMaxLength) {
-      inputError = true;
-      symbolError = true;
+    if (data.symbol.length > SYMBOLMAXLENGTH) {
+      data.inputFilled = false;
+      data.inputError = true;
+      data.symbolError = true;
     }
   }
 
-  var nameText = getSearchParameter('name');
-  var nameError = false;
-  if (nameText.length == 0) {
-    inputFilled = false;
+  data.name = loadFromUrl ? getSearchParameter('name') : $('#name').val();
+  console.log(loopCounter + " [getInputData] name: " + data.name);
+  if (data.name.length == 0) {
+    data.inputFilled = false;
   } else {
-    if (nameText.length > nameMaxLength) {
-      inputError = true;
-      nameError = true;
+    if (data.name.length > NAMEMAXLENGTH) {
+      data.inputFilled = false;
+      data.inputError = true;
+      data.nameError = true;
     }
   }
 
-  var decimalsText = getSearchParameter('decimals');
-  var decimalsError = false;
-  var decimals;
+  var decimalsText = loadFromUrl ? getSearchParameter('decimals') : $('#decimals').val();
   if (decimalsText.length == 0) {
-    inputFilled = false;
+    data.inputFilled = false;
   } else {
     try {
-      decimals = parseInt(decimalsText);
-      if (isNaN(decimals)) {
-        decimals = 999;
+      data.decimals = parseInt(decimalsText);
+      if (isNaN(data.decimals)) {
+        data.decimals = 999;
       }
-      if (decimals > decimalsMax) {
-        inputError = true;
-        decimalsError = true;
+      if (data.decimals > DECIMALSMAX) {
+        data.inputError = true;
+        data.decimalsError = true;
       }
     } catch (e) {
-      decimals = decimalsText;
-      inputError = true;
-      decimalsError = true;
+      data.decimals = decimalsText;
+      data.inputError = true;
+      data.decimalsError = true;
     }
   }
 
-  var totalSupplyText = getSearchParameter('totalSupply');
-  var totalSupplyError = false;
-  var totalSupply;
+  var totalSupplyText = loadFromUrl ? getSearchParameter('totalSupply') : $('#totalSupply').val();
   if (totalSupplyText.length == 0) {
-    inputFilled = false;
+    data.inputFilled = false;
   } else {
     try {
-      totalSupply = new BigNumber(totalSupplyText);
-      if (isNaN(totalSupply)) {
-        totalSupply = new BigNumber(999);
+      data.totalSupply = new BigNumber(totalSupplyText);
+      if (isNaN(data.totalSupply)) {
+        data.totalSupply = new BigNumber(0);
       }
-      if (totalSupply.gt(totalSupplyMax)) {
-        inputError = true;
-        totalSupplyError = true;
+      if (data.totalSupply.isZero() || data.totalSupply.gt(TOTALSUPPLYMAX)) {
+        data.inputError = true;
+        data.totalSupplyError = true;
       }
     } catch (e) {
-      totalSupply = totalSupplyText;
-      inputError = true;
-      totalSupplyError = true;
+      data.totalSupply = totalSupplyText;
+      data.inputError = true;
+      data.totalSupplyError = true;
     }
   }
 
-  if (symbolError) {
+  return data;
+}
+
+function renderInputData(data, overwriteField) {
+  if (data.symbolError) {
     $("#symbolDiv").addClass("has-error");
-    $("#symbolNote").html(symbolNote);
+    $("#symbolNote").html(SYMBOLNOTE);
   } else {
     $("#symbolDiv").removeClass("has-error");
-    $("#symbolNote").html(symbolNote);
+    $("#symbolNote").html("");
   }
-  $("#symbol").val(symbolText);
+  if (overwriteField) {
+    $("#symbol").val(data.symbol);
+  }
 
-  if (nameError) {
+  if (data.nameError) {
     $("#nameDiv").addClass("has-error");
-    $("#nameNote").html(nameNote);
+    $("#nameNote").html(NAMENOTE);
   } else {
     $("#nameDiv").removeClass("has-error");
-    $("#nameNote").html(nameNote);
+    $("#nameNote").html("");
   }
-  $("#name").val(nameText);
+  if (overwriteField) {
+    $("#name").val(data.name);
+  }
 
-  if (decimalsError) {
+  if (data.decimalsError) {
     $("#decimalsDiv").addClass("has-error");
-    $("#decimalsNote").html(decimalsNote);
+    $("#decimalsNote").html(DECIMALSNOTE);
   } else {
     $("#decimalsDiv").removeClass("has-error");
-    $("#decimalsNote").html(decimalsNote);
+    $("#decimalsNote").html("");
   }
-  $("#decimals").val(decimals);
+  if (overwriteField) {
+    $("#decimals").val(data.decimals);
+  }
 
-  if (totalSupplyError) {
+  if (data.totalSupplyError) {
     $("#totalSupplyDiv").addClass("has-error");
-    $("#totalSupplyNote").html(totalSupplyNote);
+    $("#totalSupplyNote").html(TOTALSUPPLYNOTE);
   } else {
     $("#totalSupplyDiv").removeClass("has-error");
-    $("#totalSupplyNote").html(totalSupplyNote);
+    $("#totalSupplyNote").html("");
   }
-  $("#totalSupply").val(totalSupply);
+  if (overwriteField) {
+    $("#totalSupply").val(data.totalSupply);
+  }
 
-  if (inputFilled && !inputError) {
+  if (data.inputFilled && !data.inputError) {
     $("#deploy").prop("disabled", false);
   } else {
     $("#deploy").prop("disabled", true);
   }
-  // $("#symbolDiv").addClass("has-error");
-  // $("#symbolText").html("OK");
-
-    // Modern dapp browsers...
-    if (window.ethereum) {
-        window.web3 = new Web3(ethereum);
-        try {
-            // Request account access if needed
-            await ethereum.enable();
-            // Accounts now exposed
-
-            getData(symbolText, nameText, decimals, totalSupply, inputFilled, inputError);
-            setInterval(function () {
-              getData(symbolText, nameText, decimals, totalSupply, inputFilled, inputError);
-            }, 10000);
-
-            //   getData(symbolText, nameText, decimals, totalSupply, inputFilled, inputError);
-            //   web3.version.getNetwork((error, netId) => {
-            //     if (!error) {
-            //       var network = networks[netId];
-            //       if (network == null) {
-            //         network = networks[-1];
-            //       }
-            //       // $("#network").html(network.network);
-            //       // $("#faucets").html(network.faucets);
-            //
-            //       // $("#factoryAddress").html(factoryAddress + ' <a href="'+ network.explorer + 'address/' + factoryAddress + '#code" target="_blank">🔗</a>');
-            //
-            //       // getLatestBlock();
-            //       // $("#blockNumber").html(blockNumber + ' <a href="'+ network.explorer + 'block/' + blockNumber + '" target="_blank">🔗</a>');
-            //       // web3.eth.getBlockNumber((error1, blockNumber) => {
-            //       //   if (!error1) {
-            //       //     $("#blockNumber").html(blockNumber + ' <a href="'+ network.explorer + 'block/' + blockNumber + '" target="_blank">🔗</a>');
-            //       //     web3.eth.getBlock(blockNumber, (error2, block) => {
-            //       //       if (!error2) {
-            //       //         $("#blockTime").html(new Date(block.timestamp * 1000).toUTCString());
-            //       //       } else {
-            //       //         $("#blockTime").html('ERROR ' + error);
-            //       //       }
-            //       //     });
-            //       //   } else {
-            //       //     $("#blockNumber").html('ERROR ' + error);
-            //       //   }
-            //       // });
-            //
-            //       web3.eth.getAccounts((error, account) => {
-            //         if (!error) {
-            //           address = account[0];
-            //           // $("#account").html(account[0] + ' <a href="' + network.explorer + 'address/' + account[0] + '#code" target="_blank">🔗</a>');
-            //           web3.eth.getBalance(address, function (error, result) {
-            //             if (!error) {
-            //               var balance = new BigNumber(result);
-            //               // $("#accountbalance").html(balance.shift(-18).toString() + " ethers");
-            //
-            //               var factory = web3.eth.contract(factoryAbi).at(factoryAddress);
-            //               // factory.minimumFee(function(error, minimumFee) {
-            //               //   if (!error) {
-            //               //     $("#minimumFee").html(new BigNumber(minimumFee).shift(-18).toString() + " ethers");
-            //               //   } else {
-            //               //     $("#minimumFee").html("ERROR");
-            //               //   }
-            //               // });
-            //               var deployedContractsList = $('#deployedContractsList');
-            //               factory.numberOfChildren(function(error, numberOfChildren) {
-            //                 if (!error) {
-            //                   var child = numberOfChildren - 1;
-            //                   deployedContractsList.empty();
-            //                   while (child >= 0) {
-            //                     factory.children(child, function(error, childAddress) {
-            //                       if (!error) {
-            //                         var token = web3.eth.contract(tokenAbi).at(childAddress);
-            //                         token.symbol(function(error, _symbol) {
-            //                           if (!error) {
-            //                             token.name(function(error, _name) {
-            //                               if (!error) {
-            //                                 token.decimals(function(error, _decimals) {
-            //                                   if (!error) {
-            //                                     token.totalSupply(function(error, _totalSupply) {
-            //                                       if (!error) {
-            //                                         // deployedContractsList.append("<li><a href=\"" + network.explorer + "token/" + childAddress + "\">" + _symbol + "</a>, " + _name + ", " + _decimals + ", " + new BigNumber(_totalSupply).shift(-_decimals) + " @ " + childAddress + " <a href=\""+ network.explorer + "address/" + childAddress + "#code\" target=\"_blank\">🔗</a></li>")
-            //                                       } else {
-            //                                       }
-            //                                     });
-            //                                   } else {
-            //                                   }
-            //                                 });
-            //                               } else {
-            //                               }
-            //                             });
-            //                           } else {
-            //                           }
-            //                         });
-            //                       } else {
-            //                       }
-            //                     });
-            //                     child--;
-            //                   }
-            //                 } else {
-            //
-            //                 }
-            //               });
-            //
-            //
-            //
-            //               if (parametersContainKey("deploy") && false) {
-            //                 if (!txSent) {
-            //                   $("#deployNote").html('Deploying ...');
-            //                   var gas = 1200000;
-            //                   factory.minimumFee(function(error, minimumFee) {
-            //                     if (!error) {
-            //                       // $("#minimumFee").html(factoryAddress + ' <a href="'+ network.explorer + 'address/' + factoryAddress + '#code" target="_blank">🔗</a>');
-            //
-            //                       // $("#minimumFee").html("erer");
-            //                       // $("#deployNote").html('Minimum fee ' + minimumFee);
-            //                       if (balance > minimumFee) {
-            //                         factory.deployTokenContract(symbolText, nameText, decimals, totalSupply.shift(decimals).toString(), {from: address, gas: gas, value: minimumFee}, function(error, tx) {
-            //                           if (!error) {
-            //                             $("#deployNote").html('Deployed ' + tx + ' <a href="' + network.explorer + 'tx/' + tx + '" target="_blank">🔗</a>');
-            //
-            //                           } else {
-            //                             $("#deployNote").html('Deployment cancelled. Click Check again before deploying');
-            //                             $("#deploy").prop("disabled", true);
-            //                           }
-            //                         });
-            //                       } else {
-            //                         $("#deployNote").html('Insufficient funds in your account ' + balance.shift(-18) + 'ethers to pay the minimum fee of ' + minimumFee.shift(-18) + " ethers");
-            //                       }
-            //                     } else {
-            //                       $("#deployNote").html('Error retrieving minimum fee');
-            //                     }
-            //                   });
-            //                   txSent = true;
-            //                 }
-            //               }
-            //
-            //             } else {
-            //               $("#accountbalance").html("ERROR " + error);
-            //             }
-            //           });
-            //         } else {
-            //           address = "error";
-            //           $("#account").html('ERROR ' + error);
-            //         }
-            //       });
-            //     } else {
-            //       $("#network").html("Error " + error);
-            //     }
-            //   });
-            // }, 5000);
-
-
-            // $("#mode").html(JSON.stringify(await window));
-            // web3.eth.sendTransaction({/ * ... * /});
-        } catch (error) {
-            // User denied account access...
-        }
-        // Legacy dapp browsers...
-    } else if (window.web3) {
-        $("#network").html("A 2");
-        window.web3 = new Web3(web3.currentProvider);
-        // Acccounts always exposed
-        getData(symbolText, nameText, decimals, totalSupply, inputFilled, inputError);
-        setInterval(function () {
-          getData(symbolText, nameText, decimals, totalSupply, inputFilled, inputError);
-        }, 10000);
-        // web3.eth.sendTransaction({/ * ... * /});
-        // Non-dapp browsers...
-    } else {
-      window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-      getData(symbolText, nameText, decimals, totalSupply, inputFilled, inputError);
-      setInterval(function () {
-        getData(symbolText, nameText, decimals, totalSupply, inputFilled, inputError);
-      }, 10000);
-      // $("#network").html(JSON.stringify(window.web3.eth));
-        // $("#network").html('Non-Ethereum browser detected. Consider installing the <a href="https://metamask.io/">MetaMask</a> browser addon!');
-    }
-
-});
-
-// $(document).ready(function() {
-
-	// $("#url").html(window.location.href);
-    // var Web3 = require('web3');
-    // var web3 = new Web3();
-    // web3.setProvider(new web3.providers.HttpProvider("http://localhost:8545"));
-    // var blockNumberCurrent = web3.eth.blockNumber;
-	// $("#blockNumber").html(blockNumberCurrent);
-
-/* 	web3.currentProvider.sendAsync({
-        method: "blockNumber",
-        params: [],
-        jsonrpc: "2.0",
-        id: "2"
-    }, function (err, result) {
-        $("#blockNumber").html(err);
-    });
- */
-    // var ethRpc = "http://localhost:8545";
-    // var ethRpc = "https://refunds.thedao.fund/ethrpc";
-    // var etcRpc = "https://refunds.thedao.fund/etcrpc";
-
-    /*
-    // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-    if (typeof web3 !== 'undefined') {
-      // Use Mist/MetaMask's provider
-      web3js = new Web3(web3.currentProvider);
-      $("#mode").html("A 1");
-    } else {
-      $("#mode").html("A 2");
-      console.log('No web3? You should consider trying MetaMask!')
-      // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-      web3js = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-    }
-    */
-
-
-    /*
-     // Checks Web3 support
-    if (typeof web3 !== 'undefined' && typeof Web3 !== 'undefined') {
-        // If there's a web3 library loaded, then make your own web3
-        web3 = new Web3(web3.currentProvider);
-        $("#mode").html("Running in Mist");
-        // var blockNumberCurrent = web3.eth.blockNumber;
-        // $("#blockNumber").html(blockNumberCurrent);
-    } else if (typeof Web3 !== 'undefined') {
-        // If there isn't then set a provider
-        web3 = new Web3(new Web3.providers.HttpProvider(ethRpc));
-        $("#mode").html("Running connected to JSON RPC on " + ethRpc);
-        // var blockNumberCurrent = web3.eth.blockNumber;
-        // web3.eth.blockNumber(function (error, result) {
-        //     $("#blockNumber").html(result);
-        // });
-        // $("#blockNumber").html(blockNumberCurrent);
-        // $("#blockNumber").html("hello");
-        // web3.eth.blockNumber(function (error, result) {
-        	// $("#blockNumber").html(result);
-            // console.log("blockNumber: " + result)
-        // });
-
-    } else if (typeof web3 == 'undefined' && typeof Web3 == 'undefined') {
-    	$("#blockNumber").html("Not available");
-    	return;
-    }
-    */
-
-	// var blockNumberCurrent = web3.eth.blockNumber;
-	// $("#blockNumber").html(blockNumberCurrent);
-/*
-  var address = getSearchParameter('address');
-  console.log("address: " + address);
-
-	if (address != null && address.length == 42) {
-	    $("#address").val(address);
-
-	    $('#ethexplorer').attr('href','https://etherscan.io/address/' + address);
-        $('#etcexplorer').attr('href','https://gastracker.io/addr/' + address);
-
-	    / *var preHFBalance = getPreHardforkBalance(address);
-	    console.log("Pre hard-fork balance: " + preHFBalance);* /
-        // $("#preHFBalance").html(preHFBalance);
-
-	    var ethDetails = getETHDetails(address);
-	    // console.log(JSON.stringify(ethDetails));
-        $("#ethBlockNumber").html(ethDetails.ethBlockNumber);
-        $("#ethWithdrawalAmount").html(ethDetails.ethWithdrawalAmount);
-        $("#ethExtraBalanceWithdrawalAmount").html(ethDetails.ethExtraBalanceWithdrawalAmount);
-        $("#ethAccountBalance").html(ethDetails.ethAccountBalance);
-
-	    var etcDetails = getETCDetails(address);
-	    // console.log(JSON.stringify(etcDetails));
-        $("#preHFDaoBalance").html(etcDetails.preHFDaoBalance);
-        $("#etcBlockNumber").html(etcDetails.etcBlockNumber);
-        $("#etcPaidOutAmount").html(etcDetails.etcPaidOutAmount);
-        $("#etcWithdrawalAmount").html(etcDetails.etcWithdrawalAmount);
-        $("#etcAccountBalance").html(etcDetails.etcAccountBalance);
-	}
-  */
-
-	// var balances = require('./balancesHR.json');
-	// console.table(balances);
-
-    // var blockNumber = web3.eth.getBlockNumber(function (error, result) {
-    // 	console.log("blockNumber: " + result)
-    // });
-
-    // If no accounts are present, show the floating baloon
-    // if (!web3.eth.accounts || web3.eth.accounts.length == 0) {
-    // 	console.log("No accounts");
-        // document.getElementById("vote-support").style.display = "none";
-        // document.getElementById("vote-against").style.display = "none";
-        // document.getElementById("add-account").style.display = "block";
-
-    // }
-
-    // var blockNumber = web3.eth.blockNumber;
-    // console.log("blockNumber: " + blockNumber)
-// });
-function processInput(i) {
-  return ":" + i + ":" + i + ":";
 }
+
+
+// ----------------------------------------------------------------------------
+// Main process. Connection should already be established
+// Throw an error if there is a problem
+// ----------------------------------------------------------------------------
+function process(loadFromUrl) {
+  console.log(loopCounter + " [process] loadFromUrl: " + loadFromUrl);
+  var data = getInputData(loadFromUrl);
+  // Want to render from URL to the input fields on first load
+  renderInputData(data, loadFromUrl == true);
+  console.log(loopCounter + " [process] data: " + JSON.stringify(data));
+  // console.table(data);
+  // throw "Error";
+  renderEthData(data, 'refresh');
+}
+
+
+// ----------------------------------------------------------------------------
+// Functions
+// ----------------------------------------------------------------------------
+var functionCounter = 0;
+
+async function executeFunction(action) {
+  console.log(functionCounter + " [executeFunction] connectionOk: " + connectionOk);
+  if (!connectionOk) {
+    console.log(loopCounter + " [executeFunction] calling establishConnection");
+    await establishConnection();
+    console.log(loopCounter + " [executeFunction] called establishConnection");
+  }
+  if (connectionOk) {
+    try {
+      var data = getInputData(false);
+      renderInputData(data, true);
+      renderEthData(data, action);
+    } catch (error) {
+      console.log(functionCounter + " [executeFunction] connectionOk: " + connectionOk + " - process() error " + error);
+    }
+  } else {
+    console.log(functionCounter + " [executeFunction] connectionOk: " + connectionOk + " - Skipping process()");
+  }
+  functionCounter = parseInt(functionCounter) + 1;
+}
+
+$('#check').on('click', function (e) {
+  executeFunction('check');
+})
+$('#deploy').on('click', function (e) {
+  executeFunction('deploy');
+})
+$('#doIt').on('click', function (e) {
+  executeFunction('doit');
+})
+$('#symbol').on('change', function (e) {
+  executeFunction('symbolChanged');
+})
+$('#name').on('change', function (e) {
+  executeFunction('nameChanged');
+})
+$('#decimals').on('change', function (e) {
+  executeFunction('decimalsChanged');
+})
+$('#totalSupply').on('change', function (e) {
+  executeFunction('totalSupplyChanged');
+})
+
 </script>
   </body>
 </html>
