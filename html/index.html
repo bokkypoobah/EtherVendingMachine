@@ -36,6 +36,7 @@
 
   </head>
   <body>
+    <!-- <canvas id="c"></canvas> -->
     <div class="navbar navbar-default" role="navigation">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -45,45 +46,36 @@
         <a class="navbar-brand logo" href="/">BokkyPooBah's Ether Vending Machine</a>
       </div>
       <div class="container">
-        <!--
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Decentralised Trustless Exchange Contract Markets">ETH Markets <b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Vending Machine Services">Services <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="/token/1ST"><strong>1ST</strong> <span>First Blood</span></a></li>
-                <li><a href="/token/AMIS"><strong>AMIS</strong> <span>AMIS</span></a></li>
+                <li><a href="#"><strong>Deploy Fixed Supply Token Contract</strong> <span>(BokkyPooBah's Fixed Supply Token 👊 Factory v1.10)</span></a></li>
               </ul>
             </li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="/tokenTraderContracts"><i class="icon-star fa-fw"></i> TokenTrader Contracts</a></li>
-            <li><a href="/tradeHistory"><i class="icon-star fa-fw"></i> Trade History</a></li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Application Programming Interface">API <b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Vending Machine Contracts">Contracts <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                        <li><a href="/api/markets"><i class="icon-star fa-fw"></i> Market Overview</a></li>
-                        <li class="divider"></li>
-                        <li class="dropdown-header">Tokens</li>
-                        <li class="dropdown-header">Contracts</li>
-                        <li class="divider"></li>
-                        <li><a href="/api/factories"><i class="icon-star fa-fw"></i> Factories</a></li>
+                <li><a href="https://etherscan.io/address/0xA550114ee3688601006b8b9f25e64732eF774934#code"><strong>Deploy Fixed Supply Token Contract</strong> <span>(BokkyPooBah's Fixed Supply Token 👊 Factory v1.10)</span></a></li>
               </ul>
             </li>
             <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Help">Help <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="https://github.com/bokkypoobah/TokenTrader/wiki" target="_blank"><i class="icon-star fa-fw"></i> Help</a></li>
-                        <li class="divider"></li>
-                        <li class="dropdown-header">TokenTraderFactory</li>
-                        <li class="divider"></li>
-                        <li><a href="https://github.com/bokkypoobah/TokenTrader/wiki/TokenTrader-And-TokenTraderFactory" target="_blank"><i class="icon-star fa-fw"></i> TokenTrader &amp; Factory</a></li>
-                        <li class="divider"></li>
-                    </ul>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" title="Help">Help <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#faq" target="_blank"><i class="icon-star fa-fw"></i> FAQ</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Development Details</li>
+                <li class="divider"></li>
+                <li><a href="https://github.com/bokkypoobah/EtherVendingMachine" target="_blank"><i class="icon-star fa-fw"></i> Ether Vending Machine</a></li>
+                <li><a href="https://github.com/bokkypoobah/FixedSupplyTokenFactory" target="_blank"><i class="icon-star fa-fw"></i> BokkyPooBah's Fixed Supply Token 👊 Factory</a></li>
+                <li class="divider"></li>
+              </ul>
             </li>
           </ul>
         </div>
-        -->
       </div>
     </div>
 
@@ -214,7 +206,6 @@
       <br />
       <p>Enjoy! &copy; Bok Consulting Pty Ltd 2019 • Help fund the cost of running this site by donating to <a href="https://etherscan.io/address/0x000001f568875f378bf6d170b790967fe429c81a" target="_blank">0x000001f568875f378bf6d170b790967fe429c81a</a>.</p>
     </div>
-
 <script type="text/javascript">
 // ----------------------------------------------------------------------------
 // BokkyPooBah's Ether Vending Machine v0.90
@@ -546,15 +537,19 @@ function getInputData(loadFromUrl) {
   }
 
   var decimalsText = loadFromUrl ? getSearchParameter('decimals') : $('#decimals').val();
+  // if (loadFromUrl && decimalsText == "0") {
+  //   decimalsText = "";
+  // }
   if (decimalsText.length == 0) {
     data.inputFilled = false;
   } else {
     try {
       data.decimals = parseInt(decimalsText);
       if (isNaN(data.decimals)) {
-        data.decimals = 999;
+        data.decimals = 18;
       }
       if (data.decimals > DECIMALSMAX) {
+        data.decimals = decimalsText;
         data.inputError = true;
         data.decimalsError = true;
       }
@@ -575,6 +570,7 @@ function getInputData(loadFromUrl) {
         data.totalSupply = new BigNumber(0);
       }
       if (data.totalSupply.isZero() || data.totalSupply.gt(TOTALSUPPLYMAX)) {
+        data.totalSupply = totalSupplyText;
         data.inputError = true;
         data.totalSupplyError = true;
       }
