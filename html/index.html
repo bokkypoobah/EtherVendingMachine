@@ -29,11 +29,10 @@
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="96x96" href="images/favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
-    <!-- <link rel="manifest" href="images/manifest.json"> -->
+    <link rel="manifest" href="images/manifest.json">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="images/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-
 
   </head>
   <body>
@@ -286,140 +285,155 @@ const promisify = (inner) =>
     })
   );
 
+var renderingEthData = false;
 async function renderEthData(data, action) {
-  var _networkId = promisify(cb => web3.version.getNetwork(cb));
-  var _block = promisify(cb => web3.eth.getBlock("latest", cb));
-  var _accounts = promisify(cb => web3.eth.getAccounts(cb));
-  var networkId = -1;
-  try {
-    networkId = await _networkId;
-    var networkChanged = false;
-    if (lastNetworkId != networkId) {
-      $("#network").html(networkId);
-      networkChanged = true;
-      lastNetworkId = networkId;
-    }
-    var network = networks[networkId];
-    if (network == null) {
-      network = networks[-1];
-    }
-    if (networkChanged) {
-      $("#network").html(network.network);
-      $("#faucets").html(network.faucets);
-      $("#factoryAddress").html(factoryAddress + ' <a href="'+ network.explorer + 'address/' + factoryAddress + '#code" target="_blank">🔗</a>');
-    }
+  if (!renderingEthData) {
+    renderingEthData = true;
 
-    var block = await _block;
-    var blockNumber = block.number;
-    var timestamp = block.timestamp;
-    var now = new Date() / 1000;
-    var diff = timestamp - now;
-    $("#blockNumber").html(blockNumber + ' <a href="'+ network.explorer + 'block/' + blockNumber + '" target="_blank">🔗</a>');
-    $("#blockTime").html(diff.toFixed(2) + " seconds " + new Date(timestamp * 1000).toUTCString());
-
-    var accounts = await _accounts;
-    var account = accounts[0];
-    $("#account").html(account + ' <a href="' + network.explorer + 'address/' + account + '#code" target="_blank">🔗</a>');
-
-    var _balance = promisify(cb => web3.eth.getBalance(account, cb));
-    var balance = new BigNumber(await _balance).shift(-18);
-    currentBalance = balance;
-    $("#accountbalance").html(balance.toString() + " ethers");
-
-    var factory = web3.eth.contract(factoryAbi).at(factoryAddress);
-    var _minimumFee = promisify(cb => factory.minimumFee(cb));
-    var minimumFee = new BigNumber(await _minimumFee).shift(-18);
-    currentMinimumFee = minimumFee;
-    $("#minimumFee").html(minimumFee.toString() + " ethers");
-
-    console.log(loopCounter + " [renderEthData] connectionOk: " + connectionOk + " deploymentFee: " + data.deploymentFee + " minimumFee: " + minimumFee);
-    if (data.deploymentFee < minimumFee) {
-      console.log(loopCounter + " [renderEthData] connectionOk: " + connectionOk + " deploymentFee: " + data.deploymentFee + " minimumFee: " + minimumFee + " insufficient fee");
-      data.deploymentFeeError = true;
-    }
-    if (data.deploymentFeeError) {
-      $("#deploymentFeeDiv").addClass("has-error");
-      $("#deploymentFeeNote").html(DEPLOYMENTFEENOTE);
-    } else {
-      $("#deploymentFeeDiv").removeClass("has-error");
-      $("#deploymentFeeNote").html("");
-    }
-
-    var _numberOfChildren = promisify(cb => factory.numberOfChildren(cb));
-    var numberOfChildren = new BigNumber(await _numberOfChildren);
-    var factoryUpdated = false;
-    if (!lastNumberOfChildren.equals(numberOfChildren)) {
-      console.log(loopCounter + " [renderEthData] " + action + ": lastNumberOfChildren: " + lastNumberOfChildren + ", numberOfChildren: " + numberOfChildren);
-      factoryUpdated = true;
-      lastNumberOfChildren = numberOfChildren;
-    }
-    console.log(loopCounter + " [renderEthData] " + action + ": networkChanged: " + networkChanged + ", factoryUpdated: " + factoryUpdated);
-    if (networkChanged || factoryUpdated) {
-      var deployedContractsList = $('#deployedContractsList');
-      deployedContractsList.empty();
-      var child = numberOfChildren - 1;
-      while (child >= 0) {
-        var _childAddress = promisify(cb => factory.children(child, cb));
-        var childAddress = await _childAddress;
-        var token = web3.eth.contract(tokenAbi).at(childAddress);
-        var _symbol = promisify(cb => token.symbol(cb));
-        var _name = promisify(cb => token.name(cb));
-        var _decimals = promisify(cb => token.decimals(cb));
-        var _totalSupply = promisify(cb => token.totalSupply(cb));
-        var symbol = await _symbol;
-        var name = await _name;
-        var decimals = await _decimals;
-        var totalSupply = await _totalSupply;
-        deployedContractsList.append("<li><a href=\"" + network.explorer + "token/" + childAddress + "\">" + symbol + "</a>, " + name + ", " + decimals + ", " + new BigNumber(totalSupply).shift(-decimals) + " @ " + childAddress + " <a href=\""+ network.explorer + "address/" + childAddress + "#code\" target=\"_blank\">🔗</a></li>")
-        child--;
+    var _networkId = promisify(cb => web3.version.getNetwork(cb));
+    var _block = promisify(cb => web3.eth.getBlock("latest", cb));
+    var _accounts = promisify(cb => web3.eth.getAccounts(cb));
+    var networkId = -1;
+    var seen = {};
+    try {
+      networkId = await _networkId;
+      var networkChanged = false;
+      if (lastNetworkId != networkId) {
+        $("#network").html(networkId);
+        networkChanged = true;
+        lastNetworkId = networkId;
       }
-    }
+      var network = networks[networkId];
+      if (network == null) {
+        network = networks[-1];
+      }
+      if (networkChanged) {
+        $("#network").html(network.network);
+        $("#faucets").html(network.faucets);
+        $("#factoryAddress").html(factoryAddress + ' <a href="'+ network.explorer + 'address/' + factoryAddress + '#code" target="_blank">🔗</a>');
+      }
 
-    if (data.inputFilled && !data.inputError && action == "deployClicked") {
-      $("#deploy").prop("disabled", true);
-      $("#deployNote").html('Deploying ... ' + data.deploymentFee);
-      var gas = 1200000;
-      console.log("deploy balance: " + JSON.stringify(balance));
-      console.log("deploy data.deploymentFee: " + JSON.stringify(data.deploymentFee));
-      console.log("deploy minimumFee: " + JSON.stringify(minimumFee));
-      // var status = balance.ge(data.deploymentFee); // && minimumFee.le(data.deploymentFee);
-      // var status = minimumFee.le(data.deploymentFee);
-      // console.log("deploy status: " + status);
-      // balance = new BigNumber(balance);
-      // var deploymentFee = new BigNumber(data.deploymentFee);
-      // minimumFee = new BigNumber(minimumFee);
-      if ((balance >= data.deploymentFee) && (minimumFee <= data.deploymentFee)) {
-        console.log("deployTokenContract: symbol: " + data.symbol);
-        console.log("deployTokenContract: name: " + data.name);
-        console.log("deployTokenContract: decimals: " + data.decimals);
-        console.log("deployTokenContract: totalSupply: " + data.totalSupply.shift(data.decimals));
-        console.log("deployTokenContract: account: " + account);
-        console.log("deployTokenContract: gas: " + gas);
-        console.log("deployTokenContract: data.deploymentFee: " + data.deploymentFee);
-        console.log("deployTokenContract: executing: factory.deployTokenContract(" + data.symbol + ", " + data.name + ", " + data.decimals + ", " + data.totalSupply.shift(data.decimals).toString() + ", {from: " + account + ", gas: " + gas + ", value: " + data.deploymentFee.shift(18).toString() + "})");
-        // function deployTokenContract(string memory symbol, string memory name, uint8 decimals, uint totalSupply) public payable returns (FixedSupplyToken token);
-        factory.deployTokenContract(data.symbol, data.name, data.decimals, data.totalSupply.shift(data.decimals).toString(), {from: account, gas: gas, value: data.deploymentFee.shift(18).toString()}, function(error, tx) {
-          if (!error) {
-            $("#deployNote").html('Deployed ' + tx + ' <a href="' + network.explorer + 'tx/' + tx + '" target="_blank">🔗</a>');
-          } else {
-            console.log("deployTokenContract: error: " + error);
-            $("#deployNote").html('Deployment cancelled. Click Check again before deploying: ' + error);
-            $("#deploy").prop("disabled", true);
-          }
-        });
+      var block = await _block;
+      var blockNumber = block.number;
+      var timestamp = block.timestamp;
+      var now = new Date() / 1000;
+      var diff = timestamp - now;
+      $("#blockNumber").html(blockNumber + ' <a href="'+ network.explorer + 'block/' + blockNumber + '" target="_blank">🔗</a>');
+      $("#blockTime").html(diff.toFixed(2) + " seconds " + new Date(timestamp * 1000).toUTCString());
+
+      var accounts = await _accounts;
+      var account = accounts[0];
+      $("#account").html(account + ' <a href="' + network.explorer + 'address/' + account + '#code" target="_blank">🔗</a>');
+
+      var _balance = promisify(cb => web3.eth.getBalance(account, cb));
+      var balance = new BigNumber(await _balance).shift(-18);
+      currentBalance = balance;
+      $("#accountbalance").html(balance.toString() + " ethers");
+
+      var factory = web3.eth.contract(factoryAbi).at(factoryAddress);
+      var _minimumFee = promisify(cb => factory.minimumFee(cb));
+      var minimumFee = new BigNumber(await _minimumFee).shift(-18);
+      currentMinimumFee = minimumFee;
+      $("#minimumFee").html(minimumFee.toString() + " ethers");
+
+      console.log(loopCounter + " [renderEthData] connectionOk: " + connectionOk + " deploymentFee: " + data.deploymentFee + " minimumFee: " + minimumFee);
+      if (data.deploymentFee < minimumFee) {
+        console.log(loopCounter + " [renderEthData] connectionOk: " + connectionOk + " deploymentFee: " + data.deploymentFee + " minimumFee: " + minimumFee + " insufficient fee");
+        data.deploymentFeeError = true;
+      }
+      if (data.deploymentFeeError) {
+        $("#deploymentFeeDiv").addClass("has-error");
+        $("#deploymentFeeNote").html(DEPLOYMENTFEENOTE);
       } else {
-        $("#deployNote").html('Insufficient funds in your account ' + balance + ' ethers to pay the minimum fee of ' + minimumFee + " ethers");
+        $("#deploymentFeeDiv").removeClass("has-error");
+        $("#deploymentFeeNote").html("");
       }
+
+      var _numberOfChildren = promisify(cb => factory.numberOfChildren(cb));
+      var numberOfChildren = new BigNumber(await _numberOfChildren);
+      var factoryUpdated = false;
+      if (!lastNumberOfChildren.equals(numberOfChildren)) {
+        console.log(loopCounter + " [renderEthData] " + action + ": lastNumberOfChildren: " + lastNumberOfChildren + ", numberOfChildren: " + numberOfChildren);
+        factoryUpdated = true;
+        lastNumberOfChildren = numberOfChildren;
+      }
+      console.log(loopCounter + " [renderEthData] " + action + ": networkChanged: " + networkChanged + ", factoryUpdated: " + factoryUpdated);
+      if (networkChanged || factoryUpdated) {
+        var deployedContractsList = $('#deployedContractsList');
+        deployedContractsList.empty();
+        var child = numberOfChildren - 1;
+        while (child >= 0) {
+          var _childAddress = promisify(cb => factory.children(child, cb));
+          var childAddress = await _childAddress;
+          var token = web3.eth.contract(tokenAbi).at(childAddress);
+          var _symbol = promisify(cb => token.symbol(cb));
+          var _name = promisify(cb => token.name(cb));
+          var _decimals = promisify(cb => token.decimals(cb));
+          var _totalSupply = promisify(cb => token.totalSupply(cb));
+          var symbol = await _symbol;
+          var name = await _name;
+          var decimals = await _decimals;
+          var totalSupply = await _totalSupply;
+          if (!(childAddress in seen)) {
+            deployedContractsList.append("<li><a href=\"" + network.explorer + "token/" + childAddress + "\">" + symbol + "</a>, " + name + ", " + decimals + ", " + new BigNumber(totalSupply).shift(-decimals) + " @ " + childAddress + " <a href=\""+ network.explorer + "address/" + childAddress + "#code\" target=\"_blank\">🔗</a></li>");
+            seen[childAddress] = true;
+          }
+          child--;
+        }
+      }
+
+      if (data.inputFilled && !data.inputError && action == "deployClicked") {
+        $("#deploy").prop("disabled", true);
+        $("#deployNote").html('Deploying ... ' + data.deploymentFee);
+        var gas = 1200000;
+        console.log("deploy balance: " + JSON.stringify(balance));
+        console.log("deploy data.deploymentFee: " + JSON.stringify(data.deploymentFee));
+        console.log("deploy minimumFee: " + JSON.stringify(minimumFee));
+        // var status = balance.ge(data.deploymentFee); // && minimumFee.le(data.deploymentFee);
+        // var status = minimumFee.le(data.deploymentFee);
+        // console.log("deploy status: " + status);
+        // balance = new BigNumber(balance);
+        // var deploymentFee = new BigNumber(data.deploymentFee);
+        // minimumFee = new BigNumber(minimumFee);
+        if ((balance >= data.deploymentFee) && (minimumFee <= data.deploymentFee)) {
+          console.log("deployTokenContract: symbol: " + data.symbol);
+          console.log("deployTokenContract: name: " + data.name);
+          console.log("deployTokenContract: decimals: " + data.decimals);
+          console.log("deployTokenContract: totalSupply: " + data.totalSupply.shift(data.decimals));
+          console.log("deployTokenContract: account: " + account);
+          console.log("deployTokenContract: gas: " + gas);
+          console.log("deployTokenContract: data.deploymentFee: " + data.deploymentFee);
+          console.log("deployTokenContract: executing: factory.deployTokenContract(" + data.symbol + ", " + data.name + ", " + data.decimals + ", " + data.totalSupply.shift(data.decimals).toString() + ", {from: " + account + ", gas: " + gas + ", value: " + data.deploymentFee.shift(18).toString() + "})");
+          // function deployTokenContract(string memory symbol, string memory name, uint8 decimals, uint totalSupply) public payable returns (FixedSupplyToken token);
+          factory.deployTokenContract(data.symbol, data.name, data.decimals, data.totalSupply.shift(data.decimals).toString(), {from: account, gas: gas, value: data.deploymentFee.shift(18).toString()}, function(error, tx) {
+            if (!error) {
+              $("#deployNote").html('Deployed ' + tx + ' <a href="' + network.explorer + 'tx/' + tx + '" target="_blank">🔗</a>');
+            } else {
+              console.log("deployTokenContract: error: " + error);
+              $("#deployNote").html('Deployment cancelled. Click Check again before deploying: ' + error);
+              $("#deploy").prop("disabled", true);
+            }
+          });
+        } else {
+          $("#deployNote").html('Insufficient funds in your account ' + balance + ' ethers to pay the minimum fee of ' + minimumFee + " ethers");
+        }
+      }
+
+      if (data.inputFilled && !data.inputError) {
+        $("#deploy").prop("disabled", false);
+      } else {
+        $("#deploy").prop("disabled", true);
+      }
+
+    } catch (error) {
+      var errorString = "";
+      for (var key in error) {
+        errorString += "{" + key + ": " + error[key] + "}";
+      }
+      $("#network").html(errorString);
     }
 
-    if (data.inputFilled && !data.inputError) {
-      $("#deploy").prop("disabled", false);
-    } else {
-      $("#deploy").prop("disabled", true);
-    }
-
-  } catch (error) {
-    $("#network").html(error);
+    renderingEthData = false;
   }
 }
 
@@ -732,6 +746,8 @@ function getSearchParameter(name) {
   }
   return "";
 }
+
+
 
 </script>
   </body>
