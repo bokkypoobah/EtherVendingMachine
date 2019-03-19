@@ -13,7 +13,7 @@
     <script src="js/bootstrap.min.js"></script>
     <script src="js/bignumber.min.js"></script>
     <script src="js/web3.js"></script>
-    <!-- <script src="js/app.js"></script> -->
+    <script src="js/app.js"></script>
     <!-- <script src="js/preHFBalances.js"></script> -->
 
     <link rel="apple-touch-icon" sizes="57x57" href="images/apple-icon-57x57.png">
@@ -245,11 +245,13 @@ var factoryAddress = "0xA550114ee3688601006b8b9f25e64732eF774934";
 var factoryAbi = [{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"tokens","type":"uint256"}],"name":"recoverTokens","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_minimumFee","type":"uint256"}],"name":"setMinimumFee","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"minimumFee","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"numberOfChildren","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"children","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"acceptOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"newAddress","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"symbol","type":"string"},{"name":"name","type":"string"},{"name":"decimals","type":"uint8"},{"name":"totalSupply","type":"uint256"}],"name":"deployTokenContract","outputs":[{"name":"token","type":"address"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"newOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newAddress","type":"address"}],"name":"deprecateFactory","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"isChild","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_newAddress","type":"address"}],"name":"FactoryDeprecated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldFee","type":"uint256"},{"indexed":false,"name":"newFee","type":"uint256"}],"name":"MinimumFeeUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"token","type":"address"},{"indexed":false,"name":"symbol","type":"string"},{"indexed":false,"name":"name","type":"string"},{"indexed":false,"name":"decimals","type":"uint8"},{"indexed":false,"name":"totalSupply","type":"uint256"}],"name":"TokenDeployed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"}],"name":"OwnershipTransferred","type":"event"}];
 var tokenAbi = [{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"tokens","type":"uint256"}],"name":"recoverTokens","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_owner","type":"address"}],"name":"init","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"tokenOwner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"acceptOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"symbol","type":"string"},{"name":"name","type":"string"},{"name":"decimals","type":"uint8"},{"name":"fixedSupply","type":"uint256"}],"name":"init","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"},{"name":"data","type":"bytes"}],"name":"approveAndCall","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"newOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"tokens","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"tokenOwner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"tokens","type":"uint256"}],"name":"Approval","type":"event"}];
 
-var SYMBOLMAXLENGTH = 10;
-var NAMEMAXLENGTH = 32;
+var SYMBOLMAXLENGTH = 3;
+var NAMEMAXLENGTH = 10;
 var DECIMALSMAX = 18;
-var TOTALSUPPLYMAX = new BigNumber("1").shift(12);
+var TOTALSUPPLYMAX = new BigNumber("1").shift(3);
 var DEPLOYMENTFEEMAX = new BigNumber("100");
+var DEFAULTDECIMALS = 18;
+var DEFAULTTOTALSUPPLY = new BigNumber("1");
 
 var SYMBOLNOTE = "Normally a short uppercase character string like 'BEANIE'. Max length " + SYMBOLMAXLENGTH;
 var NAMENOTE = "Normally a mixed case character string like 'Beanie Things'. Max length " + NAMEMAXLENGTH;
@@ -265,6 +267,10 @@ var connectionOk = false;
 var currentBalance;
 var currentMinimumFee;
 
+
+// ----------------------------------------------------------------------------
+// Convenience function
+// ----------------------------------------------------------------------------
 const promisify = (inner) =>
   new Promise((resolve, reject) =>
     inner((err, res) => {
@@ -275,158 +281,6 @@ const promisify = (inner) =>
       }
     })
   );
-
-var renderingEthData = false;
-async function renderEthData(data, action) {
-  if (!renderingEthData) {
-    renderingEthData = true;
-
-    var _networkId = promisify(cb => web3.version.getNetwork(cb));
-    var _block = promisify(cb => web3.eth.getBlock("latest", cb));
-    var _accounts = promisify(cb => web3.eth.getAccounts(cb));
-    var networkId = -1;
-    var seen = {};
-    try {
-      networkId = await _networkId;
-      var networkChanged = false;
-      if (lastNetworkId != networkId) {
-        $("#network").html(networkId);
-        networkChanged = true;
-        lastNetworkId = networkId;
-      }
-      var network = networks[networkId];
-      if (network == null) {
-        network = networks[-1];
-      }
-      if (networkChanged) {
-        $("#network").html(network.network);
-        $("#faucets").html(network.faucets);
-        $("#factoryAddress").html(factoryAddress + ' <a href="'+ network.explorer + 'address/' + factoryAddress + '#code" target="_blank">🔗</a>');
-      }
-
-      var block = await _block;
-      var blockNumber = block.number;
-      var timestamp = block.timestamp;
-      var now = new Date() / 1000;
-      var diff = timestamp - now;
-      $("#blockNumber").html(blockNumber + ' <a href="'+ network.explorer + 'block/' + blockNumber + '" target="_blank">🔗</a>');
-      $("#blockTime").html(diff.toFixed(2) + " seconds " + new Date(timestamp * 1000).toUTCString());
-
-      var accounts = await _accounts;
-      var account = accounts[0];
-      $("#account").html(account + ' <a href="' + network.explorer + 'address/' + account + '#code" target="_blank">🔗</a>');
-
-      var _balance = promisify(cb => web3.eth.getBalance(account, cb));
-      var balance = new BigNumber(await _balance).shift(-18);
-      currentBalance = balance;
-      $("#accountbalance").html(balance.toString() + " ethers");
-
-      var factory = web3.eth.contract(factoryAbi).at(factoryAddress);
-      var _minimumFee = promisify(cb => factory.minimumFee(cb));
-      var minimumFee = new BigNumber(await _minimumFee).shift(-18);
-      currentMinimumFee = minimumFee;
-      $("#minimumFee").html(minimumFee.toString() + " ethers");
-
-      console.log(loopCounter + " [renderEthData] connectionOk: " + connectionOk + " deploymentFee: " + data.deploymentFee + " minimumFee: " + minimumFee);
-      if (data.deploymentFee < minimumFee) {
-        console.log(loopCounter + " [renderEthData] connectionOk: " + connectionOk + " deploymentFee: " + data.deploymentFee + " minimumFee: " + minimumFee + " insufficient fee");
-        data.deploymentFeeError = true;
-      }
-      if (data.deploymentFeeError) {
-        $("#deploymentFeeDiv").addClass("has-error");
-        $("#deploymentFeeNote").html(DEPLOYMENTFEENOTE);
-      } else {
-        $("#deploymentFeeDiv").removeClass("has-error");
-        $("#deploymentFeeNote").html("");
-      }
-
-      var _numberOfChildren = promisify(cb => factory.numberOfChildren(cb));
-      var numberOfChildren = new BigNumber(await _numberOfChildren);
-      var factoryUpdated = false;
-      if (!lastNumberOfChildren.equals(numberOfChildren)) {
-        console.log(loopCounter + " [renderEthData] " + action + ": lastNumberOfChildren: " + lastNumberOfChildren + ", numberOfChildren: " + numberOfChildren);
-        factoryUpdated = true;
-        lastNumberOfChildren = numberOfChildren;
-      }
-      console.log(loopCounter + " [renderEthData] " + action + ": networkChanged: " + networkChanged + ", factoryUpdated: " + factoryUpdated);
-      if (networkChanged || factoryUpdated) {
-        var deployedContractsList = $('#deployedContractsList');
-        deployedContractsList.empty();
-        var child = numberOfChildren - 1;
-        while (child >= 0) {
-          var _childAddress = promisify(cb => factory.children(child, cb));
-          var childAddress = await _childAddress;
-          var token = web3.eth.contract(tokenAbi).at(childAddress);
-          var _symbol = promisify(cb => token.symbol(cb));
-          var _name = promisify(cb => token.name(cb));
-          var _decimals = promisify(cb => token.decimals(cb));
-          var _totalSupply = promisify(cb => token.totalSupply(cb));
-          var symbol = await _symbol;
-          var name = await _name;
-          var decimals = await _decimals;
-          var totalSupply = await _totalSupply;
-          if (!(childAddress in seen)) {
-            deployedContractsList.append("<li><a href=\"" + network.explorer + "token/" + childAddress + "\">" + symbol + "</a>, " + name + ", " + decimals + ", " + new BigNumber(totalSupply).shift(-decimals) + " @ " + childAddress + " <a href=\""+ network.explorer + "address/" + childAddress + "#code\" target=\"_blank\">🔗</a></li>");
-            seen[childAddress] = true;
-          }
-          child--;
-        }
-      }
-
-      if (data.inputFilled && !data.inputError && action == "deployClicked") {
-        $("#deploy").prop("disabled", true);
-        $("#deployNote").html('Deploying ... ' + data.deploymentFee);
-        var gas = 1200000;
-        console.log("deploy balance: " + JSON.stringify(balance));
-        console.log("deploy data.deploymentFee: " + JSON.stringify(data.deploymentFee));
-        console.log("deploy minimumFee: " + JSON.stringify(minimumFee));
-        // var status = balance.ge(data.deploymentFee); // && minimumFee.le(data.deploymentFee);
-        // var status = minimumFee.le(data.deploymentFee);
-        // console.log("deploy status: " + status);
-        // balance = new BigNumber(balance);
-        // var deploymentFee = new BigNumber(data.deploymentFee);
-        // minimumFee = new BigNumber(minimumFee);
-        if ((balance >= data.deploymentFee) && (minimumFee <= data.deploymentFee)) {
-          console.log("deployTokenContract: symbol: " + data.symbol);
-          console.log("deployTokenContract: name: " + data.name);
-          console.log("deployTokenContract: decimals: " + data.decimals);
-          console.log("deployTokenContract: totalSupply: " + data.totalSupply.shift(data.decimals));
-          console.log("deployTokenContract: account: " + account);
-          console.log("deployTokenContract: gas: " + gas);
-          console.log("deployTokenContract: data.deploymentFee: " + data.deploymentFee);
-          console.log("deployTokenContract: executing: factory.deployTokenContract(" + data.symbol + ", " + data.name + ", " + data.decimals + ", " + data.totalSupply.shift(data.decimals).toString() + ", {from: " + account + ", gas: " + gas + ", value: " + data.deploymentFee.shift(18).toString() + "})");
-          // function deployTokenContract(string memory symbol, string memory name, uint8 decimals, uint totalSupply) public payable returns (FixedSupplyToken token);
-          factory.deployTokenContract(data.symbol, data.name, data.decimals, data.totalSupply.shift(data.decimals).toString(), {from: account, gas: gas, value: data.deploymentFee.shift(18).toString()}, function(error, tx) {
-            if (!error) {
-              $("#deployNote").html('Deployed ' + tx + ' <a href="' + network.explorer + 'tx/' + tx + '" target="_blank">🔗</a>');
-            } else {
-              console.log("deployTokenContract: error: " + error);
-              $("#deployNote").html('Deployment cancelled. Click Check again before deploying: ' + error);
-              $("#deploy").prop("disabled", true);
-            }
-          });
-        } else {
-          $("#deployNote").html('Insufficient funds in your account ' + balance + ' ethers to pay the minimum fee of ' + minimumFee + " ethers");
-        }
-      }
-
-      if (data.inputFilled && !data.inputError) {
-        $("#deploy").prop("disabled", false);
-      } else {
-        $("#deploy").prop("disabled", true);
-      }
-
-    } catch (error) {
-      var errorString = "";
-      for (var key in error) {
-        errorString += "{" + key + ": " + error[key] + "}";
-      }
-      $("#network").html(errorString);
-    }
-
-    renderingEthData = false;
-  }
-}
 
 
 // ----------------------------------------------------------------------------
@@ -496,7 +350,10 @@ window.addEventListener('load', async () => {
 });
 
 
-function getInputData(loadFromUrl) {
+// ----------------------------------------------------------------------------
+// Get input data from the web page and do some basic checking
+// ----------------------------------------------------------------------------
+function getInputData() {
   var data = {
     "inputFilled": true,
     "inputError": false,
@@ -504,116 +361,124 @@ function getInputData(loadFromUrl) {
     "symbolError": false,
     "name": "",
     "nameError": false,
-    "decimals": 0,
+    "decimals": "",
+    "decimalsValue": 0,
     "decimalsError": false,
-    "totalSupply": 0,
+    "totalSupply": "",
+    "totalSupplyValue": 0,
     "totalSupplyError": false,
-    "deploymentFee": 0,
+    "deploymentFee": "",
+    "deploymentFeeValue": 0,
     "deploymentFeeError": false,
   };
 
-  data.symbol = loadFromUrl ? getSearchParameter('symbol') : $('#symbol').val();
-  // console.log(loopCounter + " [getInputData] symbol: " + data.symbol);
+  data.symbol = $('#symbol').val();
   if (data.symbol.length == 0) {
     data.inputFilled = false;
   } else {
     if (data.symbol.length > SYMBOLMAXLENGTH) {
-      data.inputFilled = false;
       data.inputError = true;
       data.symbolError = true;
     }
   }
 
-  data.name = loadFromUrl ? getSearchParameter('name') : $('#name').val();
-  // console.log(loopCounter + " [getInputData] name: " + data.name);
+  data.name = $('#name').val();
   if (data.name.length == 0) {
     data.inputFilled = false;
   } else {
     if (data.name.length > NAMEMAXLENGTH) {
-      data.inputFilled = false;
       data.inputError = true;
       data.nameError = true;
     }
   }
 
-  var decimalsText = loadFromUrl ? getSearchParameter('decimals') : $('#decimals').val();
-  // if (loadFromUrl && decimalsText == "0") {
-  //   decimalsText = "";
-  // }
-  if (decimalsText.length == 0) {
+  data.decimals = $('#decimals').val();
+  if (data.decimals.length == 0) {
     data.inputFilled = false;
   } else {
     try {
-      data.decimals = parseInt(decimalsText);
-      if (isNaN(data.decimals)) {
-        data.decimals = 18;
+      data.decimalsValue = parseInt(data.decimals);
+      if (isNaN(data.decimalsValue)) {
+        throw "nan";
       }
-      if (data.decimals > DECIMALSMAX) {
-        data.decimals = decimalsText;
-        data.inputError = true;
-        data.decimalsError = true;
+      if (data.decimalsValue < 0 || data.decimalsValue > DECIMALSMAX) {
+        throw "out of range";
       }
     } catch (e) {
-      data.decimals = decimalsText;
-      data.inputError = true;
+      console.log(loopCounter + " [getInputData] decimals: " + e);
+      data.decimalsValue = DEFAULTDECIMALS;
       data.decimalsError = true;
     }
   }
+  if (data.decimalsError) {
+    data.inputError = true;
+  }
 
-  var totalSupplyText = loadFromUrl ? getSearchParameter('totalSupply') : $('#totalSupply').val();
-  if (totalSupplyText.length == 0) {
+  data.totalSupply = $('#totalSupply').val();
+  if (data.totalSupply.length == 0) {
     data.inputFilled = false;
   } else {
     try {
-      data.totalSupply = new BigNumber(totalSupplyText);
-      if (isNaN(data.totalSupply)) {
-        data.totalSupply = new BigNumber(0);
-      }
-      if (data.totalSupply.isZero() || data.totalSupply.gt(TOTALSUPPLYMAX)) {
-        data.totalSupply = totalSupplyText;
-        data.inputError = true;
-        data.totalSupplyError = true;
+      if (data.inputFilled && !data.decimalsError) {
+        data.totalSupplyValue = new BigNumber(data.totalSupply);
+        console.log(loopCounter + " [getInputData] totalSupply: " + data.totalSupply);
+        console.log(loopCounter + " [getInputData] totalSupplyValue: " + data.totalSupplyValue);
+        console.log(loopCounter + " [getInputData] data.totalSupplyValue.shift(data.decimals): " + data.totalSupplyValue.shift(data.decimals));
+        console.log(loopCounter + " [getInputData] data.totalSupplyValue.shift(data.decimals).lessThan(1): " + data.totalSupplyValue.shift(data.decimals).lessThan(1));
+        console.log(loopCounter + " [getInputData] data.totalSupplyValue > TOTALSUPPLYMAX: " + (data.totalSupplyValue.gt(TOTALSUPPLYMAX)));
+        if (isNaN(data.totalSupplyValue)) {
+          throw "nan";
+        }
+        if (data.totalSupplyValue.shift(data.decimals).lessThan(1) || data.totalSupplyValue.gt(TOTALSUPPLYMAX)) {
+          throw "out of range";
+        }
       }
     } catch (e) {
-      data.totalSupply = totalSupplyText;
-      data.inputError = true;
+      console.log(loopCounter + " [getInputData] totalSupply: " + e);
+      data.totalSupplyValue = DEFAULTTOTALSUPPLY;
       data.totalSupplyError = true;
     }
   }
+  if (data.totalSupplyError) {
+    data.inputError = true;
+  }
 
-  var deploymentFeeText = loadFromUrl ? getSearchParameter('deploymentFee') : $('#deploymentFee').val();
-  if (deploymentFeeText.length == 0) {
+  data.deploymentFee = $('#deploymentFee').val();
+  if (data.deploymentFee.length == 0) {
     data.inputFilled = false;
   } else {
     try {
-      data.deploymentFee = new BigNumber(deploymentFeeText);
-      if (isNaN(data.deploymentFee)) {
-        data.deploymentFee = currentMinimumFee;
+      data.deploymentFeeValue = new BigNumber(data.deploymentFee);
+      if (isNaN(data.deploymentFeeValue)) {
+        throw "nan";
       }
-      if (data.deploymentFee.isZero() || data.deploymentFee.lt(currentMinimumFee) || data.deploymentFee.gt(DEPLOYMENTFEEMAX)) {
-        data.inputError = true;
-        data.deploymentFeeError = true;
+      if (data.deploymentFee < currentMinimumFee || data.deploymentFee > DEPLOYMENTFEEMAX) {
+        throw "out of range";
       }
     } catch (e) {
-      data.deploymentFee = deploymentFeeText;
-      data.inputError = true;
+      console.log(loopCounter + " [getInputData] deploymentFee: " + e);
+      data.deploymentFeeValue = currentMinimumFee;
       data.deploymentFeeError = true;
     }
+  }
+  if (data.deploymentFeeError) {
+    data.inputError = true;
   }
 
   return data;
 }
 
-function renderInputData(data, overwriteField) {
+
+// ----------------------------------------------------------------------------
+// Render any input data warnings
+// ----------------------------------------------------------------------------
+function renderInputData(data) {
   if (data.symbolError) {
     $("#symbolDiv").addClass("has-error");
     $("#symbolNote").html(SYMBOLNOTE);
   } else {
     $("#symbolDiv").removeClass("has-error");
     $("#symbolNote").html("");
-  }
-  if (overwriteField) {
-    $("#symbol").val(data.symbol);
   }
 
   if (data.nameError) {
@@ -623,9 +488,6 @@ function renderInputData(data, overwriteField) {
     $("#nameDiv").removeClass("has-error");
     $("#nameNote").html("");
   }
-  if (overwriteField) {
-    $("#name").val(data.name);
-  }
 
   if (data.decimalsError) {
     $("#decimalsDiv").addClass("has-error");
@@ -633,9 +495,6 @@ function renderInputData(data, overwriteField) {
   } else {
     $("#decimalsDiv").removeClass("has-error");
     $("#decimalsNote").html("");
-  }
-  if (overwriteField) {
-    $("#decimals").val(data.decimals);
   }
 
   if (data.totalSupplyError) {
@@ -645,10 +504,8 @@ function renderInputData(data, overwriteField) {
     $("#totalSupplyDiv").removeClass("has-error");
     $("#totalSupplyNote").html("");
   }
-  if (overwriteField) {
-    $("#totalSupply").val(data.totalSupply);
-  }
 
+  // Done in the ETH rendering part
   // if (data.deploymentFeeError) {
   //   $("#deploymentFeeDiv").addClass("has-error");
   //   $("#deploymentFeeNote").html(DEPLOYMENTFEENOTE);
@@ -656,15 +513,166 @@ function renderInputData(data, overwriteField) {
   //   $("#deploymentFeeDiv").removeClass("has-error");
   //   $("#deploymentFeeNote").html("");
   // }
-  // if (overwriteField) {
-  //   $("#deploymentFee").val(data.deploymentFee);
-  // }
 
-  // if (data.inputFilled && !data.inputError) {
-  //   $("#deploy").prop("disabled", false);
-  // } else {
-  //   $("#deploy").prop("disabled", true);
-  // }
+  if (data.inputFilled && !data.inputError) {
+    $("#deploy").prop("disabled", false);
+  } else {
+    $("#deploy").prop("disabled", true);
+  }
+}
+
+var renderingEthData = false;
+async function processEth(data, action) {
+  var processed = false;
+  if (!renderingEthData) {
+    renderingEthData = true;
+
+    if (data.inputFilled && !data.inputError) {
+      $("#deploy").prop("disabled", false);
+    } else {
+      $("#deploy").prop("disabled", true);
+    }
+
+    var _networkId = promisify(cb => web3.version.getNetwork(cb));
+    var _block = promisify(cb => web3.eth.getBlock("latest", cb));
+    var _accounts = promisify(cb => web3.eth.getAccounts(cb));
+    var networkId = -1;
+    var seen = {};
+    try {
+      networkId = await _networkId;
+      var networkChanged = false;
+      if (lastNetworkId != networkId) {
+        $("#network").html(networkId);
+        networkChanged = true;
+        lastNetworkId = networkId;
+      }
+      var network = networks[networkId];
+      if (network == null) {
+        network = networks[-1];
+      }
+      if (networkChanged) {
+        $("#network").html(network.network);
+        $("#faucets").html(network.faucets);
+        $("#factoryAddress").html(factoryAddress + ' <a href="'+ network.explorer + 'address/' + factoryAddress + '#code" target="_blank">🔗</a>');
+      }
+
+      var block = await _block;
+      var blockNumber = block.number;
+      var timestamp = block.timestamp;
+      var now = new Date() / 1000;
+      var diff = timestamp - now;
+      $("#blockNumber").html(blockNumber + ' <a href="'+ network.explorer + 'block/' + blockNumber + '" target="_blank">🔗</a>');
+      $("#blockTime").html(diff.toFixed(2) + " seconds " + new Date(timestamp * 1000).toUTCString());
+
+      var accounts = await _accounts;
+      var account = accounts[0];
+      $("#account").html(account + ' <a href="' + network.explorer + 'address/' + account + '#code" target="_blank">🔗</a>');
+
+      var _balance = promisify(cb => web3.eth.getBalance(account, cb));
+      var balance = new BigNumber(await _balance).shift(-18);
+      currentBalance = balance;
+      $("#accountbalance").html(balance.toString() + " ethers");
+
+      var factory = web3.eth.contract(factoryAbi).at(factoryAddress);
+      var _minimumFee = promisify(cb => factory.minimumFee(cb));
+      var minimumFee = new BigNumber(await _minimumFee).shift(-18);
+      currentMinimumFee = minimumFee;
+      $("#minimumFee").html(minimumFee.toString() + " ethers");
+
+      console.log(loopCounter + " [processEth] connectionOk: " + connectionOk + " deploymentFee: " + data.deploymentFeeValue + " minimumFee: " + minimumFee);
+      if (data.deploymentFee.length > 0 && data.deploymentFeeValue < minimumFee) {
+        console.log(loopCounter + " [processEth] connectionOk: " + connectionOk + " deploymentFee: " + data.deploymentFeeValue + " minimumFee: " + minimumFee + " insufficient fee");
+        data.deploymentFeeError = true;
+      }
+      if (data.deploymentFeeError) {
+        $("#deploymentFeeDiv").addClass("has-error");
+        $("#deploymentFeeNote").html(DEPLOYMENTFEENOTE);
+      } else {
+        $("#deploymentFeeDiv").removeClass("has-error");
+        $("#deploymentFeeNote").html("");
+      }
+
+      var _numberOfChildren = promisify(cb => factory.numberOfChildren(cb));
+      var numberOfChildren = new BigNumber(await _numberOfChildren);
+      var factoryUpdated = false;
+      if (!lastNumberOfChildren.equals(numberOfChildren)) {
+        console.log(loopCounter + " [processEth] " + action + ": lastNumberOfChildren: " + lastNumberOfChildren + ", numberOfChildren: " + numberOfChildren);
+        factoryUpdated = true;
+        lastNumberOfChildren = numberOfChildren;
+      }
+      console.log(loopCounter + " [processEth] " + action + ": networkChanged: " + networkChanged + ", factoryUpdated: " + factoryUpdated);
+      if (networkChanged || factoryUpdated) {
+        var deployedContractsList = $('#deployedContractsList');
+        deployedContractsList.empty();
+        var child = numberOfChildren - 1;
+        while (child >= 0) {
+          var _childAddress = promisify(cb => factory.children(child, cb));
+          var childAddress = await _childAddress;
+          var token = web3.eth.contract(tokenAbi).at(childAddress);
+          var _symbol = promisify(cb => token.symbol(cb));
+          var _name = promisify(cb => token.name(cb));
+          var _decimals = promisify(cb => token.decimals(cb));
+          var _totalSupply = promisify(cb => token.totalSupply(cb));
+          var symbol = await _symbol;
+          var name = await _name;
+          var decimals = await _decimals;
+          var totalSupply = await _totalSupply;
+          if (!(childAddress in seen)) {
+            deployedContractsList.append("<li><a href=\"" + network.explorer + "token/" + childAddress + "\">" + symbol + "</a>, " + name + ", " + decimals + ", " + new BigNumber(totalSupply).shift(-decimals) + " @ " + childAddress + " <a href=\""+ network.explorer + "address/" + childAddress + "#code\" target=\"_blank\">🔗</a></li>");
+            seen[childAddress] = true;
+          }
+          child--;
+        }
+      }
+
+      if (data.inputFilled && !data.inputError && action == "deployClicked") {
+        $("#deploy").prop("disabled", true);
+        // $("#deployNote").html('Deploying token contract with deployment fee: ' + data.deploymentFeeValue.shift(-18).value);
+        var gas = 1200000;
+        console.log("deploy balance: " + JSON.stringify(balance));
+        console.log("deploy data.deploymentFee: " + JSON.stringify(data.deploymentFeeValue.shift(-18)));
+        console.log("deploy minimumFee: " + JSON.stringify(minimumFee));
+        // var status = balance.ge(data.deploymentFee); // && minimumFee.le(data.deploymentFee);
+        // var status = minimumFee.le(data.deploymentFee);
+        // console.log("deploy status: " + status);
+        // balance = new BigNumber(balance);
+        // var deploymentFee = new BigNumber(data.deploymentFee);
+        // minimumFee = new BigNumber(minimumFee);
+        if ((balance >= data.deploymentFeeValue) && (data.deploymentFeeValue >= minimumFee)) {
+          console.log("deployTokenContract: symbol: " + data.symbol);
+          console.log("deployTokenContract: name: " + data.name);
+          console.log("deployTokenContract: decimals: " + data.decimalsValue);
+          console.log("deployTokenContract: totalSupply: " + data.totalSupplyValue.shift(data.decimals));
+          console.log("deployTokenContract: account: " + account);
+          console.log("deployTokenContract: gas: " + gas);
+          console.log("deployTokenContract: data.deploymentFee: " + data.deploymentFeeValue);
+          console.log("deployTokenContract: executing: factory.deployTokenContract(" + data.symbol + ", " + data.name + ", " + data.decimalsValue + ", " + data.totalSupplyValue.shift(data.decimals).toString() + ", {from: " + account + ", gas: " + gas + ", value: " + data.deploymentFeeValue.shift(18).toString() + "})");
+          // function deployTokenContract(string memory symbol, string memory name, uint8 decimals, uint totalSupply) public payable returns (FixedSupplyToken token);
+          factory.deployTokenContract(data.symbol, data.name, data.decimals, data.totalSupplyValue.shift(data.decimalsValue).toString(), {from: account, gas: gas, value: data.deploymentFeeValue.shift(18).toString()}, function(error, tx) {
+            if (!error) {
+              $("#deployNote").html('Deployed ' + tx + ' <a href="' + network.explorer + 'tx/' + tx + '" target="_blank">🔗</a>');
+            } else {
+              console.log("deployTokenContract error: " + error);
+              $("#deployNote").html('Deployment ' + error);
+              $("#deploy").prop("disabled", true);
+            }
+          });
+        } else {
+          $("#deployNote").html('Insufficient funds in your account ' + balance + ' ethers to pay the minimum fee of ' + minimumFee + " ethers");
+        }
+      }
+
+    } catch (error) {
+      var errorString = "";
+      for (var key in error) {
+        errorString += "{" + key + ": " + error[key] + "}";
+      }
+      $("#network").html(errorString);
+    }
+    processed = true;
+    renderingEthData = false;
+  }
+  return processed;
 }
 
 
@@ -672,15 +680,12 @@ function renderInputData(data, overwriteField) {
 // Main process. Connection should already be established
 // Throw an error if there is a problem
 // ----------------------------------------------------------------------------
-function process(loadFromUrl) {
-  console.log(loopCounter + " [process] loadFromUrl: " + loadFromUrl);
-  var data = getInputData(loadFromUrl);
-  // Want to render from URL to the input fields on first load
-  renderInputData(data, loadFromUrl == true);
+function process() {
+  console.log(loopCounter + " [process]");
+  var data = getInputData();
+  renderInputData(data);
   console.log(loopCounter + " [process] data: " + JSON.stringify(data));
-  // console.table(data);
-  // throw "Error";
-  renderEthData(data, 'refresh');
+  processEth(data, 'refresh');
 }
 
 
@@ -699,13 +704,16 @@ async function executeFunction(action) {
   if (connectionOk) {
     try {
       var data = getInputData(false);
-      renderInputData(data, true);
-      renderEthData(data, action);
+      renderInputData(data);
+      // Retry in case we are in a ETH refresh process
+      while (!processEth(data, action)) {
+        ;
+      }
     } catch (error) {
       console.log(functionCounter + " [executeFunction] connectionOk: " + connectionOk + " - process() error " + error);
     }
   } else {
-    console.log(functionCounter + " [executeFunction] connectionOk: " + connectionOk + " - Skipping process()");
+    console.log(functionCounter + " [executeFunction] connectionOk: " + connectionOk + " - Skipping processing");
   }
   functionCounter = parseInt(functionCounter) + 1;
 }
@@ -728,22 +736,6 @@ $('#totalSupply').on('change', function (e) {
 $('#deploymentFee').on('change', function (e) {
   executeFunction('deploymentFeeChanged');
 })
-
-function getSearchParameter(name) {
-  var search = window.location.search.substring(1);
-  var pairs = search.split('&');
-  for (var i = 0; i < pairs.length; i++) {
-    var pair = pairs[i].split('=');
-    var key = decodeURIComponent(pair[0]);
-    if (name == key) {
-			var value = decodeURIComponent(pair[1].replace(/\+/g, " ").replace(/%2B/ig, "\+"));
-      return value;
-    }
-  }
-  return "";
-}
-
-
 
 </script>
   </body>
