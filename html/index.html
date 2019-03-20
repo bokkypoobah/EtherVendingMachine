@@ -38,7 +38,6 @@
 
   </head>
   <body>
-    <!-- <canvas id="c"></canvas> -->
     <div class="navbar navbar-default" role="navigation">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -166,53 +165,6 @@
           </div>
         </div>
       </div>
-
-      <!-- <form class="form-inline" method="GET">
-        <h4 class="display-3">Your New Token Contract Details</h4>
-        <div class="row" id="symbolDiv">
-          <div class="col-sm-3 text-right">Symbol:</div>
-          <div class="col-sm-3"><input type="text" class="form-control" id="symbol" name="symbol" placeholder="e.g. 'BEANIE'" size="12"></div>
-          <span class="help-block" id="symbolNote"></span>
-        </div>
-        <div class="row has-error" id="nameDiv">
-          <div class="col-sm-3 text-right">Name:</div>
-          <div class="col-sm-3"><input type="text" class="form-control" id="name" name="name" placeholder="e.g. 'Beanie Things'" size="36"></div>
-          <span class="help-block" id="nameNote"></span>
-        </div>
-        <div class="row has-error" id="decimalsDiv">
-          <div class="col-sm-3 text-right">Decimals:</div>
-          <div class="col-sm-3"><input type="text" class="form-control" id="decimals" name="decimals" placeholder="0..18" size="5"></div>
-          <span class="help-block" id="decimalsNote"></span>
-        </div>
-        <div class="row has-error" id="totalSupplyDiv">
-          <div class="col-sm-3 text-right">Total Supply:</div>
-          <div class="col-sm-3"><input type="text" class="form-control" id="totalSupply" name="totalSupply" placeholder=">0 and <= 1 trillion" size="27"></div>
-          <span class="help-block" id="totalSupplyNote"></span>
-        </div>
-        <div class="row has-error" id="deploymentFeeDiv">
-          <div class="col-sm-3 text-right">Deployment Fee:</div>
-          <div class="col-sm-3"><input type="text" class="form-control" id="deploymentFee" name="deploymentFee" placeholder="minimum 0.1 ethers" size="27"></div>
-          <span class="help-block" id="deploymentFeeNote"></span>
-        </div>
-        <div class="row">
-          <div class="col-sm-3 text-right">&nbsp</div>
-          <div class="col-sm-3"><button type="button" class="btn btn-default" name="deploy" id="deploy" disabled>Deploy</button></div>
-          <span class="help-block" id="deployNote"></span>
-        </div>
-      </form> -->
-
-
-      <!-- <br />
-      <br />
-
-      <p>Switch networks in MetaMask.</p>
-      <p>See <a href="https://etherscan.io/tokens" target="_blank">https://etherscan.io/tokens</a> for list of tokens on the Ethereum Mainnet.</p>
-      <br />
-      <br />
-      <br /> -->
-      <!-- <br />
-      <br />
-      <p>Enjoy! &copy; Bok Consulting Pty Ltd 2019 • Help fund the cost of running this site by donating to <a href="https://etherscan.io/address/0x000001f568875f378bf6d170b790967fe429c81a" target="_blank">0x000001f568875f378bf6d170b790967fe429c81a</a>.</p> -->
     </div>
 <script type="text/javascript">
 // ----------------------------------------------------------------------------
@@ -253,11 +205,10 @@ var factoryAddress = "0xA550114ee3688601006b8b9f25e64732eF774934";
 var factoryAbi = [{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"tokens","type":"uint256"}],"name":"recoverTokens","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_minimumFee","type":"uint256"}],"name":"setMinimumFee","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"minimumFee","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"numberOfChildren","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"children","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"acceptOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"newAddress","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"symbol","type":"string"},{"name":"name","type":"string"},{"name":"decimals","type":"uint8"},{"name":"totalSupply","type":"uint256"}],"name":"deployTokenContract","outputs":[{"name":"token","type":"address"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"newOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newAddress","type":"address"}],"name":"deprecateFactory","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"isChild","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_newAddress","type":"address"}],"name":"FactoryDeprecated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldFee","type":"uint256"},{"indexed":false,"name":"newFee","type":"uint256"}],"name":"MinimumFeeUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"token","type":"address"},{"indexed":false,"name":"symbol","type":"string"},{"indexed":false,"name":"name","type":"string"},{"indexed":false,"name":"decimals","type":"uint8"},{"indexed":false,"name":"totalSupply","type":"uint256"}],"name":"TokenDeployed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"}],"name":"OwnershipTransferred","type":"event"}];
 var tokenAbi = [{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"tokens","type":"uint256"}],"name":"recoverTokens","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_owner","type":"address"}],"name":"init","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"tokenOwner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"acceptOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"symbol","type":"string"},{"name":"name","type":"string"},{"name":"decimals","type":"uint8"},{"name":"fixedSupply","type":"uint256"}],"name":"init","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"},{"name":"data","type":"bytes"}],"name":"approveAndCall","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"newOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"tokens","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"tokenOwner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"tokens","type":"uint256"}],"name":"Approval","type":"event"}];
 
-var SYMBOLMAXLENGTH = 3;
-var NAMEMAXLENGTH = 10;
+var SYMBOLMAXLENGTH = 64;
+var NAMEMAXLENGTH = 128;
 var DECIMALSMAX = 18;
-// var TOTALSUPPLYMAX = new BigNumber("1").shift(14); // 100 trillion
-var TOTALSUPPLYMAX = new BigNumber("1").shift(3); // 1000
+var TOTALSUPPLYMAX = new BigNumber("1").shift(14); // 100 trillion
 var DEPLOYMENTFEEMAX = new BigNumber("100");
 
 var DEFAULTDECIMALS = 18;
