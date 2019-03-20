@@ -88,13 +88,13 @@
               <div class="row">
                 <div class="form-group col-xs-6">
                   <label for="symbol">Symbol</label>
-                  <input type="text" class="form-control" id="symbol" aria-describedby="symbolHelp" placeholder="e.g. 'BURGER'">
+                  <input type="text" class="form-control" id="symbol" aria-describedby="symbolHelp" placeholder="e.g. 'ABC'">
                   <small id="symbolHelp" class="form-text text-muted">An uppercase word a few letters long</small>
                 </div>
                 <div class="clearfix"></div>
                 <div class="form-group col-xs-9">
                   <label for="name">Name</label>
-                  <input type="text" class="form-control" id="name" aria-describedby="nameHelp" placeholder="e.g. 'Bob's Burger 🍔 Token'">
+                  <input type="text" class="form-control" id="name" aria-describedby="nameHelp" placeholder="e.g. 'Alice's Burgers 🍔 And Chips 🍟'">
                   <small id="nameHelp" class="form-text text-muted">A set of mixed case words</small>
                 </div>
                 <div class="clearfix"></div>
@@ -112,7 +112,7 @@
                 <div class="clearfix"></div>
                 <div class="form-group col-xs-5">
                   <label for="deploymentFee">Deployment Fee (ethers)</label>
-                  <input type="number" class="form-control" id="deploymentFee" aria-describedby="deploymentFeeHelp" placeholder="e.g. 0.1">
+                  <input type="number" class="form-control" id="deploymentFee" aria-describedby="deploymentFeeHelp" placeholder="e.g. 0.123456789">
                   <small id="deploymentFeeHelp" class="form-text text-muted">Minimum deployment fee 0.1 ethers</small>
                 </div>
                 <div class="clearfix"></div>
@@ -334,7 +334,7 @@ function getInputData() {
     "deploymentFeeError": false,
   };
 
-  data.symbol = $('#symbol').val();
+  data.symbol = $('#symbol').val().trim();
   if (data.symbol.length == 0) {
     data.inputFilled = false;
   } else {
@@ -344,7 +344,7 @@ function getInputData() {
     }
   }
 
-  data.name = $('#name').val();
+  data.name = $('#name').val().trim();
   if (data.name.length == 0) {
     data.inputFilled = false;
   } else {
