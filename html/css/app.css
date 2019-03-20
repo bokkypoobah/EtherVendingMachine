@@ -31,3 +31,7 @@
 .hidden {
      display:none;
 }
+
+span.icon {
+ font-family: 'Glyphicons Halflings';
+}

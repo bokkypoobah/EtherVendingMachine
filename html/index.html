@@ -16,23 +16,26 @@
     <script src="js/web3.js"></script>
     <script src="js/app.js"></script>
 
-    <link rel="apple-touch-icon" sizes="57x57" href="images/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60" href="images/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76" href="images/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="images/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144" href="images/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="images/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="images/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="images/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
-    <link rel="manifest" href="images/manifest.json">
-    <meta name="msapplication-TileColor" content="#ffffff">
-    <meta name="msapplication-TileImage" content="images/ms-icon-144x144.png">
-    <meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="images/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="images/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="images/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="images/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="images/apple-touch-icon-152x152.png" />
+    <link rel="icon" type="image/png" href="images/favicon-196x196.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="images/favicon-128.png" sizes="128x128" />
+    <meta name="application-name" content="&nbsp;"/>
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="msapplication-TileImage" content="mstile-144x144.png" />
+    <meta name="msapplication-square70x70logo" content="mstile-70x70.png" />
+    <meta name="msapplication-square150x150logo" content="mstile-150x150.png" />
+    <meta name="msapplication-wide310x150logo" content="mstile-310x150.png" />
+    <meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
 
   </head>
   <body>
@@ -79,45 +82,46 @@
       </div>
     </div>
 
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
         <div class="col-sm-8">
-          <div class="card">
-            <div class="card-body">
-              <h3 class="card-title">Deploy Your Own Fixed Supply Token Contract</h3>
-              <p>&nbsp;</p>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Deploy Your Own Fixed Supply Token Contract</h3>
+            </div>
+            <div class="panel-body">
               <div class="row">
                 <div class="form-group col-xs-6">
                   <label for="symbol">Symbol</label>
-                  <input type="text" class="form-control" id="symbol" aria-describedby="symbolHelp" placeholder="e.g. 'ABC'">
+                  <input type="text" class="form-control" id="symbol" aria-describedby="symbolHelp" placeholder="example 'BBC'">
                   <small id="symbolHelp" class="form-text text-muted">An uppercase word a few letters long</small>
                 </div>
                 <div class="clearfix"></div>
                 <div class="form-group col-xs-9">
                   <label for="name">Name</label>
-                  <input type="text" class="form-control" id="name" aria-describedby="nameHelp" placeholder="e.g. 'Alice's Burgers 🍔 And Chips 🍟'">
+                  <input type="text" class="form-control" id="name" aria-describedby="nameHelp" placeholder="example 'Bob's Burgers 🍔 & Chips 🍟 Loyalty Points'">
                   <small id="nameHelp" class="form-text text-muted">A set of mixed case words</small>
                 </div>
                 <div class="clearfix"></div>
                 <div class="form-group col-xs-6">
                   <label for="decimals">Decimals</label>
-                  <input type="number" class="form-control" id="decimals" aria-describedby="decimalsHelp" placeholder="e.g. 18">
+                  <input type="number" class="form-control" id="decimals" aria-describedby="decimalsHelp" placeholder="example '18'">
                   <small id="decimalsHelp" class="form-text text-muted">Number of decimal places, between 0 and 18, inclusive</small>
                 </div>
                 <div class="clearfix"></div>
                 <div class="form-group col-xs-6">
                   <label for="totalSupply">Total Supply</label>
-                  <input type="number" class="form-control" id="totalSupply" aria-describedby="totalSupplyHelp" placeholder="e.g. 123456.789">
+                  <input type="number" class="form-control" id="totalSupply" aria-describedby="totalSupplyHelp" placeholder="example '123456.789'">
                   <small id="totalSupplyHelp" class="form-text text-muted">A positive number less than or equals to 100,000,000,000,000</small>
                 </div>
                 <div class="clearfix"></div>
                 <div class="form-group col-xs-5">
-                  <label for="deploymentFee">Deployment Fee (ethers)</label>
-                  <input type="number" class="form-control" id="deploymentFee" aria-describedby="deploymentFeeHelp" placeholder="e.g. 0.123456789">
+                  <label for="deploymentFee">Deployment Fee (in ethers)</label>
+                  <input type="number" class="form-control" id="deploymentFee" aria-describedby="deploymentFeeHelp" placeholder="example 0.123456789">
                   <small id="deploymentFeeHelp" class="form-text text-muted">Minimum deployment fee 0.1 ethers</small>
                 </div>
                 <div class="clearfix"></div>
-                <div class="form-group col-md-5">
+                <div class="form-group col-md-6">
                   <button type="submit" id="deploy" class="btn btn-primary" aria-describedby="deployHelp" disabled>
                     <span class="glyphicon glyphicon glyphicon-play"></span> Submit Transaction
                   </button>
@@ -133,49 +137,51 @@
             </div>
           </div>
         </div>
+
         <div class="col-sm-4">
-          <div class="card">
-            <div class="card-body">
-              <h4 class="card-title">NOTE</h4>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Activity</h3>
+            </div>
+            <div class="panel-body">
               <p class="card-text text-danger">You will need MetaMask in Firefox, Chromium, Brave and Chrome browser to use this vending machine, currently.</p>
-              <p class="card-text">&nbsp;</p>
             </div>
           </div>
         </div>
         <div class="col-sm-4">
-          <div class="card">
-            <div class="card-body">
-              <h4 class="card-title">Network</h4>
-              <p class="card-text">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Network &amp; Your Account</h3>
+            </div>
+            <div class="panel-body">
+              <p class="panel-text">
                 <span id="network" data-toggle="tooltip" title="Switch networks in MetaMask for the Ethereum Mainnet, or the Ropsten, Kovan, Rinkeby and Görli testnets">Checking ...</span>
+                <span id="spinner" class="glyphicon glyphicon glyphicon-heart text-danger" aria-hidden="true" data-toggle="tooltip" title="The heartbeat of the blockchain">
                 <span id="block" data-toggle="tooltip" title="The latest block number and time, and it should be recent"></span>
               </p>
+              <p class="panel-text"><span id="account" data-toggle="tooltip" title="Your account in MetaMask"></span></p>
+              <p class="panel-text">Balance <span id="accountbalance" data-toggle="tooltip" title="Your account balance"></span></p>
+              <p class="panel-text truncate"><span id="faucets" data-toggle="tooltip" title="Get testnet ethers from the faucets"></span></p>
             </div>
           </div>
-          <div class="card">
-            <div class="card-body">
-              <h4 class="card-title">Your account</h4>
-              <p class="card-text"><span id="account" data-toggle="tooltip" title="Your account in MetaMask"></span></p>
-              <p class="card-text">Balance <span id="accountbalance" data-toggle="tooltip" title="Your account balance"></span></p>
-              <p class="card-text truncate"><span id="faucets" data-toggle="tooltip" title="Get testnet ethers from the faucets"></span></p>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Factory</h3>
             </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <h4 class="card-title">Factory</h4>
-              <p class="card-text"><span id="factoryAddress" class="truncate" data-toggle="tooltip" title="The factory that will deploy your token contract"></span></p>
-              <p class="card-text">Minimum fee <span id="minimumFee" data-toggle="tooltip" title="Minimum fee required to deploy your token contract"></p>
-              <h5 class="card-title">Deployed token contracts</h5>
+            <div class="panel-body">
+              <p class="panel-text"><span id="factoryAddress" class="truncate" data-toggle="tooltip" title="The factory that will deploy your token contract"></span></p>
+              <p class="panel-text">Minimum fee <span id="minimumFee" data-toggle="tooltip" title="Minimum fee required to deploy your token contract"></p>
+              <h6 class="panel-title">Deployed token contracts</h6>
               <div id="deployedContractsList"></div>
             </div>
           </div>
-          <div class="card">
-            <div class="card-body">
-              <form class="bs-example bs-example-form" data-example-id="simple-input-groups">
-              <h4 class="card-title">Donations to</h4>
-              <p class="card-text"><a href="https://etherscan.io/address/0x000001f568875f378bf6d170b790967fe429c81a" target="_blank">0x000001f568875f378bf6d170b790967fe429c81a</a></span></p>
-              <p class="card-text">Enjoy! &copy; Bok Consulting Pty Ltd 2019</span></p>
-            </form>
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Donations</h3>
+            </div>
+            <div class="panel-body">
+              <p class="panel-text"><a href="https://etherscan.io/address/0x000001f568875f378bf6d170b790967fe429c81a" target="_blank">0x000001f568875f378bf6d170b790967fe429c81a</a></span></p>
+              <p class="panel-text">Enjoy! &copy; Bok Consulting Pty Ltd 2019</span></p>
             </div>
           </div>
         </div>
@@ -192,6 +198,8 @@
 //
 // TODO:
 // * Handle non MetaMask gracefully
+// * Data generation for offline/MEW/MyCrypto execution
+// * Transaction reporting
 // * Test out with geth and parity RPC
 // * Test out with Mist
 // * Nice to have - add Ledger and Trezor signing
@@ -235,20 +243,22 @@ var DEPLOYMENTFEEMAX = new BigNumber("100");
 var DEFAULTDECIMALS = 18;
 var DEFAULTTOTALSUPPLY = new BigNumber("1");
 
-var MAXFACTORYCHILDREN = 10;
+var MAXFACTORYCHILDREN = 5;
 
 var SYMBOLNOTE = "An uppercase word a few letters long. Maximum length " + SYMBOLMAXLENGTH;
 var NAMENOTE = "A set of mixed case words. Maximum length " + NAMEMAXLENGTH;
 var DECIMALSNOTE = "Number of decimal places, between 0 and " + DECIMALSMAX + ", inclusive";
 var TOTALSUPPLYNOTE = "A positive number less than or equals to " + w2utils.formatNumber(TOTALSUPPLYMAX.toString());
 var DEPLOYMENTFEENOTE = "Minimum deployment fee ";
+var READYTODEPLOY = "Note that there are additional network transaction fees"
 var NETWORKERROR = "Network error. Please check you have MetaMask installed and enabled in your web browser";
 var FACTORYSHORTNAME = "Fixed Supply Token 👊 Factory v1.10"
 var FACTORYDEPLOYGAS = 1200000;
 
 var lastNetworkId = -123;
+var lastBlockNumber = -123;
 var lastNumberOfChildren = new BigNumber(-123);
-var LOOPPERIOD = 10000;
+var LOOPPERIOD = 5000;
 var loopCounter = 0;
 var connectionOk = false;
 var currentMinimumFee;
@@ -267,6 +277,43 @@ const promisify = (inner) =>
       }
     })
   );
+
+
+// ----------------------------------------------------------------------------
+// Main process loop. load event to call initially, then setTimeout repeatedly
+// ----------------------------------------------------------------------------
+window.addEventListener('load', async () => {
+  processLoop("refresh");
+});
+async function processLoop(action) {
+  process(action);
+  loopCounter = parseInt(loopCounter) + 1;
+  setTimeout(function() { processLoop("refresh") }, LOOPPERIOD);
+}
+async function process(action) {
+  console.log(loopCounter + " [process." + action + "] connection: " + connectionOk);
+  if (!connectionOk) {
+    console.log(loopCounter + " [process." + action + "] calling establishConnection");
+    await establishConnection();
+    console.log(loopCounter + " [process." + action + "] called establishConnection");
+  }
+  if (connectionOk) {
+    try {
+      var data = getInputData();
+      renderInputData(data);
+      console.log(loopCounter + " [process." + action + "] data: " + JSON.stringify(data));
+      processEth(data, 'refresh');
+      console.log(loopCounter + " [process." + action + "] processEth completed");
+    } catch (error) {
+      console.log(loopCounter + " [process." + action + "] connectionOk: " + connectionOk + " - processLoop() error " + error);
+    }
+  } else {
+    console.log(loopCounter + " [process." + action + "] connectionOk: " + connectionOk + " - Skipping processLoop()");
+    // BK TODO
+    $("#network").html(NETWORKERROR);
+  }
+
+}
 
 
 // ----------------------------------------------------------------------------
@@ -306,36 +353,6 @@ async function establishConnection() {
     }
   }
 }
-
-
-// ----------------------------------------------------------------------------
-// Main process loop, using load to call initially, then setTimeout to trigger
-// ----------------------------------------------------------------------------
-async function processLoop(loadFromUrl) {
-  console.log(loopCounter + " [processLoop] connectionOk: " + connectionOk);
-  if (!connectionOk) {
-    console.log(loopCounter + " [processLoop] calling establishConnection");
-    await establishConnection();
-    console.log(loopCounter + " [processLoop] called establishConnection");
-  }
-  if (connectionOk) {
-    try {
-      process(loadFromUrl);
-    } catch (error) {
-      console.log(loopCounter + " [processLoop] connectionOk: " + connectionOk + " - process() error " + error);
-    }
-  } else {
-    console.log(loopCounter + " [processLoop] connectionOk: " + connectionOk + " - Skipping process()");
-    // BK TODO
-    $("#network").html(NETWORKERROR);
-  }
-  loopCounter = parseInt(loopCounter) + 1;
-  setTimeout(function() { processLoop(false) }, loadFromUrl ? 1000 : LOOPPERIOD);
-}
-window.addEventListener('load', async () => {
-  console.log(loopCounter + " [load]");
-  processLoop(true);
-});
 
 
 // ----------------------------------------------------------------------------
@@ -437,7 +454,11 @@ function getInputData() {
     data.inputFilled = false;
   } else {
     try {
-      data.deploymentFeeValue = new BigNumber(data.deploymentFee);
+      var v = data.deploymentFee;
+      if (v.startsWith(".")) {
+        v = "0" + v;
+      }
+      data.deploymentFeeValue = new BigNumber(v);
       if (isNaN(data.deploymentFeeValue)) {
         throw "nan";
       }
@@ -489,23 +510,9 @@ function renderInputData(data) {
     $("#totalSupplyHelp").removeClass("text-danger").addClass("text-muted");
   }
   $("#totalSupplyHelp").html(TOTALSUPPLYNOTE);
-
-  // Done in the ETH rendering part
-  // if (data.deploymentFeeError) {
-  //   $("#deploymentFeeDiv").addClass("has-error");
-  //   $("#deploymentFeeNote").html(DEPLOYMENTFEENOTE);
-  // } else {
-  //   $("#deploymentFeeDiv").removeClass("has-error");
-  //   $("#deploymentFeeNote").html("");
-  // }
-
-  // if (data.inputFilled && !data.inputError) {
-  //   $("#deploy").prop("disabled", false);
-  // } else {
-  //   $("#deploy").prop("disabled", true);
-  // }
 }
 
+var spinner = 0;
 var renderingEthData = false;
 async function processEth(data, action) {
   var processed = false;
@@ -543,12 +550,21 @@ async function processEth(data, action) {
 
       var block = await _block;
       var blockNumber = block.number;
+      if (blockNumber != lastBlockNumber) {
+        spinner = parseInt(spinner) + 1;
+        if ((spinner % 2) == 0) {
+          $("#spinner").removeClass("glyphicon-heart").addClass("glyphicon-heart-empty");
+        } else {
+          $("#spinner").removeClass("glyphicon-heart-empty").addClass("glyphicon-heart");
+        }
+        lastBlockNumber = blockNumber;
+      }
       var timestamp = block.timestamp;
       // var now = new Date() / 1000;
       // var diff = timestamp - now;
       // $("#blockTime").html(diff.toFixed(2) + " seconds " + new Date(timestamp * 1000).toUTCString());
       // $("#blockTime").html(w2utils.formatTime(timestamp * 1000, 'hh24:mi:ss'));
-      $("#block").html('#<a href="'+ network.explorer + 'block/' + blockNumber + '" target="_blank">' + w2utils.formatNumber(blockNumber) + ' ' + w2utils.formatTime(timestamp * 1000, 'hh24:mi:ss') + ' ' + w2utils.formatDate(timestamp * 1000, 'mon dd') + '</a>');
+      $("#block").html('<a href="'+ network.explorer + 'block/' + blockNumber + '" target="_blank">' + w2utils.formatNumber(blockNumber) + ' ' + w2utils.formatTime(timestamp * 1000, 'hh24:mi:ss') + ' ' + w2utils.formatDate(timestamp * 1000, 'mon dd') + '</a>');
 
       var accounts = await _accounts;
       var account = accounts[0];
@@ -582,10 +598,10 @@ async function processEth(data, action) {
         $("#deployHelp").html("Please correct errors in the field(s) above")
       } else if (!data.inputFilled) {
         $("#deployHelp").removeClass("text-danger").addClass("text-muted");
-        $("#deployHelp").html("Please fill in the fields above")
+        $("#deployHelp").html("Please fill in the fields above");
       } else {
         $("#deployHelp").removeClass("text-danger").addClass("text-muted");
-        $("#deployHelp").html("Click to deploy")
+        $("#deployHelp").html(READYTODEPLOY);
       }
       if (data.inputFilled && !data.inputError) {
         $("#deploy").prop("disabled", false);
@@ -670,19 +686,6 @@ async function processEth(data, action) {
     renderingEthData = false;
   }
   return processed;
-}
-
-
-// ----------------------------------------------------------------------------
-// Main process. Connection should already be established
-// Throw an error if there is a problem
-// ----------------------------------------------------------------------------
-function process() {
-  console.log(loopCounter + " [process]");
-  var data = getInputData();
-  renderInputData(data);
-  console.log(loopCounter + " [process] data: " + JSON.stringify(data));
-  processEth(data, 'refresh');
 }
 
 
