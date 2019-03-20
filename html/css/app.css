@@ -2,10 +2,6 @@
   color:#000000 !important;
 }
 
-/* .logo {
-  color:#fd5f00 !important;
-} */
-
 /* body {
     background-image: url(../images/MeInTheMatrix61-square.gif);
     background-repeat: no-repeat;
@@ -16,3 +12,22 @@
     // opacity : 0.8;
     // z-index: -1;
 } */
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* .navbar-brand {
+  text-align: right;
+  padding: 0 !important;
+  margin: 0;
+  font-size: 90%;
+} */
+
+.hidden {
+     display:none;
+}
