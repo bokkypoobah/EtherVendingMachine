@@ -129,25 +129,28 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Network</h5>
-              <p class="card-text"><span id="network">Checking ...</span> <span id="block"></span></p>
+              <p class="card-text">
+                <span id="network" data-toggle="tooltip" title="Switch networks in MetaMask for the Ethereum Mainnet, or the Ropsten, Kovan, Rinkeby and Görli testnets">Checking ...</span>
+                <span id="block" data-toggle="tooltip" title="The latest block number and time, and it should be recent"></span>
+              </p>
               <p class="card-text"></span>&nbsp;</p>
             </div>
           </div>
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Your account</h5>
-              <p class="card-text"><span id="account"></span></p>
-              <p class="card-text">Balance <span id="accountbalance"></span></p>
-              <p class="card-text"><span id="faucets"></span></p>
+              <p class="card-text"><span id="account" data-toggle="tooltip" title="Your account in MetaMask"></span></p>
+              <p class="card-text">Balance <span id="accountbalance" data-toggle="tooltip" title="Your account balance"></span></p>
+              <p class="card-text"><span id="faucets" data-toggle="tooltip" title="Get testnet ethers from the faucets"></span></p>
               <p class="card-text"></span>&nbsp;</p>
             </div>
           </div>
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Factory</h5>
-              <p class="card-text"><span id="factoryAddress"></span></p>
-              <p class="card-text">Minimum fee <span id="minimumFee"></p>
-              <p class="card-text">Latest deployed contracts:</p>
+              <p class="card-text"><span id="factoryAddress" data-toggle="tooltip" title="The factory that will deploy your token contract"></span></p>
+              <p class="card-text">Minimum fee <span id="minimumFee" data-toggle="tooltip" title="Minimum fee required to deploy your token contract"></p>
+              <p class="card-text"><span data-toggle="tooltip" title="">Latest deployed token contracts:</span></p>
               <div id="deployedContractsList"></div>
               <p class="card-text"></span>&nbsp;</p>
             </div>
