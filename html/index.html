@@ -7,7 +7,6 @@
     <meta name="description" content="BokkyPooBah's Ether Vending Machine (c) Bok Consulting Pty Ltd 2019">
     <meta name="author" content="BokkyPooBah/bokconsulting.com.au">
     <link href="css/bootstrap.css" rel="stylesheet" media="screen" />
-    <!-- <link href="css/bootstrap-theme.min.css" rel="stylesheet" media="screen" /> -->
     <link href="css/w2ui-1.5.rc1.css" rel="stylesheet" media="screen" />
     <link href="css/app.css" rel="stylesheet" media="screen" />
     <script src="js/jquery-3.3.1.min.js"></script>
@@ -16,7 +15,6 @@
     <script src="js/bignumber.min.js"></script>
     <script src="js/web3.js"></script>
     <script src="js/app.js"></script>
-    <!-- <script src="js/preHFBalances.js"></script> -->
 
     <link rel="apple-touch-icon" sizes="57x57" href="images/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="images/apple-icon-60x60.png">
@@ -81,7 +79,6 @@
     </div>
 
     <div class="container">
-
       <div class="row">
         <div class="col-sm-8">
           <div class="card">
@@ -119,7 +116,7 @@
                   <small id="deploymentFeeHelp" class="form-text text-muted">Minimum deployment fee 0.1 ethers</small>
                 </div>
                 <div class="clearfix"></div>
-                <div class="form-group">
+                <div class="form-group col-md-5">
                   <button type="submit" id="deploy" class="btn btn-primary" aria-describedby="deployHelp" disabled>Submit Transaction</button>
                   <div class="clearfix"></div>
                   <small id="deployHelp" class="form-text text-muted"></small>
@@ -219,7 +216,7 @@ var MAXFACTORYCHILDREN = 10;
 var SYMBOLNOTE = "An uppercase word a few letters long. Maximum length " + SYMBOLMAXLENGTH;
 var NAMENOTE = "A set of mixed case words. Maximum length " + NAMEMAXLENGTH;
 var DECIMALSNOTE = "Number of decimal places, between 0 and " + DECIMALSMAX + ", inclusive";
-var TOTALSUPPLYNOTE = "A positive number less than or equals to " + w2utils.formatNumber(TOTALSUPPLYMAX);
+var TOTALSUPPLYNOTE = "A positive number less than or equals to " + w2utils.formatNumber(TOTALSUPPLYMAX.toString());
 var DEPLOYMENTFEENOTE = "Minimum deployment fee ";
 
 var lastNetworkId = -123;
@@ -227,7 +224,6 @@ var lastNumberOfChildren = new BigNumber(-123);
 var LOOPPERIOD = 10000;
 var loopCounter = 0;
 var connectionOk = false;
-var currentBalance;
 var currentMinimumFee;
 
 
@@ -531,7 +527,6 @@ async function processEth(data, action) {
 
       var _balance = promisify(cb => web3.eth.getBalance(account, cb));
       var balance = new BigNumber(await _balance).shift(-18);
-      currentBalance = balance;
       $("#accountbalance").html('<a href="' + network.explorer + 'address/' + account + '#code" target="_blank">' + balance.toString() + '</a> ethers');
 
       var factory = web3.eth.contract(factoryAbi).at(factoryAddress);
@@ -595,7 +590,7 @@ async function processEth(data, action) {
           var decimals = await _decimals;
           var totalSupply = await _totalSupply;
           if (!(childAddress in seen)) {
-            contentString += "<p>" + (parseInt(child) + 1) + ". <a href=\"" + network.explorer + "token/" + childAddress + "\">" + symbol + ", " + name + ", " + decimals + ", " + new BigNumber(totalSupply).shift(-decimals) + " @ " + childAddress.substring(0, 10) + "</a></p>";
+            contentString += "<p>" + (parseInt(child) + 1) + ". <a href=\"" + network.explorer + "token/" + childAddress + "\">'" + symbol + "' '" + name + "' " + decimals + " " +  + new BigNumber(totalSupply).shift(-decimals).toString() + " " + childAddress.substring(0, 10) + "</a></p>";
             deployedContractsList.html(contentString);
             seen[childAddress] = true;
           }
