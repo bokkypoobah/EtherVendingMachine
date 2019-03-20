@@ -7,12 +7,10 @@
     <meta name="description" content="BokkyPooBah's Ether Vending Machine (c) Bok Consulting Pty Ltd 2019">
     <meta name="author" content="BokkyPooBah/bokconsulting.com.au">
     <link href="css/bootstrap.css" rel="stylesheet" media="screen" />
-    <!-- <link href="css/bootstrap-theme.min.css" rel="stylesheet" media="screen" /> -->
-    <link href="css/w2ui-1.5.rc1.css" rel="stylesheet" media="screen" />
+    <link href="css/bootstrap-theme.min.css" rel="stylesheet" media="screen" />
     <link href="css/app.css" rel="stylesheet" media="screen" />
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/w2ui-1.5.rc1.js"></script>
     <script src="js/bignumber.min.js"></script>
     <script src="js/web3.js"></script>
     <script src="js/app.js"></script>
@@ -82,92 +80,67 @@
     </div>
 
     <div class="container">
-
-      <div class="row">
-        <div class="col-sm-8">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Deploy Fixed Supply Token Contract</h5>
-              <p>&nbsp;</p>
-              <div class="row">
-                <div class="form-group col-xs-6">
-                  <label for="symbol">Symbol</label>
-                  <input type="text" class="form-control" id="symbol" aria-describedby="symbolHelp" placeholder="e.g. 'BURGER'">
-                  <small id="symbolHelp" class="form-text text-muted">An uppercase word a few letters long</small>
-                </div>
-                <div class="clearfix"></div>
-                <div class="form-group col-xs-9">
-                  <label for="name">Name</label>
-                  <input type="text" class="form-control" id="name" aria-describedby="nameHelp" placeholder="e.g. 'Bob's Burger 🍔 Token'">
-                  <small id="nameHelp" class="form-text text-muted">A set of mixed case words</small>
-                </div>
-                <div class="clearfix"></div>
-                <div class="form-group col-xs-6">
-                  <label for="decimals">Decimals</label>
-                  <input type="number" class="form-control" id="decimals" aria-describedby="decimalsHelp" placeholder="e.g. 18">
-                  <small id="decimalsHelp" class="form-text text-muted">Number of decimal places, between 0 and 18, inclusive</small>
-                </div>
-                <div class="clearfix"></div>
-                <div class="form-group col-xs-6">
-                  <label for="totalSupply">Total Supply</label>
-                  <input type="number" class="form-control" id="totalSupply" aria-describedby="totalSupplyHelp" placeholder="e.g. 123456.789">
-                  <small id="totalSupplyHelp" class="form-text text-muted">A positive number less than or equals to 100,000,000,000,000</small>
-                </div>
-                <div class="clearfix"></div>
-                <div class="form-group col-xs-5">
-                  <label for="deploymentFee">Deployment Fee (ethers)</label>
-                  <input type="number" class="form-control" id="deploymentFee" aria-describedby="deploymentFeeHelp" placeholder="e.g. 0.1">
-                  <small id="deploymentFeeHelp" class="form-text text-muted">Minimum deployment fee 0.1 ethers</small>
-                </div>
-                <div class="clearfix"></div>
-                <div class="form-group">
-                  <button type="submit" id="deploy" class="btn btn-primary" aria-describedby="deployHelp" disabled>Submit Transaction</button>
-                  <div class="clearfix"></div>
-                  <small id="deployHelp" class="form-text text-muted"></small>
-                </div>
-              </div>
-            </div>
-          </div>
+      <!-- <h4 class="display-3">Your Ethereum Address</h4> -->
+      <form class="form-inline" method="GET">
+        <!-- <div class="form-group"> -->
+        <div class="row">
+          <div class="col-sm-3 text-right">Status:</div>
+          <div class="col-sm-8"><span id="status">This page is still under development</span></div>
         </div>
-        <div class="col-sm-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Network</h5>
-              <p class="card-text"><span id="network">Checking ...</span> <span id="block"></span></p>
-              <p class="card-text"></span>&nbsp;</p>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Your account</h5>
-              <p class="card-text"><span id="account"></span></p>
-              <p class="card-text">Balance <span id="accountbalance"></span></p>
-              <p class="card-text"><span id="faucets"></span></p>
-              <p class="card-text"></span>&nbsp;</p>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Factory</h5>
-              <p class="card-text"><span id="factoryAddress"></span></p>
-              <p class="card-text">Minimum fee <span id="minimumFee"></p>
-              <p class="card-text">Latest deployed contracts:</p>
-              <div id="deployedContractsList"></div>
-              <p class="card-text"></span>&nbsp;</p>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Donations to</h5>
-              <p class="card-text"><a href="https://etherscan.io/address/0x000001f568875f378bf6d170b790967fe429c81a" target="_blank">0x000001f568875f378bf6d170b790967fe429c81a</a></span></p>
-              <p class="card-text"></span>&nbsp;</p>
-              <p class="card-text">Enjoy! &copy; Bok Consulting Pty Ltd 2019</span></p>
-            </div>
-          </div>
+        <div class="row">
+          <div class="col-sm-3 text-right">Network:</div>
+          <div class="col-sm-8"><span id="network">Checking ...</span></div>
         </div>
-      </div>
+        <div class="row">
+          <div class="col-sm-3 text-right">Latest block number:</div>
+          <div class="col-sm-8"><span id="blockNumber"></span></div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3 text-right">Latest block time:</div>
+          <div class="col-sm-8"><span id="blockTime"></span></div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3 text-right">Your account:</div>
+          <div class="col-sm-8"><span id="account"></span></div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3 text-right">Your account balance:</div>
+          <div class="col-sm-8"><span id="accountbalance"></span></div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3 text-right">Faucets:</div>
+          <div class="col-sm-8"><span id="faucets"></span></div>
+        </div>
+        <!--
+        <div class="row">
+          <div class="col-sm-3 text-right">Mode:</div>
+          <div class="col-sm-3"><span id="mode">(unknown))</span></div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3 text-right"><b>Enter Your Ethereum Address:</b></div>
+          <div class="col-sm-8"><input type="text" class="form-control" id="address" name="address" placeholder="0x..." size="48"><button type="submit" class="btn btn-default">Check</button></div>
+        </div>
+        -->
+        <!-- </div> -->
 
-      <!-- <form class="form-inline" method="GET">
+        <br />
+
+        <h4 class="display-3">BokkyPooBah's Fixed Supply Token 👊 Factory v1.10</h4>
+        <div class="row">
+          <div class="col-sm-3 text-right">Address:</div>
+          <div class="col-sm-8"><span id="factoryAddress"></span></div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3 text-right">Minimum fee:</div>
+          <div class="col-sm-8"><span id="minimumFee"></span></div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3 text-right">Deployed token contracts:</div>
+          <div class="col-sm-8"><span id="deployedContracts"><ul id="deployedContractsList"></ul></span></div>
+        </div>
+
+        <br />
+
         <h4 class="display-3">Your New Token Contract Details</h4>
         <div class="row" id="symbolDiv">
           <div class="col-sm-3 text-right">Symbol:</div>
@@ -194,25 +167,44 @@
           <div class="col-sm-3"><input type="text" class="form-control" id="deploymentFee" name="deploymentFee" placeholder="minimum 0.1 ethers" size="27"></div>
           <span class="help-block" id="deploymentFeeNote"></span>
         </div>
+        <!-- <div class="row">
+          <div class="col-sm-3 text-right">&nbsp</div>
+          <div class="col-sm-3"><button type="button" class="btn btn-default" name="check" id="check">Check</button></div>
+        </div> -->
         <div class="row">
           <div class="col-sm-3 text-right">&nbsp</div>
           <div class="col-sm-3"><button type="button" class="btn btn-default" name="deploy" id="deploy" disabled>Deploy</button></div>
           <span class="help-block" id="deployNote"></span>
         </div>
-      </form> -->
+        <!-- <div class="row">
+          <div class="col-sm-3 text-right">&nbsp</div>
+          <div class="col-sm-3"><button type="button" class="btn btn-default" name="doIt" id="doIt">Do It</button></div>
+          <span class="help-block" id="doItNote"></span>
+        </div> -->
+      </form>
 
 
-      <!-- <br />
+      <br />
+
+      <br />
+      <!-- <p>URL <span id="url">{url}</span></p> -->
+      <!-- <p>Address <span id="address1">{address1}</span></p> -->
+      <!-- <p>Mode <span id="mode">{mode}</span></p> -->
+      <!-- <p>Block Number <span id="blockNumber">{blockNumber}</span></p> -->
+      <br />
       <br />
 
       <p>Switch networks in MetaMask.</p>
       <p>See <a href="https://etherscan.io/tokens" target="_blank">https://etherscan.io/tokens</a> for list of tokens on the Ethereum Mainnet.</p>
       <br />
       <br />
-      <br /> -->
-      <!-- <br />
       <br />
-      <p>Enjoy! &copy; Bok Consulting Pty Ltd 2019 • Help fund the cost of running this site by donating to <a href="https://etherscan.io/address/0x000001f568875f378bf6d170b790967fe429c81a" target="_blank">0x000001f568875f378bf6d170b790967fe429c81a</a>.</p> -->
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <p>Enjoy! &copy; Bok Consulting Pty Ltd 2019 • Help fund the cost of running this site by donating to <a href="https://etherscan.io/address/0x000001f568875f378bf6d170b790967fe429c81a" target="_blank">0x000001f568875f378bf6d170b790967fe429c81a</a>.</p>
     </div>
 <script type="text/javascript">
 // ----------------------------------------------------------------------------
@@ -241,11 +233,11 @@
 
 var networks = {
   "-1" : { "network": "(unknown)", "explorer": "(unknown)", "faucets": "(unknown)" },
-  "1"  : { "network": "Ethereum Mainnet", "explorer": "https://etherscan.io/", "faucets": "" },
+  "1"  : { "network": "Ethereum Mainnet", "explorer": "https://etherscan.io/", "faucets": "No faucets on Mainnet" },
   "2"  : { "network": "Morden Testnet (deprecated)", "explorer": "https://morden.etherscan.io/", "faucets": "(deprecated)" },
-  "3"  : { "network": "Ropsten Testnet", "explorer": "https://ropsten.etherscan.io/", "faucets": "Faucets: <a href=\"https://faucet.metamask.io/\" target=\"_blank\">faucet.metamask.io</a>, <a href=\"https://twitter.com/BokkyPooBah/status/1099498823699714048\" target=\"_blank\">BokkyPooBah's VIP</a>" },
-  "4"  : { "network": "Rinkeby Testnet", "explorer": "https://rinkeby.etherscan.io/", "faucets": "Faucets: <a href=\"https://faucet.metamask.io/\" target=\"_blank\">faucet.metamask.io</a>, <a href=\"https://faucet.rinkeby.io/\" target=\"_blank\">faucet.rinkeby.io</a>" },
-  "42" : { "network": "Kovan Testnet", "explorer": "https://kovan.etherscan.io/", "faucets": "Faucets: <a href=\"https://faucet.kovan.network/\" target=\"_blank\">faucet.kovan.network</a>, <a href=\"https://github.com/kovan-testnet/faucet\" target=\"_blank\">github.com/kovan-testnet</a>" },
+  "3"  : { "network": "Ropsten Testnet", "explorer": "https://ropsten.etherscan.io/", "faucets": "<a href=\"https://faucet.metamask.io/\" target=\"_blank\">https://faucet.metamask.io/</a><br /><a href=\"https://twitter.com/BokkyPooBah/status/1099498823699714048\" target=\"_blank\">https://twitter.com/BokkyPooBah/status/1099498823699714048</a>" },
+  "4"  : { "network": "Rinkeby Testnet", "explorer": "https://rinkeby.etherscan.io/", "faucets": "<a href=\"https://faucet.metamask.io/\" target=\"_blank\">https://faucet.metamask.io/</a><br /><a href=\"https://faucet.rinkeby.io/\" target=\"_blank\">https://faucet.rinkeby.io/</a>" },
+  "42" : { "network": "Kovan Testnet", "explorer": "https://kovan.etherscan.io/", "faucets": "<a href=\"https://faucet.kovan.network/\" target=\"_blank\">https://faucet.kovan.network/</a><br /><a href=\"https://github.com/kovan-testnet/faucet\" target=\"_blank\">https://github.com/kovan-testnet/faucet</a>" },
   "5"  : { "network": "Görli Testnet", "explorer": "https://goerli.etherscan.io/", "faucets": "<a href=\"https://faucet.goerli.mudit.blog/\" target=\"_blank\">https://faucet.goerli.mudit.blog/</a><br /><a href=\"https://goerli-faucet.slock.it/\" target=\"_blank\">https://goerli-faucet.slock.it/</a>" },
 };
 
@@ -253,11 +245,10 @@ var factoryAddress = "0xA550114ee3688601006b8b9f25e64732eF774934";
 var factoryAbi = [{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"tokens","type":"uint256"}],"name":"recoverTokens","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_minimumFee","type":"uint256"}],"name":"setMinimumFee","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"minimumFee","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"numberOfChildren","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"children","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"acceptOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"newAddress","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"symbol","type":"string"},{"name":"name","type":"string"},{"name":"decimals","type":"uint8"},{"name":"totalSupply","type":"uint256"}],"name":"deployTokenContract","outputs":[{"name":"token","type":"address"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"newOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newAddress","type":"address"}],"name":"deprecateFactory","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"isChild","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_newAddress","type":"address"}],"name":"FactoryDeprecated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldFee","type":"uint256"},{"indexed":false,"name":"newFee","type":"uint256"}],"name":"MinimumFeeUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"token","type":"address"},{"indexed":false,"name":"symbol","type":"string"},{"indexed":false,"name":"name","type":"string"},{"indexed":false,"name":"decimals","type":"uint8"},{"indexed":false,"name":"totalSupply","type":"uint256"}],"name":"TokenDeployed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"}],"name":"OwnershipTransferred","type":"event"}];
 var tokenAbi = [{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"tokens","type":"uint256"}],"name":"recoverTokens","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_owner","type":"address"}],"name":"init","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"tokenOwner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"acceptOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"symbol","type":"string"},{"name":"name","type":"string"},{"name":"decimals","type":"uint8"},{"name":"fixedSupply","type":"uint256"}],"name":"init","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"},{"name":"data","type":"bytes"}],"name":"approveAndCall","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"newOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"tokens","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"tokenOwner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"tokens","type":"uint256"}],"name":"Approval","type":"event"}];
 
-var SYMBOLMAXLENGTH = 3;
-var NAMEMAXLENGTH = 10;
+var SYMBOLMAXLENGTH = 64;
+var NAMEMAXLENGTH = 128;
 var DECIMALSMAX = 18;
-// var TOTALSUPPLYMAX = new BigNumber("1").shift(14); // 100 trillion
-var TOTALSUPPLYMAX = new BigNumber("1").shift(3); // 1000
+var TOTALSUPPLYMAX = new BigNumber("1").shift(14); // 100 trillion
 var DEPLOYMENTFEEMAX = new BigNumber("100");
 
 var DEFAULTDECIMALS = 18;
@@ -265,10 +256,10 @@ var DEFAULTTOTALSUPPLY = new BigNumber("1");
 
 var MAXFACTORYCHILDREN = 10;
 
-var SYMBOLNOTE = "An uppercase word a few letters long. Maximum length " + SYMBOLMAXLENGTH;
-var NAMENOTE = "A set of mixed case words. Maximum length " + NAMEMAXLENGTH;
-var DECIMALSNOTE = "Number of decimal places, between 0 and " + DECIMALSMAX + ", inclusive";
-var TOTALSUPPLYNOTE = "A positive number less than or equals to " + w2utils.formatNumber(TOTALSUPPLYMAX);
+var SYMBOLNOTE = "A short uppercase character string like 'RAMEN'. Max length " + SYMBOLMAXLENGTH + ". Ideally 3 or less characters";
+var NAMENOTE = "A mixed case character string like 'Ramen Grade A'. Max length " + NAMEMAXLENGTH;
+var DECIMALSNOTE = "A number between 0 and " + DECIMALSMAX + ", inclusive";
+var TOTALSUPPLYNOTE = "A number > 0 (to decimal places above) and <= " + TOTALSUPPLYMAX;
 var DEPLOYMENTFEENOTE = "Minimum deployment fee ";
 
 var lastNetworkId = -123;
@@ -432,8 +423,7 @@ function getInputData() {
   } else {
     try {
       if (data.inputFilled && !data.decimalsError) {
-        var totalSupplyWithoutCommas = data.totalSupply.replace(/\,/g, '');
-        data.totalSupplyValue = new BigNumber(totalSupplyWithoutCommas);
+        data.totalSupplyValue = new BigNumber(data.totalSupply);
         console.log(loopCounter + " [getInputData] totalSupply: " + data.totalSupply);
         console.log(loopCounter + " [getInputData] totalSupplyValue: " + data.totalSupplyValue);
         console.log(loopCounter + " [getInputData] data.totalSupplyValue.shift(data.decimals): " + data.totalSupplyValue.shift(data.decimals));
@@ -487,32 +477,36 @@ function getInputData() {
 // ----------------------------------------------------------------------------
 function renderInputData(data) {
   if (data.symbolError) {
-    $("#symbolHelp").removeClass("text-muted").addClass("text-danger");
+    $("#symbolDiv").addClass("has-error");
+    $("#symbolNote").html(SYMBOLNOTE);
   } else {
-    $("#symbolHelp").removeClass("text-danger").addClass("text-muted");
+    $("#symbolDiv").removeClass("has-error");
+    $("#symbolNote").html("");
   }
-  $("#symbolHelp").html(SYMBOLNOTE);
 
   if (data.nameError) {
-    $("#nameHelp").removeClass("text-muted").addClass("text-danger");
+    $("#nameDiv").addClass("has-error");
+    $("#nameNote").html(NAMENOTE);
   } else {
-    $("#nameHelp").removeClass("text-danger").addClass("text-muted");
+    $("#nameDiv").removeClass("has-error");
+    $("#nameNote").html("");
   }
-  $("#nameHelp").html(NAMENOTE);
 
   if (data.decimalsError) {
-    $("#decimalsHelp").removeClass("text-muted").addClass("text-danger");
+    $("#decimalsDiv").addClass("has-error");
+    $("#decimalsNote").html(DECIMALSNOTE);
   } else {
-    $("#decimalsHelp").removeClass("text-danger").addClass("text-muted");
+    $("#decimalsDiv").removeClass("has-error");
+    $("#decimalsNote").html("");
   }
-  $("#decimalsHelp").html(DECIMALSNOTE);
 
   if (data.totalSupplyError) {
-    $("#totalSupplyHelp").removeClass("text-muted").addClass("text-danger");
+    $("#totalSupplyDiv").addClass("has-error");
+    $("#totalSupplyNote").html(TOTALSUPPLYNOTE);
   } else {
-    $("#totalSupplyHelp").removeClass("text-danger").addClass("text-muted");
+    $("#totalSupplyDiv").removeClass("has-error");
+    $("#totalSupplyNote").html("");
   }
-  $("#totalSupplyHelp").html(TOTALSUPPLYNOTE);
 
   // Done in the ETH rendering part
   // if (data.deploymentFeeError) {
@@ -523,11 +517,11 @@ function renderInputData(data) {
   //   $("#deploymentFeeNote").html("");
   // }
 
-  // if (data.inputFilled && !data.inputError) {
-  //   $("#deploy").prop("disabled", false);
-  // } else {
-  //   $("#deploy").prop("disabled", true);
-  // }
+  if (data.inputFilled && !data.inputError) {
+    $("#deploy").prop("disabled", false);
+  } else {
+    $("#deploy").prop("disabled", true);
+  }
 }
 
 var renderingEthData = false;
@@ -560,62 +554,45 @@ async function processEth(data, action) {
         network = networks[-1];
       }
       if (networkChanged) {
-        $("#network").html("<a href=\"" + network.explorer + "\" target=\"_blank\">" + network.network + "</a>");
+        $("#network").html(network.network);
         $("#faucets").html(network.faucets);
-        $("#factoryAddress").html('<a href="'+ network.explorer + 'address/' + factoryAddress + '#code" target="_blank">' + factoryAddress + '</a>');
+        $("#factoryAddress").html(factoryAddress + ' <a href="'+ network.explorer + 'address/' + factoryAddress + '#code" target="_blank">🔗</a>');
       }
 
       var block = await _block;
       var blockNumber = block.number;
       var timestamp = block.timestamp;
-      // var now = new Date() / 1000;
-      // var diff = timestamp - now;
-      // $("#blockTime").html(diff.toFixed(2) + " seconds " + new Date(timestamp * 1000).toUTCString());
-      // $("#blockTime").html(w2utils.formatTime(timestamp * 1000, 'hh24:mi:ss'));
-      $("#block").html('#<a href="'+ network.explorer + 'block/' + blockNumber + '" target="_blank">' + w2utils.formatNumber(blockNumber) + ' ' + w2utils.formatTime(timestamp * 1000, 'hh24:mi:ss') + ' ' + w2utils.formatDate(timestamp * 1000, 'mon dd') + '</a>');
+      var now = new Date() / 1000;
+      var diff = timestamp - now;
+      $("#blockNumber").html(blockNumber + ' <a href="'+ network.explorer + 'block/' + blockNumber + '" target="_blank">🔗</a>');
+      $("#blockTime").html(diff.toFixed(2) + " seconds " + new Date(timestamp * 1000).toUTCString());
 
       var accounts = await _accounts;
       var account = accounts[0];
-      $("#account").html('<a href="' + network.explorer + 'address/' + account + '#code" target="_blank">' + account + '</a>');
+      $("#account").html(account + ' <a href="' + network.explorer + 'address/' + account + '#code" target="_blank">🔗</a>');
 
       var _balance = promisify(cb => web3.eth.getBalance(account, cb));
       var balance = new BigNumber(await _balance).shift(-18);
       currentBalance = balance;
-      $("#accountbalance").html('<a href="' + network.explorer + 'address/' + account + '#code" target="_blank">' + balance.toString() + '</a> ethers');
+      $("#accountbalance").html(balance.toString() + " ethers");
 
       var factory = web3.eth.contract(factoryAbi).at(factoryAddress);
       var _minimumFee = promisify(cb => factory.minimumFee(cb));
       var minimumFee = new BigNumber(await _minimumFee).shift(-18);
       currentMinimumFee = minimumFee;
-      $("#minimumFee").html('<a href="'+ network.explorer + 'address/' + factoryAddress + '#readContract" target="_blank">' + minimumFee.toString() + '</a> ethers');
+      $("#minimumFee").html(minimumFee.toString() + " ethers");
 
       console.log(loopCounter + " [processEth] connectionOk: " + connectionOk + " deploymentFee: " + data.deploymentFeeValue + " minimumFee: " + minimumFee);
       if (data.deploymentFee.length > 0 && data.deploymentFeeValue < minimumFee) {
         console.log(loopCounter + " [processEth] connectionOk: " + connectionOk + " deploymentFee: " + data.deploymentFeeValue + " minimumFee: " + minimumFee + " insufficient fee");
         data.deploymentFeeError = true;
-        data.inputError = true;
       }
       if (data.deploymentFeeError) {
-        $("#deploymentFeeHelp").removeClass("text-muted").addClass("text-danger");
+        $("#deploymentFeeDiv").addClass("has-error");
+        $("#deploymentFeeNote").html(DEPLOYMENTFEENOTE + minimumFee + " ethers");
       } else {
-        $("#deploymentFeeHelp").removeClass("text-danger").addClass("text-muted");
-      }
-      $("#deploymentFeeHelp").html(DEPLOYMENTFEENOTE + minimumFee + " ethers");
-
-      if (data.inputError) {
-        $("#deployHelp").removeClass("text-muted").addClass("text-danger");
-        $("#deployHelp").html("Please correct errors in the field(s) above")
-      } else if (!data.inputFilled) {
-        $("#deployHelp").removeClass("text-danger").addClass("text-muted");
-        $("#deployHelp").html("Please fill in the fields above")
-      } else {
-        $("#deployHelp").removeClass("text-danger").addClass("text-muted");
-        $("#deployHelp").html("Click to deploy")
-      }
-      if (data.inputFilled && !data.inputError) {
-        $("#deploy").prop("disabled", false);
-      } else {
-        $("#deploy").prop("disabled", true);
+        $("#deploymentFeeDiv").removeClass("has-error");
+        $("#deploymentFeeNote").html("");
       }
 
       var _numberOfChildren = promisify(cb => factory.numberOfChildren(cb));
@@ -629,8 +606,8 @@ async function processEth(data, action) {
       console.log(loopCounter + " [processEth] " + action + ": networkChanged: " + networkChanged + ", factoryUpdated: " + factoryUpdated);
       if (networkChanged || factoryUpdated) {
         var deployedContractsList = $('#deployedContractsList');
+        deployedContractsList.empty();
         var child = numberOfChildren - 1;
-        var contentString = "";
         while (child >= 0 && child >= (numberOfChildren - MAXFACTORYCHILDREN)) {
           var _childAddress = promisify(cb => factory.children(child, cb));
           var childAddress = await _childAddress;
@@ -644,8 +621,7 @@ async function processEth(data, action) {
           var decimals = await _decimals;
           var totalSupply = await _totalSupply;
           if (!(childAddress in seen)) {
-            contentString += "<p>" + (parseInt(child) + 1) + ". <a href=\"" + network.explorer + "token/" + childAddress + "\">" + symbol + ", " + name + ", " + decimals + ", " + new BigNumber(totalSupply).shift(-decimals) + " @ " + childAddress.substring(0, 10) + "</a></p>";
-            deployedContractsList.html(contentString);
+            deployedContractsList.append("<li><a href=\"" + network.explorer + "token/" + childAddress + "\">" + symbol + "</a>, " + name + ", " + decimals + ", " + new BigNumber(totalSupply).shift(-decimals) + " @ " + childAddress + " <a href=\""+ network.explorer + "address/" + childAddress + "#code\" target=\"_blank\">🔗</a></li>");
             seen[childAddress] = true;
           }
           child--;
@@ -732,7 +708,7 @@ async function executeFunction(action) {
     try {
       var data = getInputData(false);
       renderInputData(data);
-      // Retry in case we running during a ETH refresh process
+      // Retry in case we are in a ETH refresh process
       while (!processEth(data, action)) {
         ;
       }
