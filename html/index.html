@@ -128,6 +128,15 @@
         <div class="col-sm-4">
           <div class="card">
             <div class="card-body">
+              <h4 class="card-title">NOTE</h4>
+              <p class="card-text text-danger">You will need MetaMask in Firefox, Chromium, Brave and Chrome browser to use this vending machine, currently.</p>
+              <p class="card-text">&nbsp;</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="card">
+            <div class="card-body">
               <h4 class="card-title">Network</h4>
               <p class="card-text">
                 <span id="network" data-toggle="tooltip" title="Switch networks in MetaMask for the Ethereum Mainnet, or the Ropsten, Kovan, Rinkeby and Görli testnets">Checking ...</span>
@@ -171,6 +180,12 @@
 //   0xA550114ee3688601006b8b9f25e64732eF774934
 //
 // https://github.com/bokkypoobah/EtherVendingMachine
+//
+// TODO:
+// * Handle non MetaMask gracefully
+// * Test out with geth and parity RPC
+// * Test out with Mist
+// * Nice to have - add Ledger and Trezor signing
 //
 // Enjoy. (c) BokkyPooBah / Bok Consulting Pty Ltd 2019. The MIT Licence.
 // ----------------------------------------------------------------------------
@@ -218,6 +233,7 @@ var NAMENOTE = "A set of mixed case words. Maximum length " + NAMEMAXLENGTH;
 var DECIMALSNOTE = "Number of decimal places, between 0 and " + DECIMALSMAX + ", inclusive";
 var TOTALSUPPLYNOTE = "A positive number less than or equals to " + w2utils.formatNumber(TOTALSUPPLYMAX.toString());
 var DEPLOYMENTFEENOTE = "Minimum deployment fee ";
+var NETWORKERROR = "Network error. Please check you have MetaMask installed and enabled in your web browser";
 
 var lastNetworkId = -123;
 var lastNumberOfChildren = new BigNumber(-123);
@@ -299,6 +315,8 @@ async function processLoop(loadFromUrl) {
     }
   } else {
     console.log(loopCounter + " [processLoop] connectionOk: " + connectionOk + " - Skipping process()");
+    // BK TODO
+    $("#network").html(NETWORKERROR);
   }
   loopCounter = parseInt(loopCounter) + 1;
   setTimeout(function() { processLoop(false) }, loadFromUrl ? 1000 : LOOPPERIOD);
