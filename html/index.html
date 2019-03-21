@@ -31,11 +31,11 @@
     <link rel="icon" type="image/png" href="images/favicon-128.png" sizes="128x128" />
     <meta name="application-name" content="&nbsp;"/>
     <meta name="msapplication-TileColor" content="#FFFFFF" />
-    <meta name="msapplication-TileImage" content="mstile-144x144.png" />
-    <meta name="msapplication-square70x70logo" content="mstile-70x70.png" />
-    <meta name="msapplication-square150x150logo" content="mstile-150x150.png" />
-    <meta name="msapplication-wide310x150logo" content="mstile-310x150.png" />
-    <meta name="msapplication-square310x310logo" content="mstile-310x310.png" />
+    <meta name="msapplication-TileImage" content="images/mstile-144x144.png" />
+    <meta name="msapplication-square70x70logo" content="images/mstile-70x70.png" />
+    <meta name="msapplication-square150x150logo" content="images/mstile-150x150.png" />
+    <meta name="msapplication-wide310x150logo" content="images/mstile-310x150.png" />
+    <meta name="msapplication-square310x310logo" content="images/mstile-310x310.png" />
 
   </head>
   <body>
@@ -46,7 +46,7 @@
           <i class="icon-menu"></i> Menu
         </button>
         <!-- <a class="navbar-brand logo" href="/">BokkyPooBah's Ether Vending Machine</a> -->
-        <a class="navbar-brand logo" href="/"><img style="max-width:30px; margin-top: -7px;" src="images/Me.png"></a>
+        <a class="navbar-brand logo" href="/"><img style="max-width:53px; margin-top: -16px;" src="images/Me-zoomed.png"></a>
       </div>
       <div class="container">
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -657,6 +657,10 @@ async function processEth(data, action) {
           console.log("deployTokenContract: gas: " + FACTORYDEPLOYGAS);
           console.log("deployTokenContract: data.deploymentFee: " + data.deploymentFeeValue);
           console.log("deployTokenContract: executing: factory.deployTokenContract(" + data.symbol + ", " + data.name + ", " + data.decimalsValue + ", " + data.totalSupplyValue.shift(data.decimals).toString() + ", {from: " + account + ", gas: " + FACTORYDEPLOYGAS + ", value: " + data.deploymentFeeValue.shift(18).toString() + "})");
+
+          var txData = factory.deployTokenContract.getData(data.symbol, data.name, data.decimals, data.totalSupplyValue.shift(data.decimalsValue).toString(), {from: account, gas: FACTORYDEPLOYGAS, value: data.deploymentFeeValue.shift(18).toString()});
+          console.log(JSON.stringify(txData));
+
           // function deployTokenContract(string memory symbol, string memory name, uint8 decimals, uint totalSupply) public payable returns (FixedSupplyToken token);
           factory.deployTokenContract(data.symbol, data.name, data.decimals, data.totalSupplyValue.shift(data.decimalsValue).toString(), {from: account, gas: FACTORYDEPLOYGAS, value: data.deploymentFeeValue.shift(18).toString()}, function(error, tx) {
             if (!error) {
