@@ -534,7 +534,6 @@ async function processEth(data, action) {
       networkId = await _networkId;
       var networkChanged = false;
       if (lastNetworkId != networkId) {
-        $("#network").html(networkId);
         networkChanged = true;
         lastNetworkId = networkId;
       }
@@ -542,11 +541,9 @@ async function processEth(data, action) {
       if (network == null) {
         network = networks[-1];
       }
-      if (networkChanged) {
-        $("#network").html("<a href=\"" + network.explorer + "\" target=\"_blank\">" + network.network + "</a>");
-        $("#faucets").html(network.faucets);
-        $("#factoryAddress").html('<a href="'+ network.explorer + 'address/' + factoryAddress + '#code" target="_blank">' + FACTORYSHORTNAME + ' ' + factoryAddress + '</a>');
-      }
+      $("#network").html("<a href=\"" + network.explorer + "\" target=\"_blank\">" + network.network + "</a>");
+      $("#faucets").html(network.faucets);
+      $("#factoryAddress").html('<a href="'+ network.explorer + 'address/' + factoryAddress + '#code" target="_blank">' + FACTORYSHORTNAME + ' ' + factoryAddress + '</a>');
 
       var block = await _block;
       var blockNumber = block.number;
