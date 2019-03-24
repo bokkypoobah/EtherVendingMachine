@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <title>My first Vue app</title>
     <meta charset="utf-8"/>
@@ -8,17 +8,19 @@
     <meta name="author" content="BokkyPooBah/bokconsulting.com.au">
     <link type="text/css" rel="stylesheet" href="css/bootstrap.css" />
     <link type="text/css" rel="stylesheet" href="css/bootstrap-vue.css"/>
-    <link type="text/css" rel="stylesheet" href="css/theme.css" />
-    <script src="js/polyfill.js"></script>
+    <link href="css/app.css" rel="stylesheet" media="screen" />
+    <!-- <link type="text/css" rel="stylesheet" href="css/theme.css" /> -->
+    <!-- <script src="js/polyfill.js"></script> -->
     <script src="js/vue.js"></script>
     <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/bootstrap.js"></script>
+    <!-- <script src="js/bootstrap.js"></script> -->
     <script src="js/bootstrap-vue.js"></script>
-    <script src="js/vue-router.js"></script>
-    <script src="js/vuex.js"></script>
-    <script src="js/w2ui-1.5.rc1.js"></script>
-    <script src="js/bignumber.min.js"></script>
-    <script src="js/web3.js"></script>
+    <!-- <script src="js/vue-router.js"></script> -->
+    <!-- <script src="js/vuex.js"></script> -->
+    <!-- <script src="js/w2ui-1.5.rc1.js"></script> -->
+    <!-- <script src="js/bignumber.min.js"></script> -->
+    <!-- <script src="js/web3.js"></script> -->
+
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="images/apple-touch-icon-57x57.png" />
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/apple-touch-icon-114x114.png" />
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
@@ -42,63 +44,69 @@
   </head>
   <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="#">Navbar</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Dropdown
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-          </li>
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-      </div>
-    </nav>
 
     <div id="app">
-      {{ message }}
+
+
+      <b-container>
+
+        <div>
+          <b-navbar type="dark" variant="primary">
+            <b-navbar-brand href="#">
+              <!-- <img src="images/Me-zoomed.png" style="max-width:53px; margin-top: -16px;" class="d-inline-block align-top" alt="Ether Vending Machine" /> -->
+              <img src="images/Me-zoomed.png" style="max-width:45px; margin-top: -4px;" alt="Ether Vending Machine" />
+              Ether Vending Machine
+            </b-navbar-brand>
+
+            <b-navbar-nav class="ml-auto">
+              <!-- Navbar dropdowns -->
+              <b-nav-item-dropdown text="Services" right>
+                <b-dropdown-item href="#">Deploy Fixed Supply Token Contract</b-dropdown-item>
+              </b-nav-item-dropdown>
+
+              <b-nav-item-dropdown text="Pages" right>
+                <b-dropdown-item href="#">Token Contract</b-dropdown-item>
+              </b-nav-item-dropdown>
+
+              <b-nav-item-dropdown text="Help" right>
+                <b-dropdown-item href="#">FAQ</b-dropdown-item>
+                <b-dropdown-item href="#">Settings</b-dropdown-item>
+              </b-nav-item-dropdown>
+            </b-navbar-nav>
+          </b-navbar>
+        </div>
+
+        <b-jumbotron header="BootstrapVue" lead="Bootstrap 4 Components for Vue.js 2">
+          <p>For more information visit our website</p>
+          <b-btn variant="primary" href="https://bootstrap-vue.js.org/">More Info</b-btn>
+        </b-jumbotron>
+
+        <b-form-group
+          horizontal
+          :label-cols="4"
+          description="Let us know your name."
+          label="Enter your name"
+        >
+          <b-form-input v-model.trim="name"></b-form-input>
+        </b-form-group>
+
+        <b-alert variant="success" :show="showAlert">Hello {{ name }}</b-alert>
+      </b-container>
     </div>
 
-    <p>Using mustaches: {{ rawHtml }}</p>
-    <p>Using v-html directive: <span v-html="rawHtml"></span></p>
-
-<script>
-  Vue.prototype.$appName = 'My App';
-  Vue.use(Vuex);
-
-  const greetings = (name) => {
-    return `hello ${name}`;
-  }
-
-  var app = new Vue({
-    el: '#app',
-    data: {
-      message: 'Hello Vue! 1' + greetings(1 + 2)
+<script type="text/javascript">
+window.app = new Vue({
+  el: '#app',
+  data: {
+    name: ''
+  },
+  computed: {
+    showAlert() {
+      return this.name.length > 4 ? true : false
     }
-  });
+  }
+})
 </script>
   </body>
 </html>
