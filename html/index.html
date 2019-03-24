@@ -280,11 +280,31 @@ const promisify = (inner) =>
 
 
 // ----------------------------------------------------------------------------
-// Main process loop. load event to call initially, then setTimeout repeatedly
+// Event listeners. Main process loop and individual fields
 // ----------------------------------------------------------------------------
 window.addEventListener('load', async () => {
   processLoop("refresh");
 });
+$('#deploy').on('click', function (e) {
+  execute('deployClicked');
+})
+$('#symbol').on('change', function (e) {
+  execute('symbolChanged');
+})
+$('#name').on('change', function (e) {
+  execute('nameChanged');
+})
+$('#decimals').on('change', function (e) {
+  execute('decimalsChanged');
+})
+$('#totalSupply').on('change', function (e) {
+  execute('totalSupplyChanged');
+})
+$('#deploymentFee').on('change', function (e) {
+  execute('deploymentFeeChanged');
+})
+
+
 async function processLoop(action) {
   process(action);
   loopCounter = parseInt(loopCounter) + 1;
@@ -305,10 +325,10 @@ async function process(action) {
       processEth(data, 'refresh');
       console.log(loopCounter + " [process." + action + "] processEth completed");
     } catch (error) {
-      console.log(loopCounter + " [process." + action + "] connectionOk: " + connectionOk + " - processLoop() error " + error);
+      console.log(loopCounter + " [process." + action + "] error: " + error);
     }
   } else {
-    console.log(loopCounter + " [process." + action + "] connectionOk: " + connectionOk + " - Skipping processLoop()");
+    console.log(loopCounter + " [process." + action + "] connection: " + connectionOk + " - Skipping process");
     // BK TODO
     $("#network").html(NETWORKERROR);
   }
@@ -317,10 +337,39 @@ async function process(action) {
 
 
 // ----------------------------------------------------------------------------
+// Execute functions
+// ----------------------------------------------------------------------------
+var functionCounter = 0;
+async function execute(action) {
+  console.log(functionCounter + " [execute." + action + "] connection: " + connectionOk);
+  if (!connectionOk) {
+    console.log(loopCounter + " [execute." + action + "] calling establishConnection");
+    await establishConnection();
+    console.log(loopCounter + " [execute." + action + "] called establishConnection");
+  }
+  if (connectionOk) {
+    try {
+      var data = getInputData(false);
+      renderInputData(data);
+      // Retry in case we running during a ETH refresh process
+      while (!processEth(data, action)) {
+        ;
+      }
+    } catch (error) {
+      console.log(functionCounter + " [execute." + action + "] error: " + error);
+    }
+  } else {
+    console.log(functionCounter + " [execute." + action + "] connection: " + connectionOk + " - Skipping processing");
+  }
+  functionCounter = parseInt(functionCounter) + 1;
+}
+
+
+// ----------------------------------------------------------------------------
 // Try to establish a web3 connection
 // ----------------------------------------------------------------------------
 async function establishConnection() {
-  console.log(loopCounter + " [establishConnection] connectionOk: " + connectionOk);
+  console.log(loopCounter + " [establishConnection] connection: " + connectionOk);
 
   // Modern dapp browsers...
   if (window.ethereum) {
@@ -512,8 +561,12 @@ function renderInputData(data) {
   $("#totalSupplyHelp").html(TOTALSUPPLYNOTE);
 }
 
+
 var spinner = 0;
 var renderingEthData = false;
+// ----------------------------------------------------------------------------
+// Get ETH data, display, execute transaction if necessary
+// ----------------------------------------------------------------------------
 async function processEth(data, action) {
   var processed = false;
   if (!renderingEthData) {
@@ -688,55 +741,6 @@ async function processEth(data, action) {
   }
   return processed;
 }
-
-
-// ----------------------------------------------------------------------------
-// Functions
-// ----------------------------------------------------------------------------
-var functionCounter = 0;
-
-async function executeFunction(action) {
-  console.log(functionCounter + " [executeFunction] connectionOk: " + connectionOk);
-  if (!connectionOk) {
-    console.log(loopCounter + " [executeFunction] calling establishConnection");
-    await establishConnection();
-    console.log(loopCounter + " [executeFunction] called establishConnection");
-  }
-  if (connectionOk) {
-    try {
-      var data = getInputData(false);
-      renderInputData(data);
-      // Retry in case we running during a ETH refresh process
-      while (!processEth(data, action)) {
-        ;
-      }
-    } catch (error) {
-      console.log(functionCounter + " [executeFunction] connectionOk: " + connectionOk + " - process() error " + error);
-    }
-  } else {
-    console.log(functionCounter + " [executeFunction] connectionOk: " + connectionOk + " - Skipping processing");
-  }
-  functionCounter = parseInt(functionCounter) + 1;
-}
-
-$('#deploy').on('click', function (e) {
-  executeFunction('deployClicked');
-})
-$('#symbol').on('change', function (e) {
-  executeFunction('symbolChanged');
-})
-$('#name').on('change', function (e) {
-  executeFunction('nameChanged');
-})
-$('#decimals').on('change', function (e) {
-  executeFunction('decimalsChanged');
-})
-$('#totalSupply').on('change', function (e) {
-  executeFunction('totalSupplyChanged');
-})
-$('#deploymentFee').on('change', function (e) {
-  executeFunction('deploymentFeeChanged');
-})
 
 </script>
   </body>
