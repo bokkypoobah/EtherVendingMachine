@@ -207,12 +207,14 @@
 // Enjoy. (c) BokkyPooBah / Bok Consulting Pty Ltd 2019. The MIT Licence.
 // ----------------------------------------------------------------------------
 
-// Network    Network Id   Chain Id
-// Mainnet             1          1
-// Ropsten             3          3
-// Rinkeby             4          4
-// Kovan              42         42
-// Görli               5          5
+// Network           Network Id   Chain Id
+// Mainnet                    1          1
+// Ropsten                    3          3
+// Rinkeby                    4          4
+// Kovan                     42         42
+// Görli                      5          5
+// Truffle Develop Network 4447
+// Ganache Blockchain      5777
 // Testnet   | Explorers                     | Testnet ETH Faucets
 // :-------- |:----------------------------- |:-------------------------
 // Ropsten   | https://ropsten.etherscan.io/ | https://faucet.metamask.io/<br />https://twitter.com/BokkyPooBah/status/1099498823699714048
@@ -221,13 +223,15 @@
 // Görli     | https://goerli.etherscan.io/  | https://faucet.goerli.mudit.blog/<br />https://goerli-faucet.slock.it/<br />https://bridge.goerli.com/
 
 var networks = {
-  "-1" : { "network": "(unknown)", "explorer": "(unknown)", "faucets": "(unknown)" },
-  "1"  : { "network": "Ethereum Mainnet", "explorer": "https://etherscan.io/", "faucets": "" },
-  "2"  : { "network": "Morden Testnet (deprecated)", "explorer": "https://morden.etherscan.io/", "faucets": "(deprecated)" },
-  "3"  : { "network": "Ropsten Testnet", "explorer": "https://ropsten.etherscan.io/", "faucets": "Faucets: <a href=\"https://faucet.metamask.io/\" target=\"_blank\">faucet.metamask.io</a>, <a href=\"https://twitter.com/BokkyPooBah/status/1099498823699714048\" target=\"_blank\">BokkyPooBah's VIP</a>" },
-  "4"  : { "network": "Rinkeby Testnet", "explorer": "https://rinkeby.etherscan.io/", "faucets": "Faucets: <a href=\"https://faucet.metamask.io/\" target=\"_blank\">faucet.metamask.io</a>, <a href=\"https://faucet.rinkeby.io/\" target=\"_blank\">faucet.rinkeby.io</a>" },
-  "42" : { "network": "Kovan Testnet", "explorer": "https://kovan.etherscan.io/", "faucets": "Faucets: <a href=\"https://faucet.kovan.network/\" target=\"_blank\">faucet.kovan.network</a>, <a href=\"https://github.com/kovan-testnet/faucet\" target=\"_blank\">github.com/kovan-testnet</a>" },
-  "5"  : { "network": "Görli Testnet", "explorer": "https://goerli.etherscan.io/", "faucets": "<a href=\"https://faucet.goerli.mudit.blog/\" target=\"_blank\">https://faucet.goerli.mudit.blog/</a><br /><a href=\"https://goerli-faucet.slock.it/\" target=\"_blank\">https://goerli-faucet.slock.it/</a>" },
+  "-1"   : { "network": "(unknown)", "explorer": "(unknown)", "faucets": "(n/a)" },
+  "1"    : { "network": "Ethereum Mainnet", "explorer": "https://etherscan.io/", "faucets": "" },
+  "2"    : { "network": "Morden Testnet (deprecated)", "explorer": "https://morden.etherscan.io/", "faucets": "(deprecated)" },
+  "3"    : { "network": "Ropsten Testnet", "explorer": "https://ropsten.etherscan.io/", "faucets": "Faucets: <a href=\"https://faucet.metamask.io/\" target=\"_blank\">faucet.metamask.io</a>, <a href=\"https://twitter.com/BokkyPooBah/status/1099498823699714048\" target=\"_blank\">BokkyPooBah's VIP</a>" },
+  "4"    : { "network": "Rinkeby Testnet", "explorer": "https://rinkeby.etherscan.io/", "faucets": "Faucets: <a href=\"https://faucet.metamask.io/\" target=\"_blank\">faucet.metamask.io</a>, <a href=\"https://faucet.rinkeby.io/\" target=\"_blank\">faucet.rinkeby.io</a>" },
+  "42"   : { "network": "Kovan Testnet", "explorer": "https://kovan.etherscan.io/", "faucets": "Faucets: <a href=\"https://faucet.kovan.network/\" target=\"_blank\">faucet.kovan.network</a>, <a href=\"https://github.com/kovan-testnet/faucet\" target=\"_blank\">github.com/kovan-testnet</a>" },
+  "5"    : { "network": "Görli Testnet", "explorer": "https://goerli.etherscan.io/", "faucets": "<a href=\"https://faucet.goerli.mudit.blog/\" target=\"_blank\">https://faucet.goerli.mudit.blog/</a><br /><a href=\"https://goerli-faucet.slock.it/\" target=\"_blank\">https://goerli-faucet.slock.it/</a>" },
+  "4447" : { "network": "Truffle Devnet", "explorer": "(none)", "faucets": "(n/a)" },
+  "5777" : { "network": "Ganache Devnet", "explorer": "(none)", "faucets": "(n/a)" },
 };
 
 var factoryAddress = "0xA550114ee3688601006b8b9f25e64732eF774934";
