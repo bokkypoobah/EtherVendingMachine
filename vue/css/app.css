@@ -2,6 +2,12 @@
     display: block !important;
 }
 
+.form-control-plaintext {
+  background-color: #F8F8F8 !important;
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+  font-size: 80%;
+  wrap: off !important;
+}
 
 
 /* .logo {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>My first Vue app</title>
+    <title>Ether Vending Machine In Vue.js</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="BokkyPooBah's Ether Vending Machine (c) Bok Consulting Pty Ltd 2019">
@@ -18,8 +18,8 @@
     <!-- <script src="js/vue-router.js"></script> -->
     <!-- <script src="js/vuex.js"></script> -->
     <!-- <script src="js/w2ui-1.5.rc1.js"></script> -->
-    <!-- <script src="js/bignumber.min.js"></script> -->
-    <!-- <script src="js/web3.js"></script> -->
+    <script src="js/bignumber.min.js"></script>
+    <script src="js/web3.js"></script>
 
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="images/apple-touch-icon-57x57.png" />
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/apple-touch-icon-114x114.png" />
@@ -43,19 +43,13 @@
     <meta name="msapplication-square310x310logo" content="images/mstile-310x310.png" />
   </head>
   <body>
-
-
-
     <div id="app">
-
-
-      <b-container>
-
+      <b-container fluid>
         <div>
           <b-navbar type="dark" variant="primary">
             <b-navbar-brand href="#">
               <!-- <img src="images/Me-zoomed.png" style="max-width:53px; margin-top: -16px;" class="d-inline-block align-top" alt="Ether Vending Machine" /> -->
-              <img src="images/Me-zoomed.png" style="max-width:45px; margin-top: -4px;" alt="Ether Vending Machine" />
+              <img src="images/Me-zoomed.png" style="max-width:30px; margin-top: -4px;" alt="Ether Vending Machine" />
               Ether Vending Machine
             </b-navbar-brand>
 
@@ -76,37 +70,201 @@
             </b-navbar-nav>
           </b-navbar>
         </div>
+        <br />
 
-        <b-jumbotron header="BootstrapVue" lead="Bootstrap 4 Components for Vue.js 2">
-          <p>For more information visit our website</p>
-          <b-btn variant="primary" href="https://bootstrap-vue.js.org/">More Info</b-btn>
-        </b-jumbotron>
-
-        <b-form-group
-          horizontal
-          :label-cols="4"
-          description="Let us know your name."
-          label="Enter your name"
-        >
-          <b-form-input v-model.trim="name"></b-form-input>
-        </b-form-group>
-
-        <b-alert variant="success" :show="showAlert">Hello {{ name }}</b-alert>
-      </b-container>
+        <div>
+          <b-row>
+            <b-col cols="12" md="8">
+              <b-card title="Deploy Fixed Supply Token Contract" sub-title="BokkyPooBah's Fixed Supply Token 👊 Factory v1.10">
+                <b-form @submit="onSubmit" v-if="show">
+                <!-- <b-form @submit="onSubmit" @reset="onReset" v-if="show"> -->
+                  <b-form-group id="symbolInputGroup" label-for="symbolInput" label="Symbol" horizontal :label-cols="4" description="An uppercase word a few letters long">
+                    <b-form-input id="symbolInput" type="text" v-model.trim="symbol" required placeholder="example 'BBC'"></b-form-input>
+                  </b-form-group>
+                  <b-form-group id="nameInputGroup" label-for="nameInput" label="Name" horizontal :label-cols="4" description="A set of mixed case words">
+                    <b-form-input id="nameInput" type="text" v-model.trim="name" required placeholder="example 'Bob's Burgers 🍔 & Chips 🍟 Loyalty Points'"></b-form-input>
+                  </b-form-group>
+                  <b-form-group id="decimalsInputGroup" label-for="decimalsInput" label="Decimals" horizontal :label-cols="4" description="Number of decimal places, between 0 and 18, inclusive">
+                    <b-form-input id="decimalsInput" type="number" v-model.trim="decimals" required placeholder="example '18'"></b-form-input>
+                  </b-form-group>
+                  <b-form-group id="totalSupplyInputGroup" label-for="totalSupplyInput" label="Total Supply" horizontal :label-cols="4" description="A positive number less than or equals to 100,000,000,000,000">
+                    <b-form-input id="totalSupplyInput" type="number" v-model.trim="totalSupply" required placeholder="example '123456.789'"></b-form-input>
+                  </b-form-group>
+                  <b-form-group id="deploymentFeeInputGroup" label-for="deploymentFeeInput" label="Deployment Fee" horizontal :label-cols="4" description="Minimum deployment fee 0.1 ethers">
+                    <b-form-input id="deploymentFeeInput" type="number" v-model.trim="deploymentFee" required placeholder="example 0.123456789"></b-form-input>
+                  </b-form-group>
+                  <b-form-group>
+                    <b-form-group label="Show Details: " horizontal :label-cols="4">
+                      <b-form-radio-group id="showDetails" v-model="showDetails" name="transactionDataTypeComponent">
+                        <b-form-radio value="none">None</b-form-radio>
+                        <b-form-radio value="functionCall">Function Call</b-form-radio>
+                        <b-form-radio value="javascript">JavaScript</b-form-radio>
+                        <b-form-radio value="formatted">Formatted</b-form-radio>
+                        <b-form-radio value="raw">Raw</b-form-radio>
+                      </b-form-radio-group>
+                    </b-form-group>
+                  </b-form-group>
+                  <b-form-group id="transactionDataInputGroup" label-for="transactionDataInput" v-if="showDetails != 'none'" label="Information sent with the transaction" description="You can copy and use this to execute your deployment transaction elsewhere">
+                    <b-form-textarea id="transactionDataInput" v-model.trim="getTransactionData" plaintext :wrap="showDetails === 'raw' ? 'soft' : 'off'" rows="10" max-rows="20" ></b-form-textarea>
+                  </b-form-group>
+                  <b-button variant="primary">Deploy Token Contract</b-button>
+                </b-form>
+              </b-card>
+            </b-col>
+            <b-col>
+              <b-card title="Network" sub-title="Ethereum network and your account">
+                <b-form-group horizontal :label-cols="4" description="An uppercase word a few letters long" label="Symbol">
+                  <b-form-input v-model.trim="symbol"></b-form-input>
+                </b-form-group>
+              </b-card>
+              <br />
+              <b-card title="Account" sub-title="Ethereum network and your account">
+                <b-form-group horizontal :label-cols="4" description="An uppercase word a few letters long" label="Symbol">
+                  <b-form-input v-model.trim="symbol"></b-form-input>
+                </b-form-group>
+              </b-card>
+              <br />
+              <b-card title="Fixed Supply Token Factory" sub-title="Fixed Supply Token Factory">
+                <b-form-group horizontal :label-cols="4" description="An uppercase word a few letters long" label="Symbol">
+                  <b-form-input v-model.trim="symbol"></b-form-input>
+                </b-form-group>
+              </b-card>
+            </b-col>
+          </b-row>
+        </div>
     </div>
+    <script type="text/javascript">
+    var factoryAddress = "0xA550114ee3688601006b8b9f25e64732eF774934";
+    var factoryAbi = [{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"tokens","type":"uint256"}],"name":"recoverTokens","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_minimumFee","type":"uint256"}],"name":"setMinimumFee","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"minimumFee","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"numberOfChildren","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"children","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"acceptOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"newAddress","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"symbol","type":"string"},{"name":"name","type":"string"},{"name":"decimals","type":"uint8"},{"name":"totalSupply","type":"uint256"}],"name":"deployTokenContract","outputs":[{"name":"token","type":"address"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"newOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newAddress","type":"address"}],"name":"deprecateFactory","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"isChild","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":false,"name":"_newAddress","type":"address"}],"name":"FactoryDeprecated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldFee","type":"uint256"},{"indexed":false,"name":"newFee","type":"uint256"}],"name":"MinimumFeeUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"token","type":"address"},{"indexed":false,"name":"symbol","type":"string"},{"indexed":false,"name":"name","type":"string"},{"indexed":false,"name":"decimals","type":"uint8"},{"indexed":false,"name":"totalSupply","type":"uint256"}],"name":"TokenDeployed","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"}],"name":"OwnershipTransferred","type":"event"}];
+    var tokenAbi = [{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"tokens","type":"uint256"}],"name":"recoverTokens","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_owner","type":"address"}],"name":"init","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"tokenOwner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"acceptOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"symbol","type":"string"},{"name":"name","type":"string"},{"name":"decimals","type":"uint8"},{"name":"fixedSupply","type":"uint256"}],"name":"init","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"},{"name":"data","type":"bytes"}],"name":"approveAndCall","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"newOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"tokens","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"tokenOwner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"tokens","type":"uint256"}],"name":"Approval","type":"event"}];
 
-<script type="text/javascript">
-window.app = new Vue({
-  el: '#app',
-  data: {
-    name: ''
-  },
-  computed: {
-    showAlert() {
-      return this.name.length > 4 ? true : false
+    var account = "0x07fb31ff47Dc15f78C5261EEb3D711fb6eA985D1";
+    // var txData = factory.deployTokenContract.getData(data.symbol, data.name, data.decimals, data.totalSupplyValue.shift(data.decimalsValue).toString(), {from: account, gas: FACTORYDEPLOYGAS, value: data.deploymentFeeValue.shift(18).toString()});
+    var SYMBOLMAXLENGTH = 64;
+    var NAMEMAXLENGTH = 128;
+    var DECIMALSMAX = 18;
+    // var TOTALSUPPLYMAX = new BigNumber("1").shift(14); // 100 trillion
+    var TOTALSUPPLYMAX = new BigNumber("1").shift(3); // 1000
+    var DEPLOYMENTFEEMAX = new BigNumber("100");
+
+    var DEFAULTDECIMALS = 18;
+    var DEFAULTTOTALSUPPLY = new BigNumber("1");
+    var FACTORYDEPLOYGAS = 1200000;
+
+    function isSymbolOk(symbol) {
+      try {
+        return symbol.length > 0 && symbol.length < SYMBOLMAXLENGTH;
+      } catch (e) {
+      }
+      return false;
     }
-  }
-})
-</script>
+    function isNameOk(name) {
+      try {
+        return name.length > 0 && name.length < NAMEMAXLENGTH;
+      } catch (e) {
+      }
+      return false;
+    }
+    function isDecimalsOk(decimals) {
+      if (decimals.length > 0) {
+        try {
+          return decimals >= 0 && decimals <= DECIMALSMAX;
+        } catch (e) {
+        }
+        return false;
+      }
+    }
+    function isTotalSupplyOk(totalSupply) {
+      if (totalSupply.length > 0) {
+        try {
+          var _totalSupply = new BigNumber(totalSupply);
+          return _totalSupply.greaterThan(0) && _totalSupply.lessThanOrEqualTo(TOTALSUPPLYMAX);
+        } catch (e) {
+        }
+        return false;
+      }
+    }
+
+    window.app = new Vue({
+      el: "#app",
+      data: {
+        symbol: "BBC",
+        name: "Bob's Burgers 🍔 & Chips 🍟 Loyalty Points",
+        decimals: "18",
+        totalSupply: "123.456",
+        deploymentFee: "0.123456789",
+        transactionData: "0x123456",
+        showDetails: "formatted",
+        account: "0x07fb31ff47Dc15f78C5261EEb3D711fb6eA985D1",
+        errors: [],
+        show: true,
+      },
+      methods: {
+        onSubmit(event) {
+          event.preventDefault();
+          this.name = "submitted";
+          alert("hello");
+        }
+      },
+      computed: {
+        symbolOk() {
+          return isSymbolOk(this.symbol);
+        },
+        nameOk() {
+          return isNameOk(this.name);
+        },
+        decimalsOk() {
+          return isDecimalsOk(this.decimals);
+        },
+        totalSupplyOk() {
+          return isTotalSupplyOk(this.totalSupply);
+        },
+
+        showAlert() {
+          return this.name.length > 4 ? true : false;
+        },
+        showTransactionData() {
+          return this.symbol.length > 0 && this.name.length > 0 && this.decimals > 0 && this.decimals <= 18 && this.totalSupply > 0 && this.totalSupply <= 1000 && this.deploymentFee >= 0.1;
+        },
+        dataOk() {
+          return this.symbol.length > 0 && this.name.length > 0 && this.decimals > 0 && this.decimals <= 18 && this.totalSupply > 0 && this.totalSupply <= 1000 && this.deploymentFee >= 0.1;
+        },
+        wrapTextArea() {
+          return this.showDetails == "raw";
+        },
+        getTransactionData() {
+          var result;
+          if (isSymbolOk(this.symbol) && isNameOk(this.name) && isDecimalsOk(this.decimals) && isTotalSupplyOk(this.totalSupply)) {
+            if (this.showDetails == "functionCall") {
+              result = "deployTokenContract('" + this.symbol + "', '" + this.name + "', " + this.decimals + ", " + new BigNumber(this.totalSupply).shift(this.decimals) + ")";
+            } else if (this.showDetails == "javascript") {
+              result = "var myAccount = \"" + this.account + "\";\n" +
+                "var factoryAddress = \"" + factoryAddress + "\";\n" +
+                "var factoryAbi = " + JSON.stringify(factoryAbi) + ";\n" +
+                "var factory = web3.eth.contract(factoryAbi).at(factoryAddress);\n" +
+                "var tx = factory.deployTokenContract(\"" +this.symbol + "\", \"" + this.name + "\", " + this.decimals + ", " +
+                  new BigNumber(this.totalSupply).shift(this.decimals) + ", { from: myAccount, gas: \"" + FACTORYDEPLOYGAS + "\", value: web3.toWei(\"" + this.deploymentFee + "\", \"ether\") });\n" +
+                "web3.eth.getTransaction(tx);";
+            } else {
+              var factory = web3.eth.contract(factoryAbi).at(factoryAddress);
+              try {
+                result = factory.deployTokenContract.getData(this.symbol, this.name, this.decimals, this.totalSupply, {from: account});
+                if (this.showDetails == "formatted") {
+                  var offset = 10;
+                  var tempResult = result.substring(0, 10) + "\n" + result.substring(10).match(/.{1,64}/g).join("\n");
+                  result = tempResult;
+                }
+              } catch (e) {
+                result = e;
+              }
+            }
+          } else {
+              result = "Please fill in the input fields above";
+          }
+          return result;
+        }
+      }
+    })
+    </script>
   </body>
 </html>
