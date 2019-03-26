@@ -155,9 +155,7 @@
     // TODO:
     // * Handle non MetaMask gracefully
     // * Data generation for offline/MEW/MyCrypto execution
-    // * Transaction reporting
     // * Test out with geth and parity RPC
-    // * Test out with Mist
     // * Nice to have - add Ledger and Trezor signing
     //
     // Enjoy. (c) BokkyPooBah / Bok Consulting Pty Ltd 2019. The MIT Licence.
@@ -242,8 +240,6 @@
       }
     }
     function isDeploymentFeeOk(deploymentFee, factoryMinimumFee) {
-      console.log("[isDeploymentFeeOk] deploymentFee: " + deploymentFee);
-      console.log("[isDeploymentFeeOk] factoryMinimumFee: " + factoryMinimumFee);
       if (deploymentFee.length > 0) {
         try {
           var _deploymentFee = new BigNumber(deploymentFee);
@@ -401,9 +397,6 @@
               appData.factoryLastNumberOfChildren = appData.factoryNumberOfChildren;
             }
             if (appData.actionDeploy) {
-              // TODO: Delete - was for testing
-              // appData.myAccountBalance = new BigNumber("123").shift(10);
-              // appData.deploymentFee = new BigNumber("0.09");
               var deploymentFeeInWei = new BigNumber(appData.deploymentFee).shift(18);
               console.log("[processEth.deploy] myAccountBalance: " + appData.myAccountBalance);
               console.log("[processEth.deploy] deploymentFee: " + deploymentFeeInWei);
@@ -515,13 +508,7 @@
         },
         timeoutCallback() {
           var v = this;
-          console.log("calling processEth(...)");
           processEth(this);
-
-          // var _processEth = promisify(cb => processEth(this, cb));
-          // appData.myAccountBalance = await _processEth;
-          //
-          console.log("called processEth(...)");
           setTimeout(function() {
             v.timeoutCallback();
           }, 5000);
