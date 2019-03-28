@@ -124,9 +124,9 @@
                 </div>
               </b-card>
               <br />
-              <b-card title="Your Account">
-                <b-link :href="network.explorer + 'address/' + myAccount" class="card-link" target="_blank">{{ myAccount }}</b-link>
-                <div>Balance {{ myAccountBalanceString }} ethers</div>
+              <b-card v-if="web3Connection !== null && web3Connection.connectionOk" title="Your Account">
+                <b-link :href="network.explorer + 'address/' + web3Connection.coinbase" class="card-link" target="_blank">{{ web3Connection.coinbase }}</b-link>
+                <b-card-text>Balance {{ coinbaseBalanceString }} ethers</b-card-text>
               </b-card>
               <br />
               <b-card title="Fixed Supply Token Factory">
@@ -351,47 +351,10 @@
         }
         appData.myAccount = web3Connection.coinbase;
         appData.myAccountBalance = web3Connection.balance;
-        appData.myAccountBalanceString = new BigNumber(appData.myAccountBalance).shift(-18);
+        appData.myAccountBalanceString = appData.myAccountBalance == null ? null : new BigNumber(appData.myAccountBalance).shift(-18);
 
-        // if (!web3Connection._accountOk) {
-        //   console.log("[processEth] calling establishConnection");
-        //   await establishConnection();
-        //   console.log("[processEth] called establishConnection");
-        // }
         if (!web3Connection._accountOk) {
-          // var _networkId = promisify(cb => web3.version.getNetwork(cb));
-          // var _block = promisify(cb => web3.eth.getBlock("latest", cb));
-          // var _accounts = promisify(cb => web3.eth.getAccounts(cb));
           try {
-            // appData.networkId = await _networkId;
-            // appData.networkChanged = false;
-            // if (appData.lastNetworkId != appData.networkId) {
-            //   appData.networkChanged = true;
-            //   appData.lastNetworkId = appData.networkId;
-            // }
-            // appData.network = networks[appData.networkId];
-            // if (appData.network == null) {
-            //   appData.network = networks[-1];
-            // }
-            // var block = await _block;
-            // appData.blockNumber = block.number;
-            // appData.blockNumberString = formatNumber(block.number);
-            // if (appData.blockNumber != appData.lastBlockNumber) {
-            //   appData.blockBeat = !appData.blockBeat;
-            //   appData.lastBlockNumber = appData.blockNumber;
-            // }
-            // appData.blockTimestamp = block.timestamp;
-            // var options = { hour: 'numeric', minute: 'numeric', second: 'numeric', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',  };
-            // var date = new Date(appData.blockTimestamp * 1000);
-            // appData.blockTimestampString = new Intl.DateTimeFormat('default', {hour: 'numeric', minute: 'numeric', second: 'numeric'}).format(date) + " " +
-            //   new Intl.DateTimeFormat('default', {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'}).format(date);
-            //
-            // var accounts = await _accounts;
-            // appData.myAccount = accounts[0];
-            // var _balance = promisify(cb => web3.eth.getBalance(appData.myAccount, cb));
-            // appData.myAccountBalance = await _balance;
-            // appData.myAccountBalanceString = new BigNumber(appData.myAccountBalance).shift(-18);
-
             var factory = web3.eth.contract(appData.factoryFullAbi).at(appData.factoryAddress);
             var _minimumFee = promisify(cb => factory.minimumFee(cb));
             appData.factoryMinimumFee = await _minimumFee;
@@ -569,6 +532,14 @@
 
         getDescription() {
           return descriptions[this.showDetails];
+        },
+
+        coinbaseBalanceString() {
+          if (this.web3Connection.balance != null) {
+            return new BigNumber(this.web3Connection.balance).shift(-18).toString();
+          } else {
+            return "";
+          }
         },
 
         getTransactionData() {

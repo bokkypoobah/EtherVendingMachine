@@ -107,15 +107,10 @@ async function getWeb3() {
       results.errors.push(error.message);
     }
   }
-  console.log("[getWeb3] lastBalance: " + lastBalance);
-  console.log("[getWeb3] balance: " + results.balance);
   if (lastBalance != null && results.balance.equals(lastBalance)) {
     results.balanceChanged = false;
   }
   lastBalance = results.balance;
-  console.log("[getWeb3] balanceChanged: " + results.balanceChanged);
-  console.log("[getWeb3] lastBalance: " + lastBalance);
-  console.log("[getWeb3] balance: " + results.balance);
 
   if (web3ConnectionOk) {
     try {
