@@ -20,6 +20,7 @@
     <!-- <script src="js/w2ui-1.5.rc1.js"></script> -->
     <script src="js/bignumber.min.js"></script>
     <script src="js/web3.js"></script>
+    <script src="js/getWeb3.js"></script>
 
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="images/apple-touch-icon-57x57.png" />
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/apple-touch-icon-114x114.png" />
@@ -255,7 +256,7 @@
     // Utility functions
     // ----------------------------------------------------------------------------
     function formatNumber(n) {
-        return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return n == null ? "" : n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
 
@@ -264,6 +265,7 @@
     // ----------------------------------------------------------------------------
     var connectionOk = false;
     async function establishConnection() {
+      console.table(window);
       console.log("[establishConnection] " + connectionOk);
 
       // Modern dapp browsers...
@@ -319,46 +321,76 @@
     // ----------------------------------------------------------------------------
     var processingEth = false;
     async function processEth(appData) {
+
       if (!processingEth) {
         processingEth = true;
-        if (!connectionOk) {
-          console.log("[processEth] calling establishConnection");
-          await establishConnection();
-          console.log("[processEth] called establishConnection");
-        }
-        if (connectionOk) {
-          var _networkId = promisify(cb => web3.version.getNetwork(cb));
-          var _block = promisify(cb => web3.eth.getBlock("latest", cb));
-          var _accounts = promisify(cb => web3.eth.getAccounts(cb));
-          try {
-            appData.networkId = await _networkId;
-            appData.networkChanged = false;
-            if (appData.lastNetworkId != appData.networkId) {
-              appData.networkChanged = true;
-              appData.lastNetworkId = appData.networkId;
-            }
-            appData.network = networks[appData.networkId];
-            if (appData.network == null) {
-              appData.network = networks[-1];
-            }
-            var block = await _block;
-            appData.blockNumber = block.number;
-            appData.blockNumberString = formatNumber(block.number);
-            if (appData.blockNumber != appData.lastBlockNumber) {
-              appData.blockBeat = !appData.blockBeat;
-              appData.lastBlockNumber = appData.blockNumber;
-            }
-            appData.blockTimestamp = block.timestamp;
-            var options = { hour: 'numeric', minute: 'numeric', second: 'numeric', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',  };
-            var date = new Date(appData.blockTimestamp * 1000);
-            appData.blockTimestampString = new Intl.DateTimeFormat('default', {hour: 'numeric', minute: 'numeric', second: 'numeric'}).format(date) + " " +
-              new Intl.DateTimeFormat('default', {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'}).format(date);
+        console.log("[processEth] calling getWeb3");
+        var _web3Connection = getWeb3();
+        var web3Connection = await _web3Connection;
+        appData.web3Connection = web3Connection;
+        console.log("[processEth] called getWeb3");
+        // console.table(web3Connection);
 
-            var accounts = await _accounts;
-            appData.myAccount = accounts[0];
-            var _balance = promisify(cb => web3.eth.getBalance(appData.myAccount, cb));
-            appData.myAccountBalance = await _balance;
-            appData.myAccountBalanceString = new BigNumber(appData.myAccountBalance).shift(-18);
+        appData.networkId = web3Connection.networkId;
+        appData.networkChanged = web3Connection.networkChanged;
+        appData.network = networks[appData.networkId];
+        if (appData.network == null) {
+          appData.network = networks[-1];
+        }
+        appData.blockNumber = web3Connection.block == null ? null : web3Connection.block.number;
+        appData.blockNumberString = formatNumber(appData.blockNumber);
+        if (web3Connection.block != null) {
+          appData.blockTimestamp = web3Connection.block.timestamp;
+          var options = { hour: 'numeric', minute: 'numeric', second: 'numeric', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',  };
+          var date = new Date(appData.blockTimestamp * 1000);
+          appData.blockTimestampString = new Intl.DateTimeFormat('default', {hour: 'numeric', minute: 'numeric', second: 'numeric'}).format(date) + " " +
+            new Intl.DateTimeFormat('default', {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'}).format(date);
+        } else {
+          appData.blockTimestamp = null;
+          appData.blockTimestampString = null;
+        }
+        appData.myAccount = web3Connection.coinbase;
+        appData.myAccountBalance = web3Connection.balance;
+        appData.myAccountBalanceString = new BigNumber(appData.myAccountBalance).shift(-18);
+
+        // if (!web3Connection._accountOk) {
+        //   console.log("[processEth] calling establishConnection");
+        //   await establishConnection();
+        //   console.log("[processEth] called establishConnection");
+        // }
+        if (!web3Connection._accountOk) {
+          // var _networkId = promisify(cb => web3.version.getNetwork(cb));
+          // var _block = promisify(cb => web3.eth.getBlock("latest", cb));
+          // var _accounts = promisify(cb => web3.eth.getAccounts(cb));
+          try {
+            // appData.networkId = await _networkId;
+            // appData.networkChanged = false;
+            // if (appData.lastNetworkId != appData.networkId) {
+            //   appData.networkChanged = true;
+            //   appData.lastNetworkId = appData.networkId;
+            // }
+            // appData.network = networks[appData.networkId];
+            // if (appData.network == null) {
+            //   appData.network = networks[-1];
+            // }
+            // var block = await _block;
+            // appData.blockNumber = block.number;
+            // appData.blockNumberString = formatNumber(block.number);
+            // if (appData.blockNumber != appData.lastBlockNumber) {
+            //   appData.blockBeat = !appData.blockBeat;
+            //   appData.lastBlockNumber = appData.blockNumber;
+            // }
+            // appData.blockTimestamp = block.timestamp;
+            // var options = { hour: 'numeric', minute: 'numeric', second: 'numeric', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',  };
+            // var date = new Date(appData.blockTimestamp * 1000);
+            // appData.blockTimestampString = new Intl.DateTimeFormat('default', {hour: 'numeric', minute: 'numeric', second: 'numeric'}).format(date) + " " +
+            //   new Intl.DateTimeFormat('default', {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'}).format(date);
+            //
+            // var accounts = await _accounts;
+            // appData.myAccount = accounts[0];
+            // var _balance = promisify(cb => web3.eth.getBalance(appData.myAccount, cb));
+            // appData.myAccountBalance = await _balance;
+            // appData.myAccountBalanceString = new BigNumber(appData.myAccountBalance).shift(-18);
 
             var factory = web3.eth.contract(appData.factoryFullAbi).at(appData.factoryAddress);
             var _minimumFee = promisify(cb => factory.minimumFee(cb));
@@ -466,6 +498,7 @@
         deploymentTxUrl: "",
         deploymentTxError: "",
 
+        web3Connection: null,
         lastNetworkId: "-2",
         networkId: "-1",
         networkChanged: true,
