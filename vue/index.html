@@ -114,7 +114,12 @@
               </b-card>
             </b-col>
             <b-col cols="12" md="4">
-              <b-card :title="network.name">
+              <b-card header-class="noweb3connectionheader" v-if="web3Connection === null || !web3Connection.connectionOk" header="Web3 Connection Not Detected">
+                <div>
+                  Please use the <b-link href="https://metamask.io" target="_blank">MetaMask</b-link> addon with Firefox, Chromium, Opera or Chrome, or any other other web3 browser.
+                </div>
+              </b-card>
+              <b-card v-if="web3Connection !== null && web3Connection.connectionOk" :title="network.name">
                 Block <b-link :href="network.explorer + 'block/' + blockNumber" class="card-link" target="_blank">{{ '#' + blockNumberString }}</b-link> {{ blockTimestampString }}
                 <div>
                   <span v-show="Object.keys(network.faucets).length">Faucets: </span>
@@ -129,7 +134,7 @@
                 <b-card-text>Balance {{ coinbaseBalanceString }} ethers</b-card-text>
               </b-card>
               <br />
-              <b-card title="Fixed Supply Token Factory">
+              <b-card v-if="web3Connection !== null && web3Connection.connectionOk" title="Fixed Supply Token Factory">
                 <div><b-link :href="network.explorer + 'address/' + factoryAddress" class="card-link" target="_blank">{{ factoryAddress }}</b-link></div>
                 <div>Minimum fee <b-link :href="network.explorer + 'address/' + factoryAddress + '#readContract'" class="card-link" target="_blank">{{ factoryMinimumFeeString }}</b-link> ethers</div>
                 <div>Latest deployed token contracts (max {{ factoryDisplayMaxChildren + ' of ' + factoryNumberOfChildren }})</div>
@@ -261,47 +266,6 @@
 
 
     // ----------------------------------------------------------------------------
-    // Try to establish a web3 connection
-    // ----------------------------------------------------------------------------
-    var connectionOk = false;
-    async function establishConnection() {
-      console.table(window);
-      console.log("[establishConnection] " + connectionOk);
-
-      // Modern dapp browsers...
-      if (window.ethereum) {
-        window.web3 = new Web3(ethereum);
-        try {
-          // Request account access if needed
-          await ethereum.enable();
-          console.log("[establishConnection] await ethereum.enable() completed");
-          // Accounts now exposed
-          connectionOk = true;
-        } catch (error) {
-          // User denied account access...
-        }
-      // Legacy dapp browsers...
-      } else if (window.web3) {
-        try {
-          window.web3 = new Web3(web3.currentProvider);
-          // Acccounts always exposed
-          console.log("[establishConnection] Legacy dapp browsers completed");
-          connectionOk = true;
-        } catch (error) {
-        }
-      // Non-dapp browsers...
-      } else {
-        try {
-          window.web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
-          console.log("[establishConnection] Web3 connection");
-          connectionOk = true;
-        } catch (error) {
-        }
-      }
-    }
-
-
-    // ----------------------------------------------------------------------------
     // Convenience function
     // ----------------------------------------------------------------------------
     const promisify = (inner) =>
@@ -349,11 +313,8 @@
           appData.blockTimestamp = null;
           appData.blockTimestampString = null;
         }
-        appData.myAccount = web3Connection.coinbase;
-        appData.myAccountBalance = web3Connection.balance;
-        appData.myAccountBalanceString = appData.myAccountBalance == null ? null : new BigNumber(appData.myAccountBalance).shift(-18);
 
-        if (!web3Connection._accountOk) {
+        if (web3Connection.connectionOk) {
           try {
             var factory = web3.eth.contract(appData.factoryFullAbi).at(appData.factoryAddress);
             var _minimumFee = promisify(cb => factory.minimumFee(cb));
@@ -393,18 +354,18 @@
             }
             if (appData.actionDeploy) {
               var deploymentFeeInWei = new BigNumber(appData.deploymentFee).shift(18);
-              console.log("[processEth.deploy] myAccountBalance: " + appData.myAccountBalance);
+              console.log("[processEth.deploy] web3Connection.balance: " + web3Connection.balance);
               console.log("[processEth.deploy] deploymentFee: " + deploymentFeeInWei);
               console.log("[processEth.deploy] factoryMinimumFee: " + appData.factoryMinimumFee);
-              if ((appData.myAccountBalance.greaterThanOrEqualTo(deploymentFeeInWei)) && (deploymentFeeInWei.greaterThanOrEqualTo(appData.factoryMinimumFee))) {
+              if ((web3Connection.balance.greaterThanOrEqualTo(deploymentFeeInWei)) && (deploymentFeeInWei.greaterThanOrEqualTo(appData.factoryMinimumFee))) {
                 console.log("[processEth.deploy] symbol: " + appData.symbol);
                 console.log("[processEth.deploy] name: " + appData.name);
                 console.log("[processEth.deploy] decimals: " + appData.decimals);
                 console.log("[processEth.deploy] totalSupply: " + appData.totalSupply);
-                console.log("[processEth.deploy] myAccount: " + appData.myAccount);
+                console.log("[processEth.deploy] coinbase: " + web3Connection.coinbase);
                 console.log("[processEth.deploy] gas: " + appData.factoryDeployGasRequirement);
-                console.log("[processEth.deploy] executing: factory.deployTokenContract(" + appData.symbol + ", " + appData.name + ", " + appData.decimals + ", " + new BigNumber(appData.totalSupply).shift(appData.decimals).toString() + ", {from: " + appData.myAccount + ", gas: " + appData.factoryDeployGasRequirement + ", value: " + new BigNumber(appData.deploymentFee).shift(18).toString() + "})");
-                factory.deployTokenContract(appData.symbol, appData.name, appData.decimals, new BigNumber(appData.totalSupply).shift(appData.decimals).toString(), { from: appData.myAccount, gas: appData.factoryDeployGasRequirement, value: new BigNumber(appData.deploymentFee).shift(18).toString() }, function(error, tx) {
+                console.log("[processEth.deploy] executing: factory.deployTokenContract(" + appData.symbol + ", " + appData.name + ", " + appData.decimals + ", " + new BigNumber(appData.totalSupply).shift(appData.decimals).toString() + ", {from: " + web3Connection.coinbase + ", gas: " + appData.factoryDeployGasRequirement + ", value: " + new BigNumber(appData.deploymentFee).shift(18).toString() + "})");
+                factory.deployTokenContract(appData.symbol, appData.name, appData.decimals, new BigNumber(appData.totalSupply).shift(appData.decimals).toString(), { from: web3Connection.coinbase, gas: appData.factoryDeployGasRequirement, value: new BigNumber(appData.deploymentFee).shift(18).toString() }, function(error, tx) {
                   if (!error) {
                     console.log("[processEth.deploy] deploy tx: " + tx);
                     appData.deploymentTx = tx;
@@ -416,8 +377,8 @@
                   }
                 });
               } else {
-                if (appData.myAccountBalance.lessThan(deploymentFeeInWei)) {
-                  appData.deploymentTxError = "Insufficient funds in your account (" + new BigNumber(appData.myAccountBalance).shift(-18) + " ethers) to pay the deployment fee (" + appData.deploymentFee + " ethers)";
+                if (web3Connection.balance.lessThan(deploymentFeeInWei)) {
+                  appData.deploymentTxError = "Insufficient funds in your account (" + new BigNumber(web3Connection.balance).shift(-18) + " ethers) to pay the deployment fee (" + appData.deploymentFee + " ethers)";
                 } else {
                   appData.deploymentTxError = "Deployment fee (" + appData.deploymentFee + " ethers) must be greater than or equals to the minimum deployment fee (" + new BigNumber(appData.factoryMinimumFee).shift(-18) + " ethers)";
                 }
@@ -472,10 +433,6 @@
         blockBeat: false,
         blockTimestamp: new Date() / 1000,
         blockTimestampString: "",
-
-        myAccount: "",
-        myAccountBalance: new BigNumber(0),
-        myAccountBalanceString: "",
 
         factoryAddress: factoryAddress,
         factoryAbi: factoryAbi,
@@ -548,7 +505,7 @@
             if (this.showDetails == "functionCall") {
               result = "deployTokenContract('" + this.symbol + "', '" + this.name + "', " + this.decimals + ", " + new BigNumber(this.totalSupply).shift(this.decimals) + ")";
             } else if (this.showDetails == "javascript") {
-              result = "var myAccount = \"" + this.myAccount + "\";\n" +
+              result = "var myAccount = \"{your account}\";\n" +
                 "var factoryAddress = \"" + factoryAddress + "\";\n" +
                 "var factoryAbi = " + JSON.stringify(factoryAbi) + ";\n" +
                 "var factory = web3.eth.contract(factoryAbi).at(factoryAddress);\n" +
@@ -558,7 +515,8 @@
             } else {
               var factory = web3.eth.contract(factoryAbi).at(factoryAddress);
               try {
-                result = factory.deployTokenContract.getData(this.symbol, this.name, this.decimals, this.totalSupply, {from: this.myAccount});
+                var nullAccount = "0x0";
+                result = factory.deployTokenContract.getData(this.symbol, this.name, this.decimals, this.totalSupply, {from: nullAccount});
                 if (this.showDetails == "formatted") {
                   var offset = 10;
                   var tempResult = result.substring(0, 10) + "\n" + result.substring(10).match(/.{1,64}/g).join("\n");
