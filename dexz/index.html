@@ -75,12 +75,6 @@
         <div>
           <b-row>
             <b-col cols="12" md="8">
-              <!-- <p>
-                <router-link :to="{ name: 'home' }">Home</router-link>
-                <router-link :to="{ name: 'tokenContractFactory' }">TokenContractFactory</router-link>
-                <router-link :to="{ name: 'dexz' }">Dexz</router-link>
-                <router-link :to="{ name: 'help' }">Help</router-link>
-              </p> -->
               <router-view></router-view>
             </b-col>
             <b-col cols="12" md="4">
@@ -94,7 +88,7 @@
                   <b-col cols="4">Block</b-col>
                   <b-col class="truncate" cols="8">
                     <b-link :href="web3.explorer + 'block/' + web3.block.number" class="card-link" target="_blank">{{ blockNumberString }}</b-link> {{ lastBlockTimeDiff }}
-                    <b-spinner :variant="spinnerVariant" small label="Spinning" />
+                    <b-spinner class="float-right" :variant="spinnerVariant" small type="grow" label="Spinning" />
                   </b-col>
                 </b-row>
                 <b-row>
@@ -111,101 +105,11 @@
                     </span>
                   </b-col>
                 </b-row>
-
-                <!-- <b-card v-if="web3Connection !== null && web3Connection.connectionOk" :title="network.name">
-                  Block <b-link :href="network.explorer + 'block/' + blockNumber" class="card-link" target="_blank">{{ '#' + blockNumberString }}</b-link> {{ blockTimestampString }}
-                  <div>
-                    <span v-show="Object.keys(network.faucets).length">Faucets: </span>
-                    <span v-for="(url, name) in network.faucets">
-                      <b-link :href="url" class="card-link" target="_blank">{{ name }}</b-link>&nbsp;
-                    </span>
-                  </div>
-                </b-card> -->
-
-
               </b-card>
             </b-col>
           </b-row>
-      </div>
-        <div>
-          <!-- <b-row>
-            <b-col cols="12" md="8">
-              <b-card title="Deploy Fixed Supply Token Contract" sub-title="BokkyPooBah's Fixed Supply Token 👊 Factory v1.10">
-                <b-form @submit="onSubmit" v-if="show">
-                  <b-form-group id="symbolInputGroup" label-for="symbolInput" label="Symbol" horizontal :label-cols="4" description="An uppercase word a few letters long">
-                    <b-form-input id="symbolInput" type="text" v-model.trim="symbol" required placeholder="example 'BBC'"></b-form-input>
-                  </b-form-group>
-                  <b-form-group id="nameInputGroup" label-for="nameInput" label="Name" horizontal :label-cols="4" description="A set of mixed case words">
-                    <b-form-input id="nameInput" type="text" v-model.trim="name" required placeholder="example 'Bob's Burgers 🍔 & Chips 🍟 Loyalty Points'"></b-form-input>
-                  </b-form-group>
-                  <b-form-group id="decimalsInputGroup" label-for="decimalsInput" label="Decimals" horizontal :label-cols="4" description="Number of decimal places, between 0 and 18, inclusive">
-                    <b-form-input id="decimalsInput" type="number" step="1" v-model.trim="decimals" required placeholder="example '18'"></b-form-input>
-                  </b-form-group>
-                  <b-form-group id="totalSupplyInputGroup" label-for="totalSupplyInput" label="Total Supply" horizontal :label-cols="4" description="A positive number less than or equals to 100,000,000,000,000">
-                    <b-form-input id="totalSupplyInput" type="number" step="any" v-model.trim="totalSupply" required placeholder="example '123456.789'"></b-form-input>
-                  </b-form-group>
-                  <b-form-group id="deploymentFeeInputGroup" label-for="deploymentFeeInput" label="Deployment Fee" horizontal :label-cols="4" description="Minimum deployment fee 0.1 ethers">
-                    <b-form-input id="deploymentFeeInput" type="number" step="0.000000001" v-model.trim="deploymentFee" required placeholder="example 0.123456789"></b-form-input>
-                  </b-form-group>
-                  <b-form-group label="Show Details: " horizontal :label-cols="4">
-                    <b-form-radio-group id="showDetails" v-model="showDetails" name="transactionDataTypeComponent">
-                      <b-form-radio value="none" v-b-popover.hover.top="'Don\'t show any details'">None</b-form-radio>
-                      <b-form-radio value="functionCall" v-b-popover.hover.top="'For executing using the `geth` JavaScript console'">Function Call</b-form-radio>
-                      <b-form-radio value="javascript" v-b-popover.hover.top="'For executing using the `geth` JavaScript console'">JavaScript</b-form-radio>
-                      <b-form-radio value="formatted" v-b-popover.hover.top="'For displaying the chunks of raw data'">Formatted</b-form-radio>
-                      <b-form-radio value="raw" v-b-popover.hover.top="'This raw data can be copied into MyCrypto or MyEtherWallet for deployment'">Raw</b-form-radio>
-                    </b-form-radio-group>
-                  </b-form-group>
-                  <b-form-group id="transactionDataInputGroup" horizontal :label-cols="4" label-for="transactionDataInput" v-if="showDetails != 'none'" label="Transaction details" :description="getDescription">
-                    <b-form-textarea id="transactionDataInput" v-model.trim="getTransactionData" plaintext :wrap="showDetails === 'raw' ? 'soft' : 'off'" rows="10" max-rows="20" ></b-form-textarea>
-                  </b-form-group>
-                  <b-form-group>
-                    <b-button type="submit" id="deploy" :disabled="actionDeploy === true" variant="primary">{{ actionDeploy === true ? "Deploying Token Contract ... " : "Deploy Token Contract" }}</b-button>
-                  </b-form-group>
-                  <b-form-group>
-                    <b-button v-show="deploymentTx" :href="deploymentTxUrl" variant="success" target="_blank">View transaction {{ deploymentTx }}</b-button>
-                  </b-form-group>
-                  <b-form-group>
-                    <b-button v-show="deploymentTxError" variant="danger">{{ deploymentTxError }}</b-button>
-                  </b-form-group>
-                </b-form>
-              </b-card>
-            </b-col>
-            <b-col cols="12" md="4">
-              <b-card header-class="noweb3connectionheader" v-if="web3Connection === null || !web3Connection.connectionOk" header="Web3 Connection Not Detected">
-                <div>
-                  Please use the <b-link href="https://metamask.io" target="_blank">MetaMask</b-link> addon with Firefox, Chromium, Opera or Chrome, or any other other web3 browser.
-                </div>
-              </b-card>
-              <b-card v-if="web3Connection !== null && web3Connection.connectionOk" :title="network.name">
-                Block <b-link :href="network.explorer + 'block/' + blockNumber" class="card-link" target="_blank">{{ '#' + blockNumberString }}</b-link> {{ blockTimestampString }}
-                <div>
-                  <span v-show="Object.keys(network.faucets).length">Faucets: </span>
-                  <span v-for="(url, name) in network.faucets">
-                    <b-link :href="url" class="card-link" target="_blank">{{ name }}</b-link>&nbsp;
-                  </span>
-                </div>
-              </b-card>
-              <br />
-              <b-card v-if="web3Connection !== null && web3Connection.connectionOk" title="Your Account">
-                <b-link :href="network.explorer + 'address/' + web3Connection.coinbase" class="card-link" target="_blank">{{ web3Connection.coinbase }}</b-link>
-                <b-card-text>Balance {{ coinbaseBalanceString }} ethers</b-card-text>
-              </b-card>
-              <br />
-              <b-card v-if="web3Connection !== null && web3Connection.connectionOk" title="Fixed Supply Token Factory">
-                <div><b-link :href="network.explorer + 'address/' + factoryAddress" class="card-link" target="_blank">{{ factoryAddress }}</b-link></div>
-                <div>Minimum fee <b-link :href="network.explorer + 'address/' + factoryAddress + '#readContract'" class="card-link" target="_blank">{{ factoryMinimumFeeString }}</b-link> ethers</div>
-                <div>Latest deployed token contracts (max {{ factoryDisplayMaxChildren + ' of ' + factoryNumberOfChildren }})</div>
-                <b-row no-gutters v-for="(child) in factoryChildren">
-                  <b-col cols="1">{{ child.number }}</b-col>
-                  <b-col class="truncate">
-                    <b-link :href="network.explorer + 'token/' + child.address" class="card-link" target="_blank">{{ child.symbol + ':' + child.name + ':' + child.decimals + ':' + child.totalSupplyString + ':' + child.address.substring(0, 10) }}</b-link>
-                  </b-col>
-                </b-row>
-              </b-card>
-            </b-col>
-          </b-row> -->
         </div>
+      </b-container>
     </div>
 <script type="text/javascript">
 
