@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Ether Vending Machine In Vue.js</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BokkyPooBah's Ether Vending Machine (c) Bok Consulting Pty Ltd 2019">
+    <meta name="author" content="BokkyPooBah/bokconsulting.com.au">
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="css/bootstrap-vue.css"/>
+    <link href="css/app.css" rel="stylesheet" media="screen" />
+    <!-- <link type="text/css" rel="stylesheet" href="css/theme.css" /> -->
+    <!-- <script src="js/polyfill.js"></script> -->
+    <script src="js/vue.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <!-- <script src="js/bootstrap.js"></script> -->
+    <script src="js/bootstrap-vue.js"></script>
+    <script src="js/vue-router.js"></script>
+    <!-- <script src="js/vuex.js"></script> -->
+    <!-- <script src="js/w2ui-1.5.rc1.js"></script> -->
+    <script src="js/bignumber.min.js"></script>
+    <script src="js/web3.js"></script>
+    <script src="js/getWeb3.js"></script>
+    <script src="dexz.js"></script>
+    <script src="help.js"></script>
+    <script src="home.js"></script>
+    <script src="tokenContractFactory.js"></script>
+    <script src="tokenFaucet.js"></script>
+    <script src="routes.js"></script>
+
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="images/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="images/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="images/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="images/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="images/apple-touch-icon-152x152.png" />
+    <link rel="icon" type="image/png" href="images/favicon-196x196.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="images/favicon-128.png" sizes="128x128" />
+    <meta name="application-name" content="&nbsp;"/>
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="msapplication-TileImage" content="images/mstile-144x144.png" />
+    <meta name="msapplication-square70x70logo" content="images/mstile-70x70.png" />
+    <meta name="msapplication-square150x150logo" content="images/mstile-150x150.png" />
+    <meta name="msapplication-wide310x150logo" content="images/mstile-310x150.png" />
+    <meta name="msapplication-square310x310logo" content="images/mstile-310x310.png" />
+  </head>
+  <body>
+    <div id="app">
+      <b-container fluid>
+        <div>
+          <b-navbar type="dark" variant="primary">
+            <b-navbar-brand :to="{ name: 'home' }">
+              <img src="images/Me-zoomed.png" style="max-width:30px; margin-top: -4px;" alt="Ether Vending Machine" />
+              Ether Vending Machine
+            </b-navbar-brand>
+            <b-navbar-nav class="ml-auto">
+              <b-nav-item-dropdown text="Services" right>
+                <b-dropdown-item :to="{ name: 'tokenContractFactory' }">Deploy Fixed Supply Token Contract</b-dropdown-item>
+                <b-dropdown-item :to="{ name: 'tokenFaucet' }">Token Faucet</b-dropdown-item>
+                <b-dropdown-item :to="{ name: 'dexz' }">Exchange Tokens</b-dropdown-item>
+              </b-nav-item-dropdown>
+              <b-nav-item-dropdown text="Help" right>
+                <b-dropdown-item :to="{ name: 'help' }">Help</b-dropdown-item>
+              </b-nav-item-dropdown>
+            </b-navbar-nav>
+          </b-navbar>
+        </div>
+        <br />
+
+        <div>
+          <b-row>
+            <b-col cols="12" md="8">
+              <!-- <p>
+                <router-link :to="{ name: 'home' }">Home</router-link>
+                <router-link :to="{ name: 'tokenContractFactory' }">TokenContractFactory</router-link>
+                <router-link :to="{ name: 'dexz' }">Dexz</router-link>
+                <router-link :to="{ name: 'help' }">Help</router-link>
+              </p> -->
+              <router-view></router-view>
+            </b-col>
+            <b-col cols="12" md="4">
+              <b-card header-class="noweb3connectionheader" v-if="web3 === null || !web3.connectionOk" header="Web3 Connection Not Detected">
+                <div>
+                  Please use the <b-link href="https://metamask.io" target="_blank">MetaMask</b-link> addon with Firefox, Chromium, Opera or Chrome, or any other other web3 browser.
+                </div>
+              </b-card>
+              <b-card v-if="web3 !== null && web3.connectionOk" :title="web3.networkName">
+                <b-row>
+                  <b-col cols="4">Block</b-col><b-col class="truncate" cols="8"><b-link :href="web3.explorer + 'block/' + web3.block.number" class="card-link" target="_blank">{{ '#' + blockNumberString }}</b-link> {{ lastBlockTimeDiff }}</b-col>
+                </b-row>
+                <b-row>
+                  <b-col cols="4">Account</b-col><b-col class="truncate" cols="8"><b-link :href="web3.explorer + 'address/' + web3.coinbase" class="card-link" target="_blank">{{ web3.coinbase }}</b-link></b-col>
+                </b-row>
+                <b-row>
+                  <b-col cols="4">Balance (ETH)</b-col><b-col class="truncate" cols="8"><b-link :href="web3.explorer + 'address/' + web3.coinbase" class="card-link" target="_blank">{{ coinbaseBalanceString }}</b-link></b-col>
+                </b-row>
+                <b-row v-show="Object.keys(web3.faucets).length">
+                  <b-col cols="4">Faucets</b-col>
+                  <b-col class="truncate" cols="8">
+                    <span v-for="(url, name) in web3.faucets">
+                      <b-link :href="url" class="card-link" target="_blank">{{ name }}</b-link><br />
+                    </span>
+                  </b-col>
+                </b-row>
+
+                <!-- <b-card v-if="web3Connection !== null && web3Connection.connectionOk" :title="network.name">
+                  Block <b-link :href="network.explorer + 'block/' + blockNumber" class="card-link" target="_blank">{{ '#' + blockNumberString }}</b-link> {{ blockTimestampString }}
+                  <div>
+                    <span v-show="Object.keys(network.faucets).length">Faucets: </span>
+                    <span v-for="(url, name) in network.faucets">
+                      <b-link :href="url" class="card-link" target="_blank">{{ name }}</b-link>&nbsp;
+                    </span>
+                  </div>
+                </b-card> -->
+
+
+              </b-card>
+            </b-col>
+          </b-row>
+      </div>
+        <div>
+          <!-- <b-row>
+            <b-col cols="12" md="8">
+              <b-card title="Deploy Fixed Supply Token Contract" sub-title="BokkyPooBah's Fixed Supply Token 👊 Factory v1.10">
+                <b-form @submit="onSubmit" v-if="show">
+                  <b-form-group id="symbolInputGroup" label-for="symbolInput" label="Symbol" horizontal :label-cols="4" description="An uppercase word a few letters long">
+                    <b-form-input id="symbolInput" type="text" v-model.trim="symbol" required placeholder="example 'BBC'"></b-form-input>
+                  </b-form-group>
+                  <b-form-group id="nameInputGroup" label-for="nameInput" label="Name" horizontal :label-cols="4" description="A set of mixed case words">
+                    <b-form-input id="nameInput" type="text" v-model.trim="name" required placeholder="example 'Bob's Burgers 🍔 & Chips 🍟 Loyalty Points'"></b-form-input>
+                  </b-form-group>
+                  <b-form-group id="decimalsInputGroup" label-for="decimalsInput" label="Decimals" horizontal :label-cols="4" description="Number of decimal places, between 0 and 18, inclusive">
+                    <b-form-input id="decimalsInput" type="number" step="1" v-model.trim="decimals" required placeholder="example '18'"></b-form-input>
+                  </b-form-group>
+                  <b-form-group id="totalSupplyInputGroup" label-for="totalSupplyInput" label="Total Supply" horizontal :label-cols="4" description="A positive number less than or equals to 100,000,000,000,000">
+                    <b-form-input id="totalSupplyInput" type="number" step="any" v-model.trim="totalSupply" required placeholder="example '123456.789'"></b-form-input>
+                  </b-form-group>
+                  <b-form-group id="deploymentFeeInputGroup" label-for="deploymentFeeInput" label="Deployment Fee" horizontal :label-cols="4" description="Minimum deployment fee 0.1 ethers">
+                    <b-form-input id="deploymentFeeInput" type="number" step="0.000000001" v-model.trim="deploymentFee" required placeholder="example 0.123456789"></b-form-input>
+                  </b-form-group>
+                  <b-form-group label="Show Details: " horizontal :label-cols="4">
+                    <b-form-radio-group id="showDetails" v-model="showDetails" name="transactionDataTypeComponent">
+                      <b-form-radio value="none" v-b-popover.hover.top="'Don\'t show any details'">None</b-form-radio>
+                      <b-form-radio value="functionCall" v-b-popover.hover.top="'For executing using the `geth` JavaScript console'">Function Call</b-form-radio>
+                      <b-form-radio value="javascript" v-b-popover.hover.top="'For executing using the `geth` JavaScript console'">JavaScript</b-form-radio>
+                      <b-form-radio value="formatted" v-b-popover.hover.top="'For displaying the chunks of raw data'">Formatted</b-form-radio>
+                      <b-form-radio value="raw" v-b-popover.hover.top="'This raw data can be copied into MyCrypto or MyEtherWallet for deployment'">Raw</b-form-radio>
+                    </b-form-radio-group>
+                  </b-form-group>
+                  <b-form-group id="transactionDataInputGroup" horizontal :label-cols="4" label-for="transactionDataInput" v-if="showDetails != 'none'" label="Transaction details" :description="getDescription">
+                    <b-form-textarea id="transactionDataInput" v-model.trim="getTransactionData" plaintext :wrap="showDetails === 'raw' ? 'soft' : 'off'" rows="10" max-rows="20" ></b-form-textarea>
+                  </b-form-group>
+                  <b-form-group>
+                    <b-button type="submit" id="deploy" :disabled="actionDeploy === true" variant="primary">{{ actionDeploy === true ? "Deploying Token Contract ... " : "Deploy Token Contract" }}</b-button>
+                  </b-form-group>
+                  <b-form-group>
+                    <b-button v-show="deploymentTx" :href="deploymentTxUrl" variant="success" target="_blank">View transaction {{ deploymentTx }}</b-button>
+                  </b-form-group>
+                  <b-form-group>
+                    <b-button v-show="deploymentTxError" variant="danger">{{ deploymentTxError }}</b-button>
+                  </b-form-group>
+                </b-form>
+              </b-card>
+            </b-col>
+            <b-col cols="12" md="4">
+              <b-card header-class="noweb3connectionheader" v-if="web3Connection === null || !web3Connection.connectionOk" header="Web3 Connection Not Detected">
+                <div>
+                  Please use the <b-link href="https://metamask.io" target="_blank">MetaMask</b-link> addon with Firefox, Chromium, Opera or Chrome, or any other other web3 browser.
+                </div>
+              </b-card>
+              <b-card v-if="web3Connection !== null && web3Connection.connectionOk" :title="network.name">
+                Block <b-link :href="network.explorer + 'block/' + blockNumber" class="card-link" target="_blank">{{ '#' + blockNumberString }}</b-link> {{ blockTimestampString }}
+                <div>
+                  <span v-show="Object.keys(network.faucets).length">Faucets: </span>
+                  <span v-for="(url, name) in network.faucets">
+                    <b-link :href="url" class="card-link" target="_blank">{{ name }}</b-link>&nbsp;
+                  </span>
+                </div>
+              </b-card>
+              <br />
+              <b-card v-if="web3Connection !== null && web3Connection.connectionOk" title="Your Account">
+                <b-link :href="network.explorer + 'address/' + web3Connection.coinbase" class="card-link" target="_blank">{{ web3Connection.coinbase }}</b-link>
+                <b-card-text>Balance {{ coinbaseBalanceString }} ethers</b-card-text>
+              </b-card>
+              <br />
+              <b-card v-if="web3Connection !== null && web3Connection.connectionOk" title="Fixed Supply Token Factory">
+                <div><b-link :href="network.explorer + 'address/' + factoryAddress" class="card-link" target="_blank">{{ factoryAddress }}</b-link></div>
+                <div>Minimum fee <b-link :href="network.explorer + 'address/' + factoryAddress + '#readContract'" class="card-link" target="_blank">{{ factoryMinimumFeeString }}</b-link> ethers</div>
+                <div>Latest deployed token contracts (max {{ factoryDisplayMaxChildren + ' of ' + factoryNumberOfChildren }})</div>
+                <b-row no-gutters v-for="(child) in factoryChildren">
+                  <b-col cols="1">{{ child.number }}</b-col>
+                  <b-col class="truncate">
+                    <b-link :href="network.explorer + 'token/' + child.address" class="card-link" target="_blank">{{ child.symbol + ':' + child.name + ':' + child.decimals + ':' + child.totalSupplyString + ':' + child.address.substring(0, 10) }}</b-link>
+                  </b-col>
+                </b-row>
+              </b-card>
+            </b-col>
+          </b-row> -->
+        </div>
+    </div>
+<script type="text/javascript">
+
+function logIt(f, s) {
+  console.log(new Date().toISOString() + " [" + f + "] " + s);
+}
+
+const router = new VueRouter({
+  routes: routes,
+});
+// console.table(router);
+
+Vue.config.productionTip = false;
+const app = new Vue({
+  router: router,
+  data: {
+    name: "Ether Vending Machine",
+    count: 0,
+    processingEth: false,
+    web3: null,
+    lastBlockTimestamp: 0,
+    lastBlockTimeDiff: "",
+  },
+  methods: {
+    onSubmit(event) {
+      event.preventDefault();
+      this.deploymentTx = null;
+      this.deploymentTxError = "";
+      this.actionDeploy = true;
+    },
+    async processEth() {
+      if (!this.processingEth) {
+        this.processingEth = true;
+
+        // console.table(this.$route);
+        logIt("main.processEth", this.count + " calling getWeb3()");
+        var _web3 = getWeb3();
+        var web3 = await _web3;
+        this.web3 = web3;
+        if (web3 != null && web3.block != null) {
+          this.lastBlockTimestamp = web3.block.timestamp;
+        }
+        logIt("main.processEth", this.count + " called getWeb3(): " + JSON.stringify(web3));
+
+        this.processingEth = false;
+      }
+    },
+    refresh() {
+      if (this.lastBlockTimestamp != 0) {
+        // this.lastBlockTimeDiff = new Date() / 1000 - this.lastBlockTimestamp;
+        var secs = parseInt(new Date() / 1000 - this.lastBlockTimestamp);
+        var mins = parseInt(secs / 60);
+        secs = secs % 60;
+        var hours = parseInt(mins / 60);
+        mins = mins % 60;
+        var days = parseInt(hours / 24);
+        hours = hours % 24;
+        var s = "";
+        if (days > 0) {
+          s += days + "d ";
+        }
+        if (hours > 0) {
+          s += hours + "h ";
+        }
+        if (mins > 0) {
+          s += mins + "m ";
+        }
+        if (secs > 0) {
+          s += secs + "s";
+        }
+        this.lastBlockTimeDiff = "-" + s;
+      } else {
+        this.lastBlockTimeDiff = "";
+      }
+    },
+    timeoutCallback() {
+      var t = this;
+      // processEth(this);
+      if (this.count % 5 == 0) {
+        t.processEth();
+      }
+      t.refresh(),
+      this.count++;
+      setTimeout(function() {
+        t.timeoutCallback();
+      }, 1000);
+    }
+  },
+  computed: {
+    coinbaseBalanceString() {
+      if (this.web3 != null && this.web3.balance != null) {
+        return new BigNumber(this.web3.balance).shift(-18).toString();
+      } else {
+        return "";
+      }
+    },
+    blockNumberString() {
+      if (this.web3 != null && this.web3.block != null && this.web3.block.number != null) {
+        return this.web3.block.number;
+      } else {
+        return "";
+      }
+    },
+    blockTimestampString() {
+      if (this.web3 != null && this.web3.block != null && this.web3.block.timestamp != null) {
+        return new Date(this.web3.block.timestamp * 1000).toString();
+      } else {
+        return "";
+      }
+    },
+  },
+  mounted() {
+    this.timeoutCallback();
+  },
+}).$mount('#app');
+
+// appData.blockNumberString = formatNumber(appData.blockNumber);
+// if (web3Connection.block != null) {
+//   appData.blockTimestamp = web3Connection.block.timestamp;
+//   var options = { hour: 'numeric', minute: 'numeric', second: 'numeric', weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',  };
+//   var date = new Date(appData.blockTimestamp * 1000);
+//   appData.blockTimestampString = new Intl.DateTimeFormat('default', {hour: 'numeric', minute: 'numeric', second: 'numeric'}).format(date) + " " +
+//     new Intl.DateTimeFormat('default', {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'}).format(date);
+// } else {
+//   appData.blockTimestamp = null;
+//   appData.blockTimestampString = null;
+// }
+
+      //
+      // Vue.config.productionTip = false;
+      // Vue.use(BootstrapVue);
+      // new Vue({
+      //   el: '#app',
+      //   router,
+      //   components: { App },
+      //   template: '<App/>',
+      // });
+</script>
+  </body>
+</html>
