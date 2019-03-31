@@ -78,7 +78,7 @@
               <router-view></router-view>
             </b-col>
             <b-col cols="12" md="4">
-              <b-card header-class="noweb3connectionheader" v-if="web3 === null || !web3.connectionOk" header="Web3 Connection Not Detected">
+              <b-card header-class="noweb3connectionheader" v-show="web3 === null || !web3.connectionOk" header="Web3 Connection Not Detected">
                 <div>
                   Please use the <b-link href="https://metamask.io" target="_blank">MetaMask</b-link> addon with Firefox, Chromium, Opera or Chrome, or any other other web3 browser.
                 </div>
@@ -87,7 +87,7 @@
                 <b-row>
                   <b-col cols="4">Block</b-col>
                   <b-col class="truncate" cols="8">
-                    <b-link :href="web3.explorer + 'block/' + web3.block.number" class="card-link" target="_blank">{{ blockNumberString }}</b-link> {{ lastBlockTimeDiff }}
+                    <b-link :href="web3.explorer + 'block/' + web3.block.number" class="card-link" target="_blank">{{ blockNumberString }}</b-link>&nbsp;&nbsp;<font size="-3">{{ lastBlockTimeDiff }}</font>
                     <b-spinner class="float-right" :variant="spinnerVariant" small type="grow" label="Spinning" />
                   </b-col>
                 </b-row>
@@ -98,7 +98,7 @@
                   <b-col cols="4">Balance (ETH)</b-col><b-col class="truncate" cols="8"><b-link :href="web3.explorer + 'address/' + web3.coinbase" class="card-link" target="_blank">{{ coinbaseBalanceString }}</b-link></b-col>
                 </b-row>
                 <b-row v-show="Object.keys(web3.faucets).length">
-                  <b-col cols="4">Faucets</b-col>
+                  <b-col cols="4">Faucet(s)</b-col>
                   <b-col class="truncate" cols="8">
                     <span v-for="(url, name) in web3.faucets">
                       <b-link :href="url" class="card-link" target="_blank">{{ name }}</b-link><br />
@@ -121,7 +121,7 @@ var dexzAbi=[{"constant":true,"inputs":[],"name":"ORDERTYPE_SELL","outputs":[{"n
 // Utility functions
 // ----------------------------------------------------------------------------
 function formatNumber(n) {
-    return n == null ? "" : n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return n == null ? "" : n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 function logIt(f, s) {
   console.log(new Date().toISOString() + " [" + f + "] " + s);
@@ -159,7 +159,7 @@ const app = new Vue({
         this.processingEth = true;
 
         // console.table(this.$route);
-        logIt("main.processEth", this.count + " calling getWeb3()");
+        logIt("main.processEth", this.count + " calling getWeb3() with $route '" + this.$route.name + "'");
         var _web3 = getWeb3();
         this.web3 = await _web3;
         if (this.web3 != null && this.web3.block != null) {
@@ -168,7 +168,9 @@ const app = new Vue({
         logIt("main.processEth", this.count + " called getWeb3() #" + this.web3.block.number + " @ " + new Date(this.lastBlockTimestamp * 1000).toISOString());
 
         if (this.web3.connectionOk) {
-
+          if (this.$route.name === "dexz") {
+            this.processEthDexz();
+          }
         }
 
         this.processingEth = false;
