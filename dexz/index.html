@@ -114,6 +114,45 @@
                   </b-col>
                 </b-row>
               </b-card>
+              <br />
+              <b-card v-if="web3 !== null && web3.connectionOk" title="Auction Contract" sub-title="Naming of Malleodectes sp. nov.">
+                <b-row>
+                  <b-col cols="4">Contract</b-col><b-col class="truncate" cols="8"><b-link href="https://ropsten.etherscan.io/address/0xA550114ee3688601006b8b9f25e64732eF774934" class="card-link" target="_blank">0xA550114ee3688601006b8b9f25e64732eF774934</b-link></b-col>
+                </b-row>
+                <b-row>
+                  <b-col cols="4">Start date</b-col><b-col class="truncate" cols="8">09:00 Wed Apr 10, 2019 AEST</b-col>
+                </b-row>
+                <b-row>
+                  <b-col cols="4">End date</b-col><b-col class="truncate" cols="8">15:00 Sat Apr 13, 2019 AEST</b-col>
+                </b-row>
+                <b-row>
+                  <b-col cols="4">Currency</b-col><b-col class="truncate" cols="8"><b-link href="https://etherscan.io/token/0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359" class="card-link" target="_blank">'DAI' 'Dai Stablecoin v1.0'</b-link></b-col>
+                </b-row>
+                <b-row>
+                  <b-col cols="4">Reserve</b-col><b-col class="truncate" cols="8">DAI 4,000</b-col>
+                </b-row>
+                <br />
+                <b-row>
+                  <b-col cols="4" class="text-right"><b>Bid (DAI)</b></b-col>
+                  <b-col cols="4" class="truncate"><b>Account</b></b-col>
+                  <b-col cols="4" class="truncate"><b>Tx</b></b-col>
+                </b-row>
+                <b-row>
+                  <b-col cols="4" class="text-right">5,123.45</b-col>
+                  <b-col cols="4" class="truncate"><b-link href="https://etherscan.io/token/0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359" class="card-link" target="_blank">0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359</b-link></b-col>
+                  <b-col cols="4" class="truncate"><b-link href="https://etherscan.io/tx/0x8d301ea737bc356d154b7e9a1bdcc2b3cafa9663cde2b8299079ed897b822206" class="card-link" target="_blank">0x8d301ea737bc356d154b7e9a1bdcc2b3cafa9663cde2b8299079ed897b822206</b-link></b-col>
+                </b-row>
+                <b-row>
+                  <b-col cols="4" class="text-right">5,000.00</b-col>
+                  <b-col cols="4" class="truncate"><b-link href="https://etherscan.io/address/nickjohnson.eth" class="card-link" target="_blank">nickjohnson.eth</b-link></b-col>
+                  <b-col cols="4" class="truncate"><b-link href="https://etherscan.io/tx/0x7d301ea737bc356d154b7e9a1bdcc2b3cafa9663cde2b8299079ed897b822206" class="card-link" target="_blank">0x7d301ea737bc356d154b7e9a1bdcc2b3cafa9663cde2b8299079ed897b822206</b-link></b-col>
+                </b-row>
+                <b-row>
+                  <b-col cols="4" class="text-right">4,789.10</b-col>
+                  <b-col cols="4" class="truncate"><b-link href="https://etherscan.io/address/bokkypoobah.eth" class="card-link" target="_blank">bokkypoobah.eth</b-link></b-col>
+                  <b-col cols="4" class="truncate"><b-link href="https://etherscan.io/tx/0x6d301ea737bc356d154b7e9a1bdcc2b3cafa9663cde2b8299079ed897b822206" class="card-link" target="_blank">0x6d301ea737bc356d154b7e9a1bdcc2b3cafa9663cde2b8299079ed897b822206</b-link></b-col>
+                </b-row>
+              </b-card>
             </b-col>
           </b-row>
         </div>

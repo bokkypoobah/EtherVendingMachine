@@ -3,10 +3,11 @@ const Home = {
     <b-card title="Welcome to the Ether Vending Machine">
       Please select a service:
       <ul>
-        <li><router-link :to="{ name: 'auctionFactory' }">Deploy your own auction</router-link></li>
+        <li><router-link :to="{ name: 'auction' }">Auction</router-link></li>
+        <!-- <li><router-link :to="{ name: 'auctionFactory' }">Deploy your own auction</router-link></li>
         <li><router-link :to="{ name: 'tokenContractFactory' }">Deploy your own fixed supply token contract</router-link></li>
         <li><router-link :to="{ name: 'tokenFaucet' }">Get some test tokens</router-link></li>
-        <li><router-link :to="{ name: 'dexz' }">Exchange tokens</router-link></li>
+        <li><router-link :to="{ name: 'dexz' }">Exchange tokens</router-link></li> -->
       </ul>
 
       Or check out <router-link :to="{ name: 'help' }">Help</router-link>

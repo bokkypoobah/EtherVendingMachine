@@ -5,21 +5,16 @@ const Auction = {
         Please switch to the Ropsten Testnet as the exchange is only deployed there
       </b-alert>
 
-      <b-card title="Auction" v-if="this.$parent.web3 != null && this.$parent.web3.networkName === 'Ropsten Testnet'" >
-       <b-form-select v-model="$parent.dexz.selectedPair" :options="this.$parent.dexz.pairsForSelection">
-       <template slot="first">
-         <option :value="null" disabled>-- Please select an pair --</option>
-       </template>
-       </b-form-select>
-       <br />
-       <b-card sub-title="Buy Orders">
-         <span v-for="(order, key) in this.$parent.dexz.buyOrders">
-           <b-link :href="url" class="card-link" target="_blank">{{ key.substring(0, 10) + ' ' + order.price.shift(-18) + ' by ' + order.maker}}</b-link>&nbsp;
-         </span>
-       </b-card>
-       <br />
-       <b-card sub-title="Sell Orders">
-       </b-card>
+
+
+      <b-card title="Species Naming Auction" sub-title="Malleodectes sp. nov. (Prototype)" v-if="this.$parent.web3 != null && this.$parent.web3.networkName === 'Ropsten Testnet'" >
+        <b-card class="mb-2" img-src="images/malleodectes/New species of malleodectid from Riversleigh-400x" img-bottom img-alt="Card image" img-left>
+        </b-card>
+        <b-card class="mb-2" img-src="images/malleodectes/Fig. 6. Malleodectes reconstruction-400x600.jpg" img-alt="Card image" img-left>
+          <b-card-text>
+          </b-card-text>
+        </b-card>
+
       </b-card>
     </div>`,
   data: function () {
