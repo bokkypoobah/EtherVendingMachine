@@ -21,9 +21,12 @@
     <script src="js/bignumber.min.js"></script>
     <script src="js/web3.js"></script>
     <script src="js/getWeb3.js"></script>
+    <script src="auction.js"></script>
+    <script src="auctionFactory.js"></script>
     <script src="dexz.js"></script>
     <script src="help.js"></script>
     <script src="home.js"></script>
+    <script src="settings.js"></script>
     <script src="tokenContractFactory.js"></script>
     <script src="tokenFaucet.js"></script>
     <script src="routes.js"></script>
@@ -60,9 +63,14 @@
             </b-navbar-brand>
             <b-navbar-nav class="ml-auto">
               <b-nav-item-dropdown text="Services" right>
-                <b-dropdown-item :to="{ name: 'tokenContractFactory' }">Deploy Fixed Supply Token Contract</b-dropdown-item>
+                <!-- <b-dropdown-item :to="{ name: 'auctionFactory' }">Deploy Auction</b-dropdown-item> -->
+                <b-dropdown-item :to="{ name: 'auction' }">Auction</b-dropdown-item>
+                <!-- <b-dropdown-item :to="{ name: 'tokenContractFactory' }">Deploy Fixed Supply Token Contract</b-dropdown-item>
                 <b-dropdown-item :to="{ name: 'tokenFaucet' }">Token Faucet</b-dropdown-item>
-                <b-dropdown-item :to="{ name: 'dexz' }">Exchange Tokens</b-dropdown-item>
+                <b-dropdown-item :to="{ name: 'dexz' }">Exchange Tokens</b-dropdown-item> -->
+              </b-nav-item-dropdown>
+              <b-nav-item-dropdown text="Settings" right>
+                <b-dropdown-item :to="{ name: 'settings' }">Settings</b-dropdown-item>
               </b-nav-item-dropdown>
               <b-nav-item-dropdown text="Help" right>
                 <b-dropdown-item :to="{ name: 'help' }">Help</b-dropdown-item>
@@ -115,7 +123,8 @@
 
 var dexzAddress="0xb7a7c7b5fdb673d9f1c7b8f4608a0a7e28f851d0";
 var dexzAbi=[{"constant":true,"inputs":[],"name":"ORDERTYPE_SELL","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"tokenBlockNumbers","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"tokens","type":"uint256"}],"name":"recoverTokens","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"pairBlockNumbers","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_pairKey","type":"bytes32"},{"name":"_orderType","type":"uint256"},{"name":"_key","type":"uint256"}],"name":"getNode","outputs":[{"name":"_returnKey","type":"uint256"},{"name":"_parent","type":"uint256"},{"name":"_left","type":"uint256"},{"name":"_right","type":"uint256"},{"name":"_red","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"pairInfoListLength","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_pairKey","type":"bytes32"},{"name":"_orderType","type":"uint256"}],"name":"last","outputs":[{"name":"_key","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"ORDERKEY_SENTINEL","outputs":[{"name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"ORDERFLAG_FILL_AND_ADD_ORDER","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_feeAccount","type":"address"}],"name":"setFeeAccount","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"accountList","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"accountListLength","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_orderKey","type":"bytes32"}],"name":"getOrder","outputs":[{"name":"_prev","type":"bytes32"},{"name":"_next","type":"bytes32"},{"name":"_orderType","type":"uint256"},{"name":"maker","type":"address"},{"name":"baseToken","type":"address"},{"name":"quoteToken","type":"address"},{"name":"price","type":"uint256"},{"name":"expiry","type":"uint256"},{"name":"baseTokens","type":"uint256"},{"name":"baseTokensFilled","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_pairKey","type":"bytes32"},{"name":"_orderType","type":"uint256"}],"name":"first","outputs":[{"name":"_key","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"pairInfoList","outputs":[{"name":"pairKey","type":"bytes32"},{"name":"baseToken","type":"address"},{"name":"quoteToken","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"feeAccount","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_pairKey","type":"bytes32"},{"name":"_orderType","type":"uint256"},{"name":"_x","type":"uint256"}],"name":"prev","outputs":[{"name":"_y","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"tokenWhitelist","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"ORDERFLAG_FILLALL_OR_REVERT","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"acceptOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnershipImmediately","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_pairKey","type":"bytes32"},{"name":"_orderType","type":"uint256"},{"name":"_x","type":"uint256"}],"name":"getNextBestPrice","outputs":[{"name":"_y","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_tokens","type":"uint256"},{"name":"_token","type":"address"},{"name":"_data","type":"bytes"}],"name":"receiveApproval","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_takerFeeInEthers","type":"uint256"}],"name":"setTakerFeeInEthers","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"tokenListLength","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"tokenList","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"TENPOW18","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_takerFeeInTokens","type":"uint256"}],"name":"setTakerFeeInTokens","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"accountBlockNumbers","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_pairKey","type":"bytes32"},{"name":"_orderType","type":"uint256"},{"name":"_price","type":"uint256"}],"name":"getOrderQueue","outputs":[{"name":"_exists","type":"bool"},{"name":"_head","type":"bytes32"},{"name":"_tail","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_pairKey","type":"bytes32"},{"name":"_orderType","type":"uint256"},{"name":"_x","type":"uint256"}],"name":"next","outputs":[{"name":"_y","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"status","type":"uint256"}],"name":"whitelistToken","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"takerFeeInTokens","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"tradeSig","outputs":[{"name":"","type":"bytes4"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"takerFeeInEthers","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"orderFlag","type":"uint256"},{"name":"baseToken","type":"address"},{"name":"quoteToken","type":"address"},{"name":"price","type":"uint256"},{"name":"expiry","type":"uint256"},{"name":"baseTokens","type":"uint256"},{"name":"uiFeeAccount","type":"address"}],"name":"trade","outputs":[{"name":"_baseTokensFilled","type":"uint256"},{"name":"_quoteTokensFilled","type":"uint256"},{"name":"_baseTokensOnOrder","type":"uint256"},{"name":"_orderKey","type":"bytes32"}],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[],"name":"ORDERFLAG_FILL","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"deploymentBlockNumber","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"newOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"ORDERTYPE_BUY","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"ORDERFLAG_BUYSELL_MASK","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_pairKey","type":"bytes32"},{"name":"_orderType","type":"uint256"}],"name":"getBestPrice","outputs":[{"name":"_key","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_pairKey","type":"bytes32"},{"name":"_orderType","type":"uint256"},{"name":"_key","type":"uint256"}],"name":"exists","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"key","type":"bytes32"}],"name":"removeOrder","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"_feeAccount","type":"address"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"key","type":"bytes32"},{"indexed":false,"name":"orderType","type":"uint256"},{"indexed":true,"name":"taker","type":"address"},{"indexed":true,"name":"maker","type":"address"},{"indexed":false,"name":"amount","type":"uint256"},{"indexed":false,"name":"baseToken","type":"address"},{"indexed":false,"name":"quoteToken","type":"address"},{"indexed":false,"name":"baseTokens","type":"uint256"},{"indexed":false,"name":"quoteTokens","type":"uint256"},{"indexed":false,"name":"feeBaseTokens","type":"uint256"},{"indexed":false,"name":"feeQuoteTokens","type":"uint256"},{"indexed":false,"name":"baseTokensFilled","type":"uint256"}],"name":"Trade","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"pairKey","type":"bytes32"},{"indexed":true,"name":"key","type":"bytes32"},{"indexed":false,"name":"orderType","type":"uint256"},{"indexed":true,"name":"maker","type":"address"},{"indexed":false,"name":"baseToken","type":"address"},{"indexed":false,"name":"quoteToken","type":"address"},{"indexed":false,"name":"price","type":"uint256"},{"indexed":false,"name":"expiry","type":"uint256"},{"indexed":false,"name":"baseTokens","type":"uint256"}],"name":"OrderAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"key","type":"bytes32"}],"name":"OrderRemoved","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"key","type":"bytes32"},{"indexed":false,"name":"baseTokens","type":"uint256"},{"indexed":false,"name":"newBaseTokens","type":"uint256"}],"name":"OrderUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"token","type":"address"},{"indexed":false,"name":"oldStatus","type":"uint256"},{"indexed":false,"name":"newStatus","type":"uint256"}],"name":"TokenWhitelistUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldTakerFeeInEthers","type":"uint256"},{"indexed":false,"name":"newTakerFeeInEthers","type":"uint256"}],"name":"TakerFeeInEthersUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldTakerFeeInTokens","type":"uint256"},{"indexed":false,"name":"newTakerFeeInTokens","type":"uint256"}],"name":"TakerFeeInTokensUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldFeeAccount","type":"address"},{"indexed":false,"name":"newFeeAccount","type":"address"}],"name":"FeeAccountUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"token","type":"address"}],"name":"TokenAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"account","type":"address"}],"name":"AccountAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"pairKey","type":"bytes32"},{"indexed":true,"name":"baseToken","type":"address"},{"indexed":true,"name":"quoteToken","type":"address"}],"name":"PairAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"topic","type":"string"},{"indexed":false,"name":"number","type":"uint256"},{"indexed":false,"name":"data","type":"bytes32"},{"indexed":false,"name":"note","type":"string"},{"indexed":false,"name":"addr","type":"address"}],"name":"LogInfo","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"}],"name":"OwnershipTransferred","type":"event"}];
-// var dexz=web3.eth.contract(dexzAbi).at(dexzAddress);
+var tokenAbi = [{"constant":false,"inputs":[{"name":"token","type":"address"},{"name":"tokens","type":"uint256"}],"name":"recoverTokens","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_owner","type":"address"}],"name":"init","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"tokenOwner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"acceptOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"symbol","type":"string"},{"name":"name","type":"string"},{"name":"decimals","type":"uint8"},{"name":"fixedSupply","type":"uint256"}],"name":"init","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"tokens","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"tokens","type":"uint256"},{"name":"data","type":"bytes"}],"name":"approveAndCall","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"newOwner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"tokenOwner","type":"address"},{"name":"spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"payable":true,"stateMutability":"payable","type":"fallback"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"tokens","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"tokenOwner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"tokens","type":"uint256"}],"name":"Approval","type":"event"}];
+
 
 // ----------------------------------------------------------------------------
 // Utility functions
@@ -126,6 +135,71 @@ function formatNumber(n) {
 function logIt(f, s) {
   console.log(new Date().toISOString() + " [" + f + "] " + s);
 }
+
+var tokensByNetwork = [
+  {
+    network: 1,
+    address: "0x2823589Ae095D99bD64dEeA80B4690313e2fB519",
+    symbol: "WEENUS",
+    name: "Weenus 💪",
+    decimals: 18,
+  },
+  {
+    network: 1,
+    address: "0xeEf5E2d8255E973d587217f9509B416b41CA5870",
+    symbol: "XEENUS",
+    name: "Xeenus 💪",
+    decimals: 18,
+  },
+  {
+    network: 1,
+    address: "0x187E63F9eBA692A0ac98d3edE6fEb870AF0079e1",
+    symbol: "YEENUS",
+    name: "Yeenus 💪",
+    decimals: 8,
+  },
+  {
+    network: 1,
+    address: "0x0693c3a780A0a757E803a4BD76bCf43d438f8806",
+    symbol: "ZEENUS",
+    name: "Zeenus 💪",
+    decimals: 0,
+  },
+  {
+    network: 3,
+    address: "0x101848D5C5bBca18E6b4431eEdF6B95E9ADF82FA",
+    symbol: "WEENUS",
+    name: "Weenus 💪",
+    decimals: 18,
+  },
+  {
+    network: 3,
+    address: "0x7E0480Ca9fD50EB7A3855Cf53c347A1b4d6A2FF5",
+    symbol: "XEENUS",
+    name: "Xeenus 💪",
+    decimals: 18,
+  },
+  {
+    network: 3,
+    address: "0xF6fF95D53E08c9660dC7820fD5A775484f77183A",
+    symbol: "YEENUS",
+    name: "Yeenus 💪",
+    decimals: 8,
+  },
+  {
+    network: 3,
+    address: "0xC84f8B669Ccb91C86AB2b38060362b9956f2De52",
+    symbol: "ZEENUS",
+    name: "Zeenus 💪",
+    decimals: 0,
+  },
+];
+
+// [WEENUS](contracts/WeenusToken.sol) | 18 | 1,000 | [0x2823589A](https://etherscan.io/address/0x2823589Ae095D99bD64dEeA80B4690313e2fB519#code) | [0x101848D5](https://ropsten.etherscan.io/address/0x101848D5C5bBca18E6b4431eEdF6B95E9ADF82FA#code) | [0xaFF4481D](https://kovan.etherscan.io/address/0xaFF4481D10270F50f203E0763e2597776068CBc5#code) | [0xaFF4481D](https://rinkeby.etherscan.io/address/0xaFF4481D10270F50f203E0763e2597776068CBc5#code) | [0xaFF4481D](https://goerli.etherscan.io/address/0xaFF4481D10270F50f203E0763e2597776068CBc5#code)
+// [XEENUS](contracts/XeenusToken.sol) | 18 | 1,000 | [0xeEf5E2d8](https://etherscan.io/address/0xeEf5E2d8255E973d587217f9509B416b41CA5870#code) | [0x7E0480Ca](https://ropsten.etherscan.io/address/0x7E0480Ca9fD50EB7A3855Cf53c347A1b4d6A2FF5#code) | [0x022E292b](https://kovan.etherscan.io/address/0x022E292b44B5a146F2e8ee36Ff44D3dd863C915c#code) | [0x022E292b](https://rinkeby.etherscan.io/address/0x022E292b44B5a146F2e8ee36Ff44D3dd863C915c#code)  | [0x022E292b](https://goerli.etherscan.io/address/0x022E292b44B5a146F2e8ee36Ff44D3dd863C915c#code)
+// [YEENUS](contracts/YeenusToken.sol) |  8 | 1,000 | [0x187E63F9](https://etherscan.io/address/0x187E63F9eBA692A0ac98d3edE6fEb870AF0079e1#code) | [0xF6fF95D5](https://ropsten.etherscan.io/address/0xF6fF95D53E08c9660dC7820fD5A775484f77183A#code) | [0xc6fDe3FD](https://kovan.etherscan.io/address/0xc6fDe3FD2Cc2b173aEC24cc3f267cb3Cd78a26B7#code) | [0xc6fDe3FD](https://rinkeby.etherscan.io/address/0xc6fDe3FD2Cc2b173aEC24cc3f267cb3Cd78a26B7#code) | [0xc6fDe3FD](https://goerli.etherscan.io/address/0xc6fDe3FD2Cc2b173aEC24cc3f267cb3Cd78a26B7#code)
+// [ZEENUS](contracts/ZeenusToken.sol) |  0 | 1,000 | [0x0693c3a7](https://etherscan.io/address/0x0693c3a780A0a757E803a4BD76bCf43d438f8806#code) | [0xC84f8B66](https://ropsten.etherscan.io/address/0xC84f8B669Ccb91C86AB2b38060362b9956f2De52#code) | [0x1f9061B9](https://kovan.etherscan.io/address/0x1f9061B953bBa0E36BF50F21876132DcF276fC6e#code) | [0x1f9061B9](https://rinkeby.etherscan.io/address/0x1f9061B953bBa0E36BF50F21876132DcF276fC6e#code) | [0x1f9061B9](https://goerli.etherscan.io/address/0x1f9061B953bBa0E36BF50F21876132DcF276fC6e#code)
+
 
 const router = new VueRouter({
   routes: routes,
@@ -143,6 +217,19 @@ const app = new Vue({
     lastBlockTimestamp: 0,
     lastBlockTimeDiff: "",
     spinnerVariant: "success",
+    dexz: {
+      abi: dexzAbi,
+      address: dexzAddress,
+      tokenListLength: 0,
+      lastTokenListLength: -1,
+      pairInfoListLength: 0,
+      lastPairInfoListLength: -1,
+      pairsForSelection: [],
+      selectedPair: "0x9d14737c333cc42887f27b7d65dc729efd7871e5247a85414fc53b2c9502bf7f",
+      buyOrders: {},
+      sellOrders: {},
+      updated: true,
+    },
   },
   methods: {
     onSubmit(event) {
@@ -153,6 +240,133 @@ const app = new Vue({
     },
     async processEthDexz() {
       logIt("main.processEthDexz", this.count);
+      try {
+        var dexz = web3.eth.contract(this.dexz.abi).at(this.dexz.address);
+
+        var _tokenListLength = promisify(cb => dexz.tokenListLength(cb));
+        this.dexz.tokenListLength = parseInt(await _tokenListLength);
+
+        var _pairInfoListLength = promisify(cb => dexz.pairInfoListLength(cb));
+        this.dexz.pairInfoListLength = parseInt(await _pairInfoListLength);
+
+        this.dexz.updated = false;
+
+        if (this.web3.connectionChanged) {
+          this.dexz.updated = true;
+        }
+        if (this.dexz.tokenListLength !== this.dexz.lastTokenListLength) {
+          this.dexz.updated = true;
+        }
+        this.dexz.lastTokenListLength = this.dexz.tokenListLength;
+        if (this.dexz.pairInfoListLength !== this.dexz.lastPairInfoListLength) {
+          this.dexz.updated = true;
+        }
+        this.dexz.lastPairInfoListLength = this.dexz.pairInfoListLength;
+
+        if (this.dexz.updated || this.web3.connectionChanged) {
+          logIt("main.processEthDexz", "Getting updated tokens");
+          var i;
+          this.dexz.tokens = {};
+          var seen = {};
+          for (i = 0; i < this.dexz.tokenListLength; i++) {
+            var _token = promisify(cb => dexz.tokenList(i, cb));
+            var tokenAddress = await _token;
+            logIt("main.processEthDexz", "token[" + i + "]: " + tokenAddress);
+            if (!seen[tokenAddress]) {
+              var token = web3.eth.contract(tokenAbi).at(tokenAddress);
+              var symbol = "";
+              var name = "";
+              var decimals = 18;
+              var totalSupply = 0;
+              try {
+                var _symbol = promisify(cb => token.symbol(cb));
+                symbol = await _symbol;
+              } catch (error) {
+                symbol = "UNKNOWN";
+              }
+              try {
+                var _name = promisify(cb => token.name(cb));
+                name = await _name;
+              } catch (error) {
+                name = "Unknown";
+              }
+              try {
+                var _decimals = promisify(cb => token.decimals(cb));
+                decimals = parseInt(await _decimals);
+              } catch (error) {
+                decimals = 18;
+              }
+              try {
+                var _totalSupply = promisify(cb => token.totalSupply(cb));
+                totalSupply = new BigNumber(await _totalSupply);
+              } catch (error) {
+                totalSupply = 0;
+              }
+              this.dexz.tokens[tokenAddress] = { tokenAddress: tokenAddress, symbol: symbol, name: name, decimals: decimals, totalSupply: totalSupply };
+              seen[tokenAddress] = true;
+            }
+          }
+          this.dexz.pairs = {};
+          this.dexz.pairsForSelection = [];
+          var seen = {};
+          for (i = 0; i < this.dexz.pairInfoListLength; i++) {
+            var _pairInfo = promisify(cb => dexz.pairInfoList(i, cb));
+            var pairInfo = await _pairInfo;
+            var pairKey = pairInfo[0];
+            var baseToken = pairInfo[1];
+            var quoteToken = pairInfo[2];
+            if (!seen[pairKey]) {
+              this.dexz.pairs[pairKey] = { pairKey: pairKey, baseToken: this.dexz.tokens[baseToken], quoteToken: this.dexz.tokens[quoteToken] };
+              this.dexz.pairsForSelection.push({value: pairKey, text: this.dexz.tokens[baseToken].symbol + '/' + this.dexz.tokens[quoteToken].symbol })
+              seen[pairKey] = true;
+            }
+            logIt("main.processEthDexz", "pairInfo[" + i + "]: " + JSON.stringify(pairInfo));
+          }
+        }
+
+        if (this.dexz.updated || this.web3.connectionChanged || this.web3.blockChanged) {
+          if (this.dexz.selectedPair !== null) {
+            for (var buySell = 0; buySell < 2; buySell++) {
+              var orders = {};
+              var orderPriceKey = 0;
+              var _orderPriceKey = promisify(cb => dexz.getNextBestPrice(this.dexz.selectedPair, buySell, orderPriceKey, cb));
+              orderPriceKey = await _orderPriceKey;
+              while (orderPriceKey != 0) {
+                logIt("main.processEthDexz", "orderPriceKey: " + orderPriceKey.toString());
+                var _orderQueue = promisify(cb => dexz.getOrderQueue(this.dexz.selectedPair, buySell, orderPriceKey, cb));
+                var orderQueue = await _orderQueue;
+                logIt("main.processEthDexz", "Price: " + orderPriceKey.shift(-18) + " head=" + orderQueue[1].substring(0, 18) + " tail=" + orderQueue[2].substring(0, 18));
+                var orderKey = orderQueue[1];
+                while (orderKey != 0) {
+                  var _order = promisify(cb => dexz.getOrder(orderKey, cb));
+                  var order = await _order;
+                  logIt("main.processEthDexz", "Order '" + orderKey + ": " + JSON.stringify(order));
+                  var minutes = (order[7] - new Date() / 1000) / 60;
+                  logIt("main.processEthDexz", "Order key=" + orderKey.substring(0, 18) + " prev=" + order[0].substring(0, 18) + " next=" + order[1].substring(0, 18) +
+                    (parseInt(order[2]) == 1 ? " Sell": " Buy") + " maker=" + order[3] + " base=" + order[4] + " quote=" + order[5] + " price=" + order[6].shift(-18) +
+                    " expiry=" + minutes.toFixed(2) + "s baseTokens=" + order[8].shift(-18) + " baseTokensFilled=" + order[9].shift(-18));
+                  if (!orders[orderKey]) {
+                    orders[orderKey] = { orderKey: orderKey, prev: order[0], next: order[1], buySell: order[2], maker: order[3], baseToken: order[4], quoteToken: order[5], price: order[6], expiry: order[7], baseTokens: order[8], baseTokensFilled: order[9]};
+                    logIt("main.processEthDexz", "orders['" + orderKey + "']: " + JSON.stringify(orders[orderKey]));
+                  }
+                  orderKey = order[1];
+                }
+                _orderPriceKey = promisify(cb => dexz.getNextBestPrice(this.dexz.selectedPair, buySell, orderPriceKey, cb));
+                orderPriceKey = await _orderPriceKey;
+              }
+              if (buySell == 0) {
+                this.dexz.buyOrders = orders;
+                logIt("main.processEthDexz", "this.dexz.buyOrders: " + JSON.stringify(this.dexz.buyOrders));
+              } else {
+                this.dexz.sellOrders = orders;
+                logIt("main.processEthDexz", "this.dexz.sellOrders: " + JSON.stringify(this.dexz.sellOrders));
+              }
+            }
+          }
+        }
+      } catch (error) {
+        console.table(error);
+      }
     },
     async processEth() {
       if (!this.processingEth) {
@@ -162,10 +376,12 @@ const app = new Vue({
         logIt("main.processEth", this.count + " calling getWeb3() with $route '" + this.$route.name + "'");
         var _web3 = getWeb3();
         this.web3 = await _web3;
-        if (this.web3 != null && this.web3.block != null) {
+        if (this.web3 !== null && this.web3.block !== null) {
           this.lastBlockTimestamp = this.web3.block.timestamp;
+          logIt("main.processEth", this.count + " called getWeb3() #" + this.web3.block.number + " @ " + new Date(this.lastBlockTimestamp * 1000).toISOString());
+        } else {
+          logIt("main.processEth", this.count + " called getWeb3() #" + this.web3.block.number + " @ " + new Date(this.lastBlockTimestamp * 1000).toISOString());
         }
-        logIt("main.processEth", this.count + " called getWeb3() #" + this.web3.block.number + " @ " + new Date(this.lastBlockTimestamp * 1000).toISOString());
 
         if (this.web3.connectionOk) {
           if (this.$route.name === "dexz") {
@@ -240,6 +456,12 @@ const app = new Vue({
         return "";
       }
     },
+    tokenList() {
+      var t = this;
+      return tokensByNetwork.filter(function (token) {
+        return parseInt(token.network) === parseInt(t.web3.networkId);
+      });
+    }
   },
   mounted() {
     this.timeoutCallback();
@@ -248,3 +470,14 @@ const app = new Vue({
 </script>
   </body>
 </html>
+
+
+
+
+<!-- var tokensByNetwork = [
+  {
+    network: 1,
+    address: "0x2823589Ae095D99bD64dEeA80B4690313e2fB519",
+    symbol: "WEENUS",
+    name: "Weenus 💪",
+    decimals: 18, -->

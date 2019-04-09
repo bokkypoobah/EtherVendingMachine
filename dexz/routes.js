@@ -5,6 +5,16 @@ const routes = [
     component: Home,
   },
   {
+    path: '/auction',
+    name: 'auction',
+    component: Auction,
+  },
+  {
+    path: '/auctionFactory',
+    name: 'auctionFactory',
+    component: AuctionFactory,
+  },
+  {
     path: '/tokenContractFactory',
     name: 'tokenContractFactory',
     component: TokenContractFactory,
@@ -18,6 +28,11 @@ const routes = [
     path: '/dexz',
     name: 'dexz',
     component: Dexz,
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: Settings,
   },
   {
     path: '/help',

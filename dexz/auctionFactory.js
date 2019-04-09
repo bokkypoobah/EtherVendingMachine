@@ -1,4 +1,4 @@
-const Dexz = {
+const AuctionFactory = {
   template: `
     <div>
       <b-alert :show="this.$parent.web3 == null || this.$parent.web3.networkName !== 'Ropsten Testnet'" variant="warning">
@@ -24,7 +24,7 @@ const Dexz = {
     </div>`,
   data: function () {
     return {
-      name: "Dexz",
+      name: "AuctionFactory",
     }
   },
 

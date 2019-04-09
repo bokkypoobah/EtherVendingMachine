@@ -1,11 +1,11 @@
-const Dexz = {
+const Auction = {
   template: `
     <div>
       <b-alert :show="this.$parent.web3 == null || this.$parent.web3.networkName !== 'Ropsten Testnet'" variant="warning">
         Please switch to the Ropsten Testnet as the exchange is only deployed there
       </b-alert>
 
-      <b-card title="Exchange Tokens" v-if="this.$parent.web3 != null && this.$parent.web3.networkName === 'Ropsten Testnet'" >
+      <b-card title="Auction" v-if="this.$parent.web3 != null && this.$parent.web3.networkName === 'Ropsten Testnet'" >
        <b-form-select v-model="$parent.dexz.selectedPair" :options="this.$parent.dexz.pairsForSelection">
        <template slot="first">
          <option :value="null" disabled>-- Please select an pair --</option>
@@ -24,7 +24,7 @@ const Dexz = {
     </div>`,
   data: function () {
     return {
-      name: "Dexz",
+      name: "Auction",
     }
   },
 
