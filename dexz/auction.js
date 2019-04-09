@@ -8,7 +8,7 @@ const Auction = {
 
 
       <b-card title="Species Naming Auction" sub-title="Malleodectes sp. nov. (Prototype)" v-if="this.$parent.web3 != null && this.$parent.web3.networkName === 'Ropsten Testnet'" >
-        <b-card class="mb-2" img-src="images/malleodectes/New species of malleodectid from Riversleigh-400x" img-bottom img-alt="Card image" img-left>
+        <b-card class="mb-2" img-src="images/malleodectes/New species of malleodectid from Riversleigh-400x.png" img-bottom img-alt="Card image" img-left>
         </b-card>
         <b-card class="mb-2" img-src="images/malleodectes/Fig. 6. Malleodectes reconstruction-400x600.jpg" img-alt="Card image" img-left>
           <b-card-text>
