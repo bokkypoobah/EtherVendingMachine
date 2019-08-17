@@ -166,7 +166,7 @@ const gazeCoinBuilderModule = {
     async execWeb3 ({state, commit}, {count, networkChanged, blockChanged, coinbaseChanged}) {
       if (!state.executing) {
         commit('updateExecuting', true);
-        logIt("gazeCoinBuilderModule", "execWeb3() start[" + count + ", " + networkChanged + ", " + blockChanged + "]");
+        logIt("gazeCoinBuilderModule", "execWeb3() start[" + count + ", " + networkChanged + ", " + blockChanged + ", " + coinbaseChanged + "]");
         var contract = web3.eth.contract(GAZECOINMETAVERSEASSETABI).at(state.nftAddress);
         if (networkChanged || blockChanged || coinbaseChanged) {
           var _symbol = promisify(cb => contract.symbol(cb));
@@ -209,8 +209,9 @@ const gazeCoinBuilderModule = {
           }
         }
         commit('updateExecuting', false);
+        logIt("gazeCoinBuilderModule", "execWeb3() end [" + count + ", " + networkChanged + ", " + blockChanged + ", " + coinbaseChanged + "]");
       } else {
-        logIt("gazeCoinBuilderModule", "execWeb3() start[" + count + ", " + networkChanged + ", " + blockChanged + "]");
+        logIt("gazeCoinBuilderModule", "execWeb3() already executing [" + count + ", " + networkChanged + ", " + blockChanged + ", " + coinbaseChanged + "]");
       }
         // var child = factoryNumberOfChildren - 1;
         // var factoryChildren = [];

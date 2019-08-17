@@ -352,7 +352,7 @@ const deployTokenContractModule = {
   },
   actions: {
     async execWeb3 ({state, commit}, {count, networkChanged, blockChanged, coinbaseChanged}) {
-      logIt("deployTokenContractModule", "execWeb3() start[" + count + ", " + networkChanged + ", " + blockChanged + "]");
+      logIt("deployTokenContractModule", "execWeb3() start[" + count + ", " + networkChanged + ", " + blockChanged + ", " + coinbaseChanged + "]");
       var factory = web3.eth.contract(FACTORYABI).at(FACTORYADDRESS);
       if (networkChanged || blockChanged || coinbaseChanged) {
         var _minimumFee = promisify(cb => factory.minimumFee(cb));
