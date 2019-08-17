@@ -268,6 +268,7 @@ const Connection = {
         }
       }
 
+      var coinbaseChanged = false;
       var coinbase = null;
       if (store.getters['connection/isOk']) {
         try {
@@ -277,6 +278,7 @@ const Connection = {
             store.dispatch('connection/setCoinbase', coinbase);
             logIt("Connection", "getWeb3() Coinbase updated from " + this.lastCoinbase + " to " + coinbase);
             this.lastCoinbase = coinbase;
+            coinbaseChanged = true;
           }
         } catch (error) {
           store.dispatch('connection/setIsOk', false);
@@ -331,9 +333,9 @@ const Connection = {
 
       if (store.getters['connection/isOk']) {
         if (this.$route.name == "DeployTokenContract") {
-          await store.dispatch('deployTokenContract/execWeb3', { count: this.count, networkChanged, blockChanged });
+          await store.dispatch('deployTokenContract/execWeb3', { count: this.count, networkChanged, blockChanged, coinbaseChanged });
         } else if (this.$route.name == "GazeCoinBuilder") {
-            await store.dispatch('gazeCoinBuilder/execWeb3', { count: this.count, networkChanged, blockChanged });
+            await store.dispatch('gazeCoinBuilder/execWeb3', { count: this.count, networkChanged, blockChanged, coinbaseChanged });
         }
       }
       logIt("Connection", "getWeb3() end[" + this.count + "]");

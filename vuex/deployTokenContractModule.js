@@ -351,10 +351,10 @@ const deployTokenContractModule = {
     },
   },
   actions: {
-    async execWeb3 ({state, commit}, {count, networkChanged, blockChanged}) {
+    async execWeb3 ({state, commit}, {count, networkChanged, blockChanged, coinbaseChanged}) {
       logIt("deployTokenContractModule", "execWeb3() start[" + count + ", " + networkChanged + ", " + blockChanged + "]");
       var factory = web3.eth.contract(FACTORYABI).at(FACTORYADDRESS);
-      if (networkChanged || blockChanged) {
+      if (networkChanged || blockChanged || coinbaseChanged) {
         var _minimumFee = promisify(cb => factory.minimumFee(cb));
         var minimumFee = await _minimumFee;
         if (!minimumFee.equals(state.factoryMinimumFee)) {
@@ -363,7 +363,7 @@ const deployTokenContractModule = {
       }
 
       var childrenChanged = false;
-      if (networkChanged || blockChanged) {
+      if (networkChanged || blockChanged || coinbaseChanged) {
         var _numberOfChildren = promisify(cb => factory.numberOfChildren(cb));
         var factoryNumberOfChildren = new BigNumber(await _numberOfChildren);
         if (!new BigNumber(factoryNumberOfChildren).equals(state.factoryNumberOfChildren)) {
@@ -372,7 +372,7 @@ const deployTokenContractModule = {
         }
       }
 
-      if (childrenChanged || networkChanged) {
+      if (childrenChanged || networkChanged || coinbaseChanged) {
         var child = factoryNumberOfChildren - 1;
         var factoryChildren = [];
         var seen = {};

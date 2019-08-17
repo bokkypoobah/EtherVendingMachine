@@ -131,6 +131,7 @@ const gazeCoinBuilderModule = {
     name: "DEFAULTNAME",
     totalSupply: "0",
     balanceOf: "0",
+    executing: false,
   },
   getters: {
     nftAddress: state => state.nftAddress,
@@ -156,50 +157,61 @@ const gazeCoinBuilderModule = {
       state.balanceOf = balanceOf;
       logIt("deployTokenContractModule", "updateBalanceOf('" + balanceOf + "')")
     },
+    updateExecuting (state, executing) {
+      state.executing = executing;
+      logIt("deployTokenContractModule", "updateExecuting('" + executing + "')")
+    },
   },
   actions: {
-    async execWeb3 ({state, commit}, {count, networkChanged, blockChanged}) {
-      logIt("gazeCoinBuilderModule", "execWeb3() start[" + count + ", " + networkChanged + ", " + blockChanged + "]");
-      var contract = web3.eth.contract(GAZECOINMETAVERSEASSETABI).at(state.nftAddress);
-      if (networkChanged || blockChanged) {
-        var _symbol = promisify(cb => contract.symbol(cb));
-        var symbol = await _symbol;
-        if (symbol !== state.symbol) {
-          commit('updateSymbol', symbol);
-        }
-        var _name = promisify(cb => contract.name(cb));
-        var name = await _name;
-        if (name !== state.name) {
-          commit('updateName', name);
-        }
-        var _totalSupply = promisify(cb => contract.totalSupply(cb));
-        var totalSupply = await _totalSupply;
-        if (!totalSupply.equals(state.totalSupply)) {
-          commit('updateTotalSupply', totalSupply);
-        }
-        var coinbase = store.getters['connection/coinbase'];
-        var _balanceOf = promisify(cb => contract.balanceOf(coinbase, cb));
-        var balanceOf = await _balanceOf;
-        if (!balanceOf.equals(state.balanceOf)) {
-          commit('updateBalanceOf', balanceOf);
-        }
-        var i;
-        for (i = 0; i < balanceOf; i++) {
-          logIt("gazeCoinBuilderModule", "execWeb3() token " + i);
-          var _tokenId = promisify(cb => contract.tokenOfOwnerByIndex(coinbase, i, cb));
-          var tokenId = await _tokenId;
-          logIt("gazeCoinBuilderModule", "execWeb3() token " + i + " has tokenId #" + tokenId);
-          var _numberOfAttributes = promisify(cb => contract.numberOfAttributes(tokenId, cb));
-          var numberOfAttributes = await _numberOfAttributes;
-          logIt("gazeCoinBuilderModule", "execWeb3() token " + i + " has tokenId #" + tokenId + " with " + numberOfAttributes + " attributes");
-          var j;
-          for (j = 0; j < numberOfAttributes; j++) {
-            var _attribute = promisify(cb => contract.getAttributeByIndex(tokenId, j, cb));
-            var attribute = await _attribute;
-            logIt("gazeCoinBuilderModule", "execWeb3()   attribute " + j + " " + JSON.stringify(attribute));
+    async execWeb3 ({state, commit}, {count, networkChanged, blockChanged, coinbaseChanged}) {
+      if (!state.executing) {
+        commit('updateExecuting', true);
+        logIt("gazeCoinBuilderModule", "execWeb3() start[" + count + ", " + networkChanged + ", " + blockChanged + "]");
+        var contract = web3.eth.contract(GAZECOINMETAVERSEASSETABI).at(state.nftAddress);
+        if (networkChanged || blockChanged || coinbaseChanged) {
+          var _symbol = promisify(cb => contract.symbol(cb));
+          var symbol = await _symbol;
+          if (symbol !== state.symbol) {
+            commit('updateSymbol', symbol);
           }
-
+          var _name = promisify(cb => contract.name(cb));
+          var name = await _name;
+          if (name !== state.name) {
+            commit('updateName', name);
+          }
+          var _totalSupply = promisify(cb => contract.totalSupply(cb));
+          var totalSupply = await _totalSupply;
+          if (!totalSupply.equals(state.totalSupply)) {
+            commit('updateTotalSupply', totalSupply);
+          }
+          var coinbase = store.getters['connection/coinbase'];
+          var _balanceOf = promisify(cb => contract.balanceOf(coinbase, cb));
+          var balanceOf = await _balanceOf;
+          if (!balanceOf.equals(state.balanceOf)) {
+            commit('updateBalanceOf', balanceOf);
+          }
+          var i;
+          var tokens = [];
+          for (i = 0; i < balanceOf; i++) {
+            logIt("gazeCoinBuilderModule", "execWeb3() token " + i);
+            var _tokenId = promisify(cb => contract.tokenOfOwnerByIndex(coinbase, i, cb));
+            var tokenId = await _tokenId;
+            logIt("gazeCoinBuilderModule", "execWeb3() token " + i + " has tokenId #" + tokenId);
+            var _numberOfAttributes = promisify(cb => contract.numberOfAttributes(tokenId, cb));
+            var numberOfAttributes = await _numberOfAttributes;
+            logIt("gazeCoinBuilderModule", "execWeb3() token " + i + " has tokenId #" + tokenId + " with " + numberOfAttributes + " attributes");
+            var j;
+            for (j = 0; j < numberOfAttributes; j++) {
+              var _attribute = promisify(cb => contract.getAttributeByIndex(tokenId, j, cb));
+              var attribute = await _attribute;
+              logIt("gazeCoinBuilderModule", "execWeb3()   attribute " + j + " " + JSON.stringify(attribute));
+            }
+          }
         }
+        commit('updateExecuting', false);
+      } else {
+        logIt("gazeCoinBuilderModule", "execWeb3() start[" + count + ", " + networkChanged + ", " + blockChanged + "]");
+      }
         // var child = factoryNumberOfChildren - 1;
         // var factoryChildren = [];
         // var seen = {};
@@ -227,7 +239,7 @@ const gazeCoinBuilderModule = {
         // }
         // commit('updateFactoryChildren', factoryChildren);
 
-      }
+      // }
     }
   },
 };
