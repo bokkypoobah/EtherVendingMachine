@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Ether Vending Machine</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="BokkyPooBah's Ether Vending Machine (c) Bok Consulting Pty Ltd 2019">
+    <meta name="author" content="BokkyPooBah/bokconsulting.com.au">
+    <link type="text/css" rel="stylesheet" href="css/bootstrap.css" />
+    <link type="text/css" rel="stylesheet" href="css/bootstrap-vue.css"/>
+    <link href="css/app.css" rel="stylesheet" media="screen" />
+    <!-- <link type="text/css" rel="stylesheet" href="css/theme.css" /> -->
+    <!-- <script src="js/polyfill.js"></script> -->
+    <script src="js/vue.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/bootstrap-vue.js"></script>
+    <script src="js/vue-router.js"></script>
+    <script src="js/vuex.js"></script>
+    <script src="js/vuex-router-sync.js"></script>
+    <!-- <script src="js/w2ui-1.5.rc1.js"></script> -->
+    <script src="js/bignumber.min.js"></script>
+    <script src="js/web3.js"></script>
+    <!-- <script src="js/getWeb3.js"></script> -->
+    <!-- <script src="dexz.js"></script> -->
+    <script src="functions.js"></script>
+    <script src="connectionModule.js"></script>
+    <script src="deployTokenContractModule.js"></script>
+    <script src="gazeCoinBuilderModule.js"></script>
+    <script src="viewTokensModule.js"></script>
+    <script src="homeModule.js"></script>
+    <script src="modules.js"></script>
+    <script src="routes.js"></script>
+
+    <link rel="apple-touch-icon-precomposed" sizes="57x57" href="images/apple-touch-icon-57x57.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="images/apple-touch-icon-114x114.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="images/apple-touch-icon-72x72.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="images/apple-touch-icon-144x144.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="60x60" href="images/apple-touch-icon-60x60.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="120x120" href="images/apple-touch-icon-120x120.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="76x76" href="images/apple-touch-icon-76x76.png" />
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="images/apple-touch-icon-152x152.png" />
+    <link rel="icon" type="image/png" href="images/favicon-196x196.png" sizes="196x196" />
+    <link rel="icon" type="image/png" href="images/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="images/favicon-128.png" sizes="128x128" />
+    <meta name="application-name" content="&nbsp;"/>
+    <meta name="msapplication-TileColor" content="#FFFFFF" />
+    <meta name="msapplication-TileImage" content="images/mstile-144x144.png" />
+    <meta name="msapplication-square70x70logo" content="images/mstile-70x70.png" />
+    <meta name="msapplication-square150x150logo" content="images/mstile-150x150.png" />
+    <meta name="msapplication-wide310x150logo" content="images/mstile-310x150.png" />
+    <meta name="msapplication-square310x310logo" content="images/mstile-310x310.png" />
+  </head>
+  <body>
+    <div id="app">
+      <b-container fluid>
+        <div>
+          <b-navbar type="dark" variant="primary">
+            <b-navbar-brand to="/">
+              <!-- <img src="images/Me-zoomed.png" style="max-width:53px; margin-top: -16px;" class="d-inline-block align-top" alt="Ether Vending Machine" /> -->
+              <img src="images/Me-zoomed.png" style="max-width:30px; margin-top: -4px;" alt="Ether Vending Machine" />
+              Ether Vending Machine
+            </b-navbar-brand>
+            <b-navbar-nav class="ml-auto">
+              <b-nav-item-dropdown text="Services" right>
+                <b-dropdown-item to="/deployTokenContract">Deploy Token Contract</b-dropdown-item>
+                <b-dropdown-item to="/gazeCoinBuilder">GazeCoin Builder</b-dropdown-item>
+                <!-- <b-dropdown-item to="/viewTokens">View Tokens</b-dropdown-item> -->
+              </b-nav-item-dropdown>
+              <!--
+              <b-nav-item-dropdown text="Pages" right>
+                <b-dropdown-item to="page2">Token Contract</b-dropdown-item>
+              </b-nav-item-dropdown>
+              <b-nav-item-dropdown text="Help" right>
+                <b-dropdown-item href="#">FAQ</b-dropdown-item>
+                <b-dropdown-item href="#">Settings</b-dropdown-item>
+              </b-nav-item-dropdown>
+              -->
+            </b-navbar-nav>
+          </b-navbar>
+        </div>
+        <br />
+        <router-view></router-view>
+      </b-container>
+
+      <!-- <p>
+        <router-link to="/page1">Go to Page1</router-link>
+        <router-link to="/page2">Go to Page2</router-link>
+      </p> -->
+    </div>
+    <script src="index.js"></script>
+  </body>
+</html>
