@@ -7,7 +7,7 @@ const GazeCoinBuilder = {
     <div>
       <b-row>
         <b-col cols="12" md="8">
-          <b-card title="GazeCoin Builder" sub-title="BokkyPooBah's Fixed Supply Token 👊 Factory v1.10">
+          <b-card title="GazeCoin Builder" sub-title="Your Assets">
             <b-form @submit="onSubmit" v-if="show">
               <b-form-group id="symbolInputGroup" label-for="symbolInput" label="Symbol" label-cols="4" description="An uppercase word a few letters long">
                 <b-form-input id="symbolInput" type="text" :value.trim="symbol" @input="updateSymbol" required placeholder="example '${DEFAULTSYMBOL}'"></b-form-input>
@@ -160,29 +160,73 @@ const gazeCoinBuilderModule = {
   actions: {
     async execWeb3 ({state, commit}, {count, networkChanged, blockChanged}) {
       logIt("gazeCoinBuilderModule", "execWeb3() start[" + count + ", " + networkChanged + ", " + blockChanged + "]");
-      var factory = web3.eth.contract(GAZECOINMETAVERSEASSETABI).at(state.nftAddress);
+      var contract = web3.eth.contract(GAZECOINMETAVERSEASSETABI).at(state.nftAddress);
       if (networkChanged || blockChanged) {
-        var _symbol = promisify(cb => factory.symbol(cb));
+        var _symbol = promisify(cb => contract.symbol(cb));
         var symbol = await _symbol;
         if (symbol !== state.symbol) {
           commit('updateSymbol', symbol);
         }
-        var _name = promisify(cb => factory.name(cb));
+        var _name = promisify(cb => contract.name(cb));
         var name = await _name;
         if (name !== state.name) {
           commit('updateName', name);
         }
-        var _totalSupply = promisify(cb => factory.totalSupply(cb));
+        var _totalSupply = promisify(cb => contract.totalSupply(cb));
         var totalSupply = await _totalSupply;
         if (!totalSupply.equals(state.totalSupply)) {
           commit('updateTotalSupply', totalSupply);
         }
         var coinbase = store.getters['connection/coinbase'];
-        var _balanceOf = promisify(cb => factory.balanceOf(coinbase, cb));
+        var _balanceOf = promisify(cb => contract.balanceOf(coinbase, cb));
         var balanceOf = await _balanceOf;
         if (!balanceOf.equals(state.balanceOf)) {
           commit('updateBalanceOf', balanceOf);
         }
+        var i;
+        for (i = 0; i < balanceOf; i++) {
+          logIt("gazeCoinBuilderModule", "execWeb3() token " + i);
+          var _tokenId = promisify(cb => contract.tokenOfOwnerByIndex(coinbase, i, cb));
+          var tokenId = await _tokenId;
+          logIt("gazeCoinBuilderModule", "execWeb3() token " + i + " has tokenId #" + tokenId);
+          var _numberOfAttributes = promisify(cb => contract.numberOfAttributes(tokenId, cb));
+          var numberOfAttributes = await _numberOfAttributes;
+          logIt("gazeCoinBuilderModule", "execWeb3() token " + i + " has tokenId #" + tokenId + " with " + numberOfAttributes + " attributes");
+          var j;
+          for (j = 0; j < numberOfAttributes; j++) {
+            var _attribute = promisify(cb => contract.getAttributeByIndex(tokenId, j, cb));
+            var attribute = await _attribute;
+            logIt("gazeCoinBuilderModule", "execWeb3()   attribute " + j + " " + JSON.stringify(attribute));
+          }
+
+        }
+        // var child = factoryNumberOfChildren - 1;
+        // var factoryChildren = [];
+        // var seen = {};
+        // while (child >= 0 && child >= (factoryNumberOfChildren - state.factoryDisplayMaxChildren)) {
+        //   var _childAddress = promisify(cb => factory.children(child, cb));
+        //   var childAddress = await _childAddress;
+        //   var token = web3.eth.contract(tokenAbi).at(childAddress);
+        //   var _symbol = promisify(cb => token.symbol(cb));
+        //   var _name = promisify(cb => token.name(cb));
+        //   var _decimals = promisify(cb => token.decimals(cb));
+        //   var _totalSupply = promisify(cb => token.totalSupply(cb));
+        //   var symbol = await _symbol;
+        //   var name = await _name;
+        //   var decimals = await _decimals;
+        //   var totalSupply = await _totalSupply;
+        //   var totalSupplyString = new BigNumber(totalSupply).shift(-decimals);
+        //   if (!seen[childAddress]) {
+        //     logIt("deployTokenContractModule", "execWeb3() Adding [" + childAddress.substring(0, 10) + ", " + symbol + "]");
+        //     factoryChildren.push({ number: child + 1, address: childAddress, symbol: symbol, name: name, decimals: decimals, totalSupply: totalSupply, totalSupplyString: totalSupplyString });
+        //     seen[childAddress] = true;
+        //   } else {
+        //     logIt("deployTokenContractModule", "execWeb3() Already seen [" + childAddress + "]");
+        //   }
+        //   child--;
+        // }
+        // commit('updateFactoryChildren', factoryChildren);
+
       }
     }
   },
