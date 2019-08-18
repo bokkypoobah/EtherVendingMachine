@@ -9,6 +9,17 @@ const GazeCoinBuilder = {
         <b-col cols="12" md="8">
           <b-card title="GazeCoin Builder" sub-title="Your Assets">
             <b-form @submit="onSubmit" v-if="show">
+            <b-row no-gutters v-for="(item, key, index) in items">
+              <b-col cols="1">{{ key }}</b-col>
+              <!--
+              <b-col class="truncate">
+                <b-link :href="explorer + 'token/' + itemn.tokenId" class="card-link" target="_blank">{{ item }}</b-link>
+              </b-col>
+              -->
+            </b-row>
+
+
+              <!--
               <b-form-group id="symbolInputGroup" label-for="symbolInput" label="Symbol" label-cols="4" description="An uppercase word a few letters long">
                 <b-form-input id="symbolInput" type="text" :value.trim="symbol" @input="updateSymbol" required placeholder="example '${DEFAULTSYMBOL}'"></b-form-input>
               </b-form-group>
@@ -36,8 +47,9 @@ const GazeCoinBuilder = {
               <b-form-group id="transactionDataInputGroup" label-cols="4" label-for="transactionDataInput" v-if="showDetails != 'none'" label="Transaction details" :description="getDescription">
                 <b-form-textarea id="transactionDataInput" v-model.trim="getTransactionData" plaintext :wrap="showDetails === 'raw' ? 'soft' : 'off'" rows="10" max-rows="20" ></b-form-textarea>
               </b-form-group>
+              -->
               <b-form-group>
-                <b-button type="submit" id="deploy" :disabled="actionDeploy === true" variant="primary">{{ actionDeploy === true ? "Deploying Token Contract ... " : "Deploy Token Contract" }}</b-button>
+                <b-button type="submit" id="deploy" :disabled="actionDeploy === true" variant="primary">{{ actionDeploy === true ? "Doing something ... " : "Do something (TODO)" }}</b-button>
               </b-form-group>
               <b-form-group>
                 <b-button v-show="deploymentTx" :href="explorer + 'tx/' + deploymentTx" variant="success" target="_blank">View transaction {{ deploymentTx }}</b-button>
@@ -105,6 +117,9 @@ const GazeCoinBuilder = {
     },
     balanceOf() {
       return store.getters['gazeCoinBuilder/balanceOf'];
+    },
+    items() {
+      return store.getters['gazeCoinBuilder/items'];
     },
     coinbase() {
       return store.getters['connection/coinbase'];
