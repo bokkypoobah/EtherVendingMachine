@@ -131,6 +131,7 @@ const gazeCoinBuilderModule = {
     name: "DEFAULTNAME",
     totalSupply: "0",
     balanceOf: "0",
+    items: {},
     executing: false,
   },
   getters: {
@@ -139,6 +140,7 @@ const gazeCoinBuilderModule = {
     name: state => state.name,
     totalSupply: state => state.totalSupply,
     balanceOf: state => state.balanceOf,
+    items: state => state.items,
   },
   mutations: {
     updateSymbol (state, symbol) {
@@ -156,6 +158,10 @@ const gazeCoinBuilderModule = {
     updateBalanceOf (state, balanceOf) {
       state.balanceOf = balanceOf;
       logIt("deployTokenContractModule", "updateBalanceOf('" + balanceOf + "')")
+    },
+    updateItems (state, items) {
+      Vue.set(state, 'items', items);
+      logIt("deployTokenContractModule", "updateItems('" + Object.keys(items).length + "' items)");
     },
     updateExecuting (state, executing) {
       state.executing = executing;
@@ -191,7 +197,7 @@ const gazeCoinBuilderModule = {
             commit('updateBalanceOf', balanceOf);
           }
           var i;
-          var tokens = [];
+          var items = {};
           for (i = 0; i < balanceOf; i++) {
             logIt("gazeCoinBuilderModule", "execWeb3() token " + i);
             var _tokenId = promisify(cb => contract.tokenOfOwnerByIndex(coinbase, i, cb));
@@ -200,47 +206,25 @@ const gazeCoinBuilderModule = {
             var _numberOfAttributes = promisify(cb => contract.numberOfAttributes(tokenId, cb));
             var numberOfAttributes = await _numberOfAttributes;
             logIt("gazeCoinBuilderModule", "execWeb3() token " + i + " has tokenId #" + tokenId + " with " + numberOfAttributes + " attributes");
+            var attributes = {};
             var j;
             for (j = 0; j < numberOfAttributes; j++) {
               var _attribute = promisify(cb => contract.getAttributeByIndex(tokenId, j, cb));
               var attribute = await _attribute;
               logIt("gazeCoinBuilderModule", "execWeb3()   attribute " + j + " " + JSON.stringify(attribute));
+              attributes[attribute[1]] = attribute[2];
             }
+            var item = { tokenId: tokenId, attributes: attributes };
+            items[tokenId] = item;
           }
+          commit('updateItems', items);
         }
         commit('updateExecuting', false);
-        logIt("gazeCoinBuilderModule", "execWeb3() end [" + count + ", " + networkChanged + ", " + blockChanged + ", " + coinbaseChanged + "]");
+        logIt("gazeCoinBuilderModule", "execWeb3() items " + JSON.stringify(items));
+        logIt("gazeCoinBuilderModule", "execWeb3() end[" + count + ", " + networkChanged + ", " + blockChanged + ", " + coinbaseChanged + "]");
       } else {
-        logIt("gazeCoinBuilderModule", "execWeb3() already executing [" + count + ", " + networkChanged + ", " + blockChanged + ", " + coinbaseChanged + "]");
+        logIt("gazeCoinBuilderModule", "execWeb3() already executing[" + count + ", " + networkChanged + ", " + blockChanged + ", " + coinbaseChanged + "]");
       }
-        // var child = factoryNumberOfChildren - 1;
-        // var factoryChildren = [];
-        // var seen = {};
-        // while (child >= 0 && child >= (factoryNumberOfChildren - state.factoryDisplayMaxChildren)) {
-        //   var _childAddress = promisify(cb => factory.children(child, cb));
-        //   var childAddress = await _childAddress;
-        //   var token = web3.eth.contract(tokenAbi).at(childAddress);
-        //   var _symbol = promisify(cb => token.symbol(cb));
-        //   var _name = promisify(cb => token.name(cb));
-        //   var _decimals = promisify(cb => token.decimals(cb));
-        //   var _totalSupply = promisify(cb => token.totalSupply(cb));
-        //   var symbol = await _symbol;
-        //   var name = await _name;
-        //   var decimals = await _decimals;
-        //   var totalSupply = await _totalSupply;
-        //   var totalSupplyString = new BigNumber(totalSupply).shift(-decimals);
-        //   if (!seen[childAddress]) {
-        //     logIt("deployTokenContractModule", "execWeb3() Adding [" + childAddress.substring(0, 10) + ", " + symbol + "]");
-        //     factoryChildren.push({ number: child + 1, address: childAddress, symbol: symbol, name: name, decimals: decimals, totalSupply: totalSupply, totalSupplyString: totalSupplyString });
-        //     seen[childAddress] = true;
-        //   } else {
-        //     logIt("deployTokenContractModule", "execWeb3() Already seen [" + childAddress + "]");
-        //   }
-        //   child--;
-        // }
-        // commit('updateFactoryChildren', factoryChildren);
-
-      // }
     }
   },
 };
