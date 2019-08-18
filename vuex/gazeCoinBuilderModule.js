@@ -9,15 +9,15 @@ const GazeCoinBuilder = {
         <b-col cols="12" md="8">
           <b-card title="GazeCoin Builder" sub-title="Your Assets">
             <b-form @submit="onSubmit" v-if="show">
-            <b-row no-gutters v-for="(item, key, index) in items">
-              <b-col cols="1">{{ key }}</b-col>
               <!--
-              <b-col class="truncate">
-                <b-link :href="explorer + 'token/' + itemn.tokenId" class="card-link" target="_blank">{{ item }}</b-link>
-              </b-col>
+              <b-row no-gutters v-for="(item, key, index) in items">
+                <b-col cols="1">{{ key }}</b-col>
+                <b-col class="truncate">
+                  <b-link :href="explorer + 'token/' + itemn.tokenId" class="card-link" target="_blank">{{ item }}</b-link>
+                </b-col>
+              </b-row>
               -->
-            </b-row>
-
+              <b-table striped hover :items="items"></b-table>
 
               <!--
               <b-form-group id="symbolInputGroup" label-for="symbolInput" label="Symbol" label-cols="4" description="An uppercase word a few letters long">
@@ -146,7 +146,7 @@ const gazeCoinBuilderModule = {
     name: "DEFAULTNAME",
     totalSupply: "0",
     balanceOf: "0",
-    items: {},
+    items: [],
     executing: false,
   },
   getters: {
@@ -212,7 +212,7 @@ const gazeCoinBuilderModule = {
             commit('updateBalanceOf', balanceOf);
           }
           var i;
-          var items = {};
+          var items = [];
           for (i = 0; i < balanceOf; i++) {
             logIt("gazeCoinBuilderModule", "execWeb3() token " + i);
             var _tokenId = promisify(cb => contract.tokenOfOwnerByIndex(coinbase, i, cb));
@@ -230,7 +230,7 @@ const gazeCoinBuilderModule = {
               attributes[attribute[1]] = attribute[2];
             }
             var item = { tokenId: tokenId, attributes: attributes };
-            items[tokenId] = item;
+            items.push(item);
           }
           commit('updateItems', items);
         }
