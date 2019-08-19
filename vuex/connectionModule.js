@@ -342,7 +342,7 @@ const Connection = {
     },
     timeoutCallback() {
       var t = this;
-      if (this.count++ % 50 == 0 || store.getters['gazeCoinBuilder/refreshRequested'] ) {
+      if (this.count++ % 10 == 0 || store.getters['gazeCoinBuilder/refreshRequested'] ) {
         t.getWeb3();
       }
       if (store.getters['connection/block'] != null) {

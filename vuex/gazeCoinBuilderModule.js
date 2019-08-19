@@ -21,21 +21,17 @@ const GazeCoinBuilder = {
                       </b-form-radio-group>
                     </b-form-group>
                     <b-form-group label="Display tokens: " label-cols="4">
-                      <b-form-radio-group id="displayTokens" :value="displayTokens" @input="updateDisplayTokens" name="displayTokensComponent">
+                      <b-form-radio-group id="displayTokens" :value.trim="displayTokens" @input="updateDisplayTokens" v-model="displayTokens" name="displayTokensComponent">
                         <b-form-radio value="all" v-b-popover.hover.top="'Display all tokens'">All</b-form-radio>
                         <b-form-radio value="owned" v-b-popover.hover.top="'Display tokens owned'">Owned</b-form-radio>
                       </b-form-radio-group>
                     </b-form-group>
                     <b-form-group label="Page size: " label-cols="4">
                       <b-input-group prepend="10" append="100" class="mt-3">
-                        <b-form-input :value.trim="displayPageSize" @input="updateDisplayPageSize" type="range" min="10" max="100" step="10"></b-form-input>
+                        <b-form-input :value.trim="displayPageSize" @input="updateDisplayPageSize" type="range" min="10" max="100" step="5"></b-form-input>
                       </b-input-group>
                     </b-form-group>
-                    <b-form-group label="Page: " label-cols="4">
-                      <b-input-group prepend="1" append="100" class="mt-3">
-                        <b-form-input :value.trim="displayPage" @input="updateDisplayPage" type="range" min="1" max="100"></b-form-input>
-                      </b-input-group>
-                    </b-form-group>
+                    <b-pagination :value.trim="displayPage" @input="updateDisplayPage" :total-rows="displayTotalRows" :per-page="displayPageSize" aria-controls="my-table" ></b-pagination>
                   </b-card>
                 </b-collapse>
               </div>
@@ -130,9 +126,11 @@ const GazeCoinBuilder = {
   data: function () {
     return {
       show: true,
+      // pages: "10",
       displayMode: "list",
       fields: [
-        { key: 'tokenId', stickyColumn: true, isRowHeader: true, variant: 'primary' },
+        { key: 'number', stickyColumn: true, isRowHeader: true, variant: 'primary' },
+        { key: 'tokenId', stickyColumn: true, isRowHeader: true, variant: 'info' },
         { key: 'attributes', variant: 'info' },
       ],
     }
@@ -156,14 +154,31 @@ const GazeCoinBuilder = {
     balanceOf() {
       return store.getters['gazeCoinBuilder/balanceOf'];
     },
-    displayTokens() {
-      return store.getters['gazeCoinBuilder/displayTokens'];
+    displayTokens: {
+      get () {
+        return store.getters['gazeCoinBuilder/displayTokens'];
+      },
+      set (value) {
+        this.$store.commit('gazeCoinBuilder/updateDisplayTokens', value);
+      }
     },
     displayPageSize() {
       return store.getters['gazeCoinBuilder/displayPageSize'];
     },
     displayPage() {
       return store.getters['gazeCoinBuilder/displayPage'];
+    },
+    displayTotalRows() {
+      if (store.getters['gazeCoinBuilder/displayTokens'] == "owned") {
+        console.log("GazeCoinBuilder.displayTotalRows() owned " + store.getters['gazeCoinBuilder/balanceOf']);
+        return parseInt(store.getters['gazeCoinBuilder/balanceOf']);
+      } else {
+        console.log("GazeCoinBuilder.displayTotalRows() all " + store.getters['gazeCoinBuilder/totalSupply']);
+        return parseInt(store.getters['gazeCoinBuilder/totalSupply']);
+      }
+    },
+    pages() {
+      return store.getters['gazeCoinBuilder/pages'];
     },
     items() {
       return store.getters['gazeCoinBuilder/items'];
@@ -199,7 +214,7 @@ const gazeCoinBuilderModule = {
     name: "DEFAULTNAME",
     totalSupply: "0",
     balanceOf: "0",
-    displayTokens: "owned",
+    displayTokens: "all",
     displayPageSize: "10",
     displayPage: "1",
     items: [],
@@ -218,58 +233,71 @@ const gazeCoinBuilderModule = {
     items: state => state.items,
     refreshRequested: state => state.refreshRequested,
   },
+  computed: {
+    pages() {
+      if (state.displayTokens == "owned") {
+        console.log("gazeCoinBuilderModule.pages() called owned");
+        var pages = Math.round(((state.balanceOf - 1) / state.displayPageSize), 0) + 1
+        return pages.toString();
+      } else {
+        console.log("gazeCoinBuilderModule.pages() called all");
+        var pages = Math.round(((state.totalSupply - 1) / state.displayPageSize), 0) + 1
+        return pages.toString();
+      }
+    },
+  },
   mutations: {
     updateSymbol (state, symbol) {
       state.symbol = symbol;
-      logIt("deployTokenContractModule", "updateSymbol('" + symbol + "')")
+      logIt("gazeCoinBuilderModule", "updateSymbol('" + symbol + "')")
     },
     updateName (state, name) {
       state.name = name;
-      logIt("deployTokenContractModule", "updateName('" + name + "')")
+      logIt("gazeCoinBuilderModule", "updateName('" + name + "')")
     },
     updateTotalSupply (state, totalSupply) {
       state.totalSupply = totalSupply;
-      logIt("deployTokenContractModule", "updateTotalSupply('" + totalSupply + "')")
+      logIt("gazeCoinBuilderModule", "updateTotalSupply('" + totalSupply + "')")
     },
     updateBalanceOf (state, balanceOf) {
       state.balanceOf = balanceOf;
-      logIt("deployTokenContractModule", "updateBalanceOf('" + balanceOf + "')")
+      logIt("gazeCoinBuilderModule", "updateBalanceOf('" + balanceOf + "')")
     },
     updateDisplayTokens (state, displayTokens) {
       state.displayTokens = displayTokens;
       state.refreshRequested = true;
-      logIt("deployTokenContractModule", "updateDisplayTokens('" + displayTokens + "')")
+      logIt("gazeCoinBuilderModule", "updateDisplayTokens('" + displayTokens + "'). refreshRequested true")
     },
     updateDisplayPageSize (state, displayPageSize) {
       state.displayPageSize = displayPageSize;
       state.refreshRequested = true;
-      logIt("deployTokenContractModule", "updateDisplayPageSize('" + displayPageSize + "')")
+      logIt("gazeCoinBuilderModule", "updateDisplayPageSize('" + displayPageSize + "'). refreshRequested true")
     },
     updateDisplayPage (state, displayPage) {
       state.displayPage = displayPage;
       state.refreshRequested = true;
-      logIt("deployTokenContractModule", "updateDisplayPage('" + displayPage + "')")
+      logIt("gazeCoinBuilderModule", "updateDisplayPage('" + displayPage + "'). refreshRequested true")
     },
     updateItems (state, items) {
       Vue.set(state, 'items', items);
-      logIt("deployTokenContractModule", "updateItems('" + Object.keys(items).length + "' items)");
+      logIt("gazeCoinBuilderModule", "updateItems('" + Object.keys(items).length + "' items)");
     },
     updateExecuting (state, executing) {
       state.executing = executing;
-      logIt("deployTokenContractModule", "updateExecuting('" + executing + "')")
+      logIt("gazeCoinBuilderModule", "updateExecuting('" + executing + "')")
     },
     updateRefreshRequested (state, refreshRequested) {
       state.refreshRequested = refreshRequested;
-      logIt("deployTokenContractModule", "updateRefreshRequested('" + refreshRequested + "')")
+      logIt("gazeCoinBuilderModule", "updateRefreshRequested('" + refreshRequested + "')")
     },
   },
   actions: {
     async execWeb3 ({state, commit}, {count, networkChanged, blockChanged, coinbaseChanged}) {
       if (!state.executing) {
         commit('updateExecuting', true);
-        logIt("gazeCoinBuilderModule", "execWeb3() start[" + count + ", " + networkChanged + ", " + blockChanged + ", " + coinbaseChanged + "]");
+        logIt("gazeCoinBuilderModule", "execWeb3() start[" + count + ", " + networkChanged + ", " + blockChanged + ", " + coinbaseChanged + ", " + state.refreshRequested + "]");
         var contract = web3.eth.contract(GAZECOINMETAVERSEASSETABI).at(state.nftAddress);
-        if (networkChanged || blockChanged || coinbaseChanged) {
+        if (networkChanged || blockChanged || coinbaseChanged || state.refreshRequested) {
           var _symbol = promisify(cb => contract.symbol(cb));
           var symbol = await _symbol;
           if (symbol !== state.symbol) {
@@ -292,12 +320,43 @@ const gazeCoinBuilderModule = {
             commit('updateBalanceOf', balanceOf);
           }
           var i;
+          var numbers = [];
+          var tokenIds = {};
+          if (state.displayTokens == "owned") {
+            var pages = Math.round(((balanceOf - 1) / state.displayPageSize), 0) + 1
+            var page = Math.min(Math.max(state.displayPage, 0), pages);
+            var start = Math.max((page - 1) * state.displayPageSize, 0);
+            var end = Math.min(page * state.displayPageSize, balanceOf);
+            logIt("gazeCoinBuilderModule", "execWeb3() owned pages " + pages + " page " + page + " start " + start + " end " + end);
+            for (i = start; i < end; i++) {
+              var _tokenId = promisify(cb => contract.tokenOfOwnerByIndex(coinbase, i, cb));
+              var tokenId = await _tokenId;
+              numbers.push(i + 1);
+              tokenIds[i + 1] = tokenId;
+              logIt("gazeCoinBuilderModule", "execWeb3() owned token " + i + " with tokenId:" + tokenId);
+            }
+          } else {
+            var pages = Math.round(((totalSupply - 1) / state.displayPageSize), 0) + 1
+            var page = Math.min(Math.max(state.displayPage, 0), pages);
+            var start = Math.max((page - 1) * state.displayPageSize, 0);
+            var end = Math.min(page * state.displayPageSize, totalSupply);
+            logIt("gazeCoinBuilderModule", "execWeb3() all pages " + pages + " page " + page + " start " + start + " end " + end);
+            for (i = start; i < end; i++) {
+              var _tokenId = promisify(cb => contract.tokenByIndex(i, cb));
+              var tokenId = await _tokenId;
+              numbers.push(i + 1);
+              tokenIds[i + 1] = tokenId;
+              logIt("gazeCoinBuilderModule", "execWeb3() all token " + i + " with tokenId:" + tokenId);
+            }
+          }
+          Object.keys(tokenIds).forEach(function(number) {
+            var tokenId = tokenIds[number];
+            console.log(number + " => " + tokenIds[number]);
+          });
           var items = [];
-          for (i = 0; i < balanceOf; i++) {
-            logIt("gazeCoinBuilderModule", "execWeb3() token " + i);
-            var _tokenId = promisify(cb => contract.tokenOfOwnerByIndex(coinbase, i, cb));
-            var tokenId = await _tokenId;
-            logIt("gazeCoinBuilderModule", "execWeb3() token " + i + " has tokenId #" + tokenId);
+          for (i = 0; i < numbers.length; i++) {
+            var number = numbers[i];
+            var tokenId = tokenIds[number];
             var _numberOfAttributes = promisify(cb => contract.numberOfAttributes(tokenId, cb));
             var numberOfAttributes = await _numberOfAttributes;
             logIt("gazeCoinBuilderModule", "execWeb3() token " + i + " has tokenId #" + tokenId + " with " + numberOfAttributes + " attributes");
@@ -309,8 +368,7 @@ const gazeCoinBuilderModule = {
               logIt("gazeCoinBuilderModule", "execWeb3()   attribute " + j + " " + JSON.stringify(attribute));
               attributes[attribute[1]] = attribute[2];
             }
-            var item = { tokenId: tokenId, attributes: attributes };
-            items.push(item);
+            items.push({ number: number, tokenId: tokenId, attributes: attributes });
           }
           commit('updateItems', items);
         }
