@@ -7,8 +7,39 @@ const GazeCoinBuilder = {
     <div>
       <b-row>
         <b-col cols="12" md="8">
-          <b-card title="GazeCoin Builder" sub-title="Your Assets">
+          <b-card title="GazeCoin Builder" \>
             <b-form @submit="onSubmit" v-if="show">
+
+              <div>
+                <b-button v-b-toggle.collapse-1 variant="primary">Display</b-button>
+                <b-collapse visible id="collapse-1" class="mt-2">
+                  <b-card>
+                    <b-form-group label="Display as: " label-cols="4">
+                      <b-form-radio-group id="displayMode" v-model="displayMode" name="displayModeComponent">
+                        <b-form-radio value="list" v-b-popover.hover.top="'Display as list'">List</b-form-radio>
+                        <b-form-radio value="card" v-b-popover.hover.top="'Display are cards'">Cards</b-form-radio>
+                      </b-form-radio-group>
+                    </b-form-group>
+                    <b-form-group label="Display tokens: " label-cols="4">
+                      <b-form-radio-group id="displayTokens" :value="displayTokens" @input="updateDisplayTokens" name="displayTokensComponent">
+                        <b-form-radio value="all" v-b-popover.hover.top="'Display all tokens'">All</b-form-radio>
+                        <b-form-radio value="owned" v-b-popover.hover.top="'Display tokens owned'">Owned</b-form-radio>
+                      </b-form-radio-group>
+                    </b-form-group>
+                    <b-form-group label="Page size: " label-cols="4">
+                      <b-input-group prepend="10" append="100" class="mt-3">
+                        <b-form-input :value.trim="displayPageSize" @input="updateDisplayPageSize" type="range" min="10" max="100" step="10"></b-form-input>
+                      </b-input-group>
+                    </b-form-group>
+                    <b-form-group label="Page: " label-cols="4">
+                      <b-input-group prepend="1" append="100" class="mt-3">
+                        <b-form-input :value.trim="displayPage" @input="updateDisplayPage" type="range" min="1" max="100"></b-form-input>
+                      </b-input-group>
+                    </b-form-group>
+                  </b-card>
+                </b-collapse>
+              </div>
+
               <!--
               <b-row no-gutters v-for="(item, key, index) in items">
                 <b-col cols="1">{{ key }}</b-col>
@@ -17,7 +48,7 @@ const GazeCoinBuilder = {
                 </b-col>
               </b-row>
               -->
-              <b-table striped hover :items="items"></b-table>
+              <b-table v-if="displayMode == 'list'" striped selectable selected-variant="success" hover :items="items" :fields="fields"></b-table>
 
               <!--
               <b-form-group id="symbolInputGroup" label-for="symbolInput" label="Symbol" label-cols="4" description="An uppercase word a few letters long">
@@ -48,6 +79,7 @@ const GazeCoinBuilder = {
                 <b-form-textarea id="transactionDataInput" v-model.trim="getTransactionData" plaintext :wrap="showDetails === 'raw' ? 'soft' : 'off'" rows="10" max-rows="20" ></b-form-textarea>
               </b-form-group>
               -->
+              <!--
               <b-form-group>
                 <b-button type="submit" id="deploy" :disabled="actionDeploy === true" variant="primary">{{ actionDeploy === true ? "Doing something ... " : "Do something (TODO)" }}</b-button>
               </b-form-group>
@@ -57,6 +89,7 @@ const GazeCoinBuilder = {
               <b-form-group>
                 <b-button v-show="deploymentTxError" variant="danger">{{ deploymentTxError }}</b-button>
               </b-form-group>
+              -->
             </b-form>
           </b-card>
         </b-col>
@@ -97,6 +130,11 @@ const GazeCoinBuilder = {
   data: function () {
     return {
       show: true,
+      displayMode: "list",
+      fields: [
+        { key: 'tokenId', stickyColumn: true, isRowHeader: true, variant: 'primary' },
+        { key: 'attributes', variant: 'info' },
+      ],
     }
   },
   computed: {
@@ -118,6 +156,15 @@ const GazeCoinBuilder = {
     balanceOf() {
       return store.getters['gazeCoinBuilder/balanceOf'];
     },
+    displayTokens() {
+      return store.getters['gazeCoinBuilder/displayTokens'];
+    },
+    displayPageSize() {
+      return store.getters['gazeCoinBuilder/displayPageSize'];
+    },
+    displayPage() {
+      return store.getters['gazeCoinBuilder/displayPage'];
+    },
     items() {
       return store.getters['gazeCoinBuilder/items'];
     },
@@ -126,12 +173,18 @@ const GazeCoinBuilder = {
     },
   },
   methods: {
-    updateSymbol (e) {
-      this.$store.commit('viewTokens/updateSymbol', e);
+    updateDisplayTokens (e) {
+      this.$store.commit('gazeCoinBuilder/updateDisplayTokens', e);
+    },
+    updateDisplayPageSize (e) {
+      this.$store.commit('gazeCoinBuilder/updateDisplayPageSize', e);
+    },
+    updateDisplayPage (e) {
+      this.$store.commit('gazeCoinBuilder/updateDisplayPage', e);
     },
     onSubmit(event) {
       event.preventDefault();
-      this.$store.commit('deployTokenContract/updateActionDeploy', true);
+      this.$store.commit('gazeCoinBuilder/updateActionDeploy', true);
     },
   },
   mounted() {
@@ -146,8 +199,12 @@ const gazeCoinBuilderModule = {
     name: "DEFAULTNAME",
     totalSupply: "0",
     balanceOf: "0",
+    displayTokens: "owned",
+    displayPageSize: "10",
+    displayPage: "1",
     items: [],
     executing: false,
+    refreshRequested: false,
   },
   getters: {
     nftAddress: state => state.nftAddress,
@@ -155,7 +212,11 @@ const gazeCoinBuilderModule = {
     name: state => state.name,
     totalSupply: state => state.totalSupply,
     balanceOf: state => state.balanceOf,
+    displayTokens: state => state.displayTokens,
+    displayPageSize: state => state.displayPageSize,
+    displayPage: state => state.displayPage,
     items: state => state.items,
+    refreshRequested: state => state.refreshRequested,
   },
   mutations: {
     updateSymbol (state, symbol) {
@@ -174,6 +235,21 @@ const gazeCoinBuilderModule = {
       state.balanceOf = balanceOf;
       logIt("deployTokenContractModule", "updateBalanceOf('" + balanceOf + "')")
     },
+    updateDisplayTokens (state, displayTokens) {
+      state.displayTokens = displayTokens;
+      state.refreshRequested = true;
+      logIt("deployTokenContractModule", "updateDisplayTokens('" + displayTokens + "')")
+    },
+    updateDisplayPageSize (state, displayPageSize) {
+      state.displayPageSize = displayPageSize;
+      state.refreshRequested = true;
+      logIt("deployTokenContractModule", "updateDisplayPageSize('" + displayPageSize + "')")
+    },
+    updateDisplayPage (state, displayPage) {
+      state.displayPage = displayPage;
+      state.refreshRequested = true;
+      logIt("deployTokenContractModule", "updateDisplayPage('" + displayPage + "')")
+    },
     updateItems (state, items) {
       Vue.set(state, 'items', items);
       logIt("deployTokenContractModule", "updateItems('" + Object.keys(items).length + "' items)");
@@ -181,6 +257,10 @@ const gazeCoinBuilderModule = {
     updateExecuting (state, executing) {
       state.executing = executing;
       logIt("deployTokenContractModule", "updateExecuting('" + executing + "')")
+    },
+    updateRefreshRequested (state, refreshRequested) {
+      state.refreshRequested = refreshRequested;
+      logIt("deployTokenContractModule", "updateRefreshRequested('" + refreshRequested + "')")
     },
   },
   actions: {
@@ -233,6 +313,9 @@ const gazeCoinBuilderModule = {
             items.push(item);
           }
           commit('updateItems', items);
+        }
+        if (state.refreshRequested) {
+          commit('updateRefreshRequested', false);
         }
         commit('updateExecuting', false);
         logIt("gazeCoinBuilderModule", "execWeb3() items " + JSON.stringify(items));

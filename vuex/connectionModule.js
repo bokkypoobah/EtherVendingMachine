@@ -342,7 +342,7 @@ const Connection = {
     },
     timeoutCallback() {
       var t = this;
-      if (this.count++ % 5 == 0 /* || queue has tx to process */ ) {
+      if (this.count++ % 50 == 0 || store.getters['gazeCoinBuilder/refreshRequested'] ) {
         t.getWeb3();
       }
       if (store.getters['connection/block'] != null) {
@@ -389,6 +389,7 @@ const connectionModule = {
     coinbase: null,
     balance: null,
     block: null,
+    // refreshRequested: false,
     // networkChanged: 0,
     // coinbaseChanged: 0,
     // balanceChanged: 0,
@@ -432,6 +433,9 @@ const connectionModule = {
     setBlock (state, b) {
       state.block = b;
     },
+    // setRefreshRequested (state, rr) {
+    //   state.refreshRequested = rr;
+    // },
   },
   actions: {
     setIsMounted (context) {
@@ -458,6 +462,9 @@ const connectionModule = {
     setBlock (context, b) {
       context.commit('setBlock', b);
     },
+    // setRefreshRequested (context, rr) {
+    //   context.commit('setRefreshRequested', rr);
+    // },
   },
   getters: {
     isMounted: state => state.isMounted,
@@ -471,6 +478,7 @@ const connectionModule = {
     coinbase: state => state.coinbase,
     balance: state => state.balance,
     block: state => state.block,
+    // refreshRequested: state => state.refreshRequested,
   },
   // Below should work but does not
   // computed: Vuex.mapState({
