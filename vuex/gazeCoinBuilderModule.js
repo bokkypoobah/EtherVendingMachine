@@ -17,7 +17,7 @@ const GazeCoinBuilder = {
                     <b-form-group label="Display as: " label-cols="4">
                       <b-form-radio-group id="displayMode" v-model="displayMode" name="displayModeComponent">
                         <b-form-radio value="list" v-b-popover.hover.top="'Display as list'">List</b-form-radio>
-                        <b-form-radio value="card" v-b-popover.hover.top="'Display are cards'">Cards</b-form-radio>
+                        <b-form-radio value="cards" v-b-popover.hover.top="'Display are cards'">Cards</b-form-radio>
                       </b-form-radio-group>
                     </b-form-group>
                     <b-form-group label="Display tokens: " label-cols="4">
@@ -36,14 +36,25 @@ const GazeCoinBuilder = {
                 </b-collapse>
               </div>
 
-              <!--
-              <b-row no-gutters v-for="(item, key, index) in items">
-                <b-col cols="1">{{ key }}</b-col>
-                <b-col class="truncate">
-                  <b-link :href="explorer + 'token/' + itemn.tokenId" class="card-link" target="_blank">{{ item }}</b-link>
-                </b-col>
-              </b-row>
-              -->
+              <b-card-group deck v-if="displayMode != 'list'" v-for="(item, key, index) in items" v-bind:key="item.number">
+                <b-card no-body img-top>
+                  <b-card-header>
+                    <b-card-title>
+                    <b-link to="/">
+                      #{{ item.number }} TokenId {{ item.tokenId }}
+                    </b-link>
+                    </b-card-title>
+                  </b-card-header>
+                  <b-card-body>
+                    <b-card-text>Owner {{ item.owner }}</b-card-text>
+                    <b-card-text>Attributes {{ item.attributes }}</b-card-text>
+                    <b-card-img src="https://d33wubrfki0l68.cloudfront.net/ca0061c3c33c88b2b124e64ad341e15e2a17af49/c8765/images/alligator-logo3.svg">
+                    </b-card-img>
+                  </b-card-body>
+                  <b-button href="#" variant="primary">Go somewhere</b-button>
+                </b-card>
+              </b-card-group>
+
               <b-table v-if="displayMode == 'list'" striped selectable selected-variant="success" hover :items="items" :fields="fields"></b-table>
 
               <!--
@@ -127,12 +138,12 @@ const GazeCoinBuilder = {
     return {
       show: true,
       // pages: "10",
-      displayMode: "list",
+      displayMode: "cards", // "list" or "cards"
       fields: [
-        { key: 'number', stickyColumn: true, isRowHeader: true, variant: 'primary' },
-        { key: 'tokenId', stickyColumn: true, isRowHeader: true, variant: 'info' },
-        { key: 'owner', stickyColumn: true, isRowHeader: true, variant: 'info' },
-        { key: 'attributes', variant: 'info' },
+        { key: 'number', label: '#', stickyColumn: true, variant: 'primary' },
+        { key: 'tokenId', label: 'TokenId', stickyColumn: true, isRowHeader: true, variant: 'info' },
+        { key: 'owner', label: 'Owner', stickyColumn: true, variant: 'info' },
+        { key: 'attributes', label: 'Attributes', variant: 'info' },
       ],
     }
   },
@@ -215,7 +226,7 @@ const gazeCoinBuilderModule = {
     name: "DEFAULTNAME",
     totalSupply: "0",
     balanceOf: "0",
-    displayTokens: "all",
+    displayTokens: "all", // "all" or "owned"
     displayPageSize: "10",
     displayPage: "1",
     items: [],
