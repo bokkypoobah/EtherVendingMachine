@@ -131,6 +131,7 @@ const GazeCoinBuilder = {
       fields: [
         { key: 'number', stickyColumn: true, isRowHeader: true, variant: 'primary' },
         { key: 'tokenId', stickyColumn: true, isRowHeader: true, variant: 'info' },
+        { key: 'owner', stickyColumn: true, isRowHeader: true, variant: 'info' },
         { key: 'attributes', variant: 'info' },
       ],
     }
@@ -332,7 +333,7 @@ const gazeCoinBuilderModule = {
               var _tokenId = promisify(cb => contract.tokenOfOwnerByIndex(coinbase, i, cb));
               var tokenId = await _tokenId;
               numbers.push(i + 1);
-              tokenIds[i + 1] = tokenId;
+              tokenIds[i + 1] = { tokenId: tokenId, owner: coinbase };
               logIt("gazeCoinBuilderModule", "execWeb3() owned token " + i + " with tokenId:" + tokenId);
             }
           } else {
@@ -344,19 +345,22 @@ const gazeCoinBuilderModule = {
             for (i = start; i < end; i++) {
               var _tokenId = promisify(cb => contract.tokenByIndex(i, cb));
               var tokenId = await _tokenId;
+              var _ownerOf = promisify(cb => contract.ownerOf(tokenId, cb));
+              var ownerOf = await _ownerOf;
               numbers.push(i + 1);
-              tokenIds[i + 1] = tokenId;
+              tokenIds[i + 1] = { tokenId: tokenId, owner: ownerOf };
               logIt("gazeCoinBuilderModule", "execWeb3() all token " + i + " with tokenId:" + tokenId);
             }
           }
-          Object.keys(tokenIds).forEach(function(number) {
-            var tokenId = tokenIds[number];
-            console.log(number + " => " + tokenIds[number]);
-          });
+          // Object.keys(tokenIds).forEach(function(number) {
+          //   var tokenId = tokenIds[number];
+          //   console.log(number + " => " + tokenIds[number]);
+          // });
           var items = [];
           for (i = 0; i < numbers.length; i++) {
             var number = numbers[i];
-            var tokenId = tokenIds[number];
+            var tokenId = tokenIds[number].tokenId;
+            var owner = tokenIds[number].owner;
             var _numberOfAttributes = promisify(cb => contract.numberOfAttributes(tokenId, cb));
             var numberOfAttributes = await _numberOfAttributes;
             logIt("gazeCoinBuilderModule", "execWeb3() token " + i + " has tokenId #" + tokenId + " with " + numberOfAttributes + " attributes");
@@ -368,7 +372,7 @@ const gazeCoinBuilderModule = {
               logIt("gazeCoinBuilderModule", "execWeb3()   attribute " + j + " " + JSON.stringify(attribute));
               attributes[attribute[1]] = attribute[2];
             }
-            items.push({ number: number, tokenId: tokenId, attributes: attributes });
+            items.push({ number: number, tokenId: tokenId, owner: owner, attributes: attributes });
           }
           commit('updateItems', items);
         }
