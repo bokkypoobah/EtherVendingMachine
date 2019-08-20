@@ -9,7 +9,7 @@ const Home = {
             <b-card title="Please make a selection">
               <b-list-group>
                 <b-list-group-item to="/deployTokenContract">Deploy BokkyPooBah's Fixed Supply Token 👊 Contract</b-list-group-item>
-                <b-list-group-item to="/gazeCoinBuilder">GazeCoin Builder</b-list-group-item>
+                <b-list-group-item to="/gazeCoinBuilder/all">GazeCoin Builder</b-list-group-item>
                 <!-- <b-list-group-item to="/viewTokens">View Tokens</b-list-group-item>
                 <b-list-group-item to="/page2">Exchange Tokens</b-list-group-item>
                 <b-list-group-item to="/page2">Trade Put/Call Options</b-list-group-item> -->

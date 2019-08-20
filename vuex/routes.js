@@ -7,9 +7,15 @@ const routes = [{
     component: ViewTokens,
     name: 'ViewTokens'
   }, {
-    path: '/gazeCoinBuilder',
+    // all
+    // owned
+    // 0x123456
+    // new
+    // {tokenId}
+
+    path: '/gazeCoinBuilder/:param1',
     component: GazeCoinBuilder,
-    name: 'GazeCoinBuilder'
+    name: 'GazeCoinBuilder',
   }, {
     path: '/page1',
     component: Page1,

@@ -10,17 +10,17 @@ const router = new VueRouter({
 const storeVersion = 1;
 const store = new Vuex.Store({
   strict: true,
-  state: {
-    username: 'Jack',
-    phrases: ['Welcome back', 'Have a nice day'],
-  },
-  getters: {
-    getMessage(state) {
-      return state.route.name === 'top' ?
-        `${state.phrases[0]}, ${state.username}` :
-        `${state.phrases[1]}, ${state.username}`;
-    },
-  },
+  // state: {
+  //   username: 'Jack',
+  //   phrases: ['Welcome back', 'Have a nice day'],
+  // },
+  // getters: {
+  //   getMessage(state) {
+  //     return state.route.name === 'top' ?
+  //       `${state.phrases[0]}, ${state.username}` :
+  //       `${state.phrases[1]}, ${state.username}`;
+  //   },
+  // },
   mutations: {
     initialiseStore(state) {
       // Check if the store exists

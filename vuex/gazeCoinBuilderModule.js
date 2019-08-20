@@ -43,6 +43,7 @@ const GazeCoinBuilder = {
                     <b-link to="/">
                       #{{ item.number }} TokenId {{ item.tokenId }}
                     </b-link>
+                    AAARGGH {{ $route.params.param1 }}
                     </b-card-title>
                   </b-card-header>
                   <b-card-body>
@@ -57,46 +58,6 @@ const GazeCoinBuilder = {
 
               <b-table v-if="displayMode == 'list'" striped selectable selected-variant="success" hover :items="items" :fields="fields"></b-table>
 
-              <!--
-              <b-form-group id="symbolInputGroup" label-for="symbolInput" label="Symbol" label-cols="4" description="An uppercase word a few letters long">
-                <b-form-input id="symbolInput" type="text" :value.trim="symbol" @input="updateSymbol" required placeholder="example '${DEFAULTSYMBOL}'"></b-form-input>
-              </b-form-group>
-              <b-form-group id="nameInputGroup" label-for="nameInput" label="Name" label-cols="4" description="A set of mixed case words">
-                <b-form-input id="nameInput" type="text" :value.trim="name" @input="updateName" required placeholder="example '${DEFAULTNAME}'"></b-form-input>
-              </b-form-group>
-              <b-form-group id="decimalsInputGroup" label-for="decimalsInput" label="Decimals" label-cols="4" description="Number of decimal places, between 0 and 18, inclusive">
-                <b-form-input id="decimalsInput" type="number" step="1" :value.trim="decimals" @input="updateDecimals" required placeholder="example '${DEFAULTDECIMALS}'"></b-form-input>
-              </b-form-group>
-              <b-form-group id="totalSupplyInputGroup" label-for="totalSupplyInput" label="Total Supply" label-cols="4" description="A positive number less than or equals to 100,000,000,000,000">
-                <b-form-input id="totalSupplyInput" type="number" step="any" :value.trim="totalSupply" @input="updateTotalSupply" required placeholder="example '${DEFAULTTOTALSUPPLY}'"></b-form-input>
-              </b-form-group>
-              <b-form-group id="deploymentFeeInputGroup" label-for="deploymentFeeInput" label="Deployment Fee" label-cols="4" description="Minimum deployment fee 0.1 ethers">
-                <b-form-input id="deploymentFeeInput" type="number" step="0.000000001" :value.trim="deploymentFee" @input="updateDeploymentFee" required placeholder="example '${DEFAULTMINIMUMFEE}'"></b-form-input>
-              </b-form-group>
-              <b-form-group label="Show Details: " label-cols="4">
-                <b-form-radio-group id="showDetails" v-model="showDetails" name="transactionDataTypeComponent">
-                  <b-form-radio value="none" v-b-popover.hover.top="'Dont show any details'">None</b-form-radio>
-                  <b-form-radio value="functionCall" v-b-popover.hover.top="'For executing using the geth JavaScript console'">Function Call</b-form-radio>
-                  <b-form-radio value="javascript" v-b-popover.hover.top="'For executing using the geth JavaScript console'">JavaScript</b-form-radio>
-                  <b-form-radio value="formatted" v-b-popover.hover.top="'For displaying the chunks of raw data'">Formatted</b-form-radio>
-                  <b-form-radio value="raw" v-b-popover.hover.top="'This raw data can be copied into MyCrypto or MyEtherWallet for deployment'">Raw</b-form-radio>
-                </b-form-radio-group>
-              </b-form-group>
-              <b-form-group id="transactionDataInputGroup" label-cols="4" label-for="transactionDataInput" v-if="showDetails != 'none'" label="Transaction details" :description="getDescription">
-                <b-form-textarea id="transactionDataInput" v-model.trim="getTransactionData" plaintext :wrap="showDetails === 'raw' ? 'soft' : 'off'" rows="10" max-rows="20" ></b-form-textarea>
-              </b-form-group>
-              -->
-              <!--
-              <b-form-group>
-                <b-button type="submit" id="deploy" :disabled="actionDeploy === true" variant="primary">{{ actionDeploy === true ? "Doing something ... " : "Do something (TODO)" }}</b-button>
-              </b-form-group>
-              <b-form-group>
-                <b-button v-show="deploymentTx" :href="explorer + 'tx/' + deploymentTx" variant="success" target="_blank">View transaction {{ deploymentTx }}</b-button>
-              </b-form-group>
-              <b-form-group>
-                <b-button v-show="deploymentTxError" variant="danger">{{ deploymentTxError }}</b-button>
-              </b-form-group>
-              -->
             </b-form>
           </b-card>
         </b-col>
@@ -248,11 +209,9 @@ const gazeCoinBuilderModule = {
   computed: {
     pages() {
       if (state.displayTokens == "owned") {
-        console.log("gazeCoinBuilderModule.pages() called owned");
         var pages = Math.round(((state.balanceOf - 1) / state.displayPageSize), 0) + 1
         return pages.toString();
       } else {
-        console.log("gazeCoinBuilderModule.pages() called all");
         var pages = Math.round(((state.totalSupply - 1) / state.displayPageSize), 0) + 1
         return pages.toString();
       }
@@ -304,10 +263,10 @@ const gazeCoinBuilderModule = {
     },
   },
   actions: {
-    async execWeb3 ({state, commit}, {count, networkChanged, blockChanged, coinbaseChanged}) {
+    async execWeb3 ({state, commit, rootState}, {count, networkChanged, blockChanged, coinbaseChanged}) {
       if (!state.executing) {
         commit('updateExecuting', true);
-        logIt("gazeCoinBuilderModule", "execWeb3() start[" + count + ", " + networkChanged + ", " + blockChanged + ", " + coinbaseChanged + ", " + state.refreshRequested + "]");
+        logIt("gazeCoinBuilderModule", "execWeb3() start[" + count + ", " + JSON.stringify(rootState.route.params) + ", " + networkChanged + ", " + blockChanged + ", " + coinbaseChanged + ", " + state.refreshRequested + "]");
         var contract = web3.eth.contract(GAZECOINMETAVERSEASSETABI).at(state.nftAddress);
         if (networkChanged || blockChanged || coinbaseChanged || state.refreshRequested) {
           var _symbol = promisify(cb => contract.symbol(cb));
