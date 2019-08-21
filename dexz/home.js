@@ -11,6 +11,10 @@ const Home = {
       </ul>
 
       Or check out <router-link :to="{ name: 'help' }">Help</router-link>
+
+      <button-counter></button-counter>
+      <button-counter></button-counter>
+      <button-counter></button-counter>      
     </b-card>`,
   data: function () {
     return {

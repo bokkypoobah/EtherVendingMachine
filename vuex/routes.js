@@ -12,8 +12,9 @@ const routes = [{
     // 0x123456
     // new
     // {tokenId}
+    // {tokenIdFrom-tokenIdTo}
 
-    path: '/gazeCoinBuilder/:param1',
+    path: '/gazeCoinBuilder/:param',
     component: GazeCoinBuilder,
     name: 'GazeCoinBuilder',
   }, {

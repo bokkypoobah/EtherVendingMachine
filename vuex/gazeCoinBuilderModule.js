@@ -20,12 +20,6 @@ const GazeCoinBuilder = {
                         <b-form-radio value="cards" v-b-popover.hover.top="'Display are cards'">Cards</b-form-radio>
                       </b-form-radio-group>
                     </b-form-group>
-                    <b-form-group label="Display tokens: " label-cols="4">
-                      <b-form-radio-group id="displayTokens" :value.trim="displayTokens" @input="updateDisplayTokens" v-model="displayTokens" name="displayTokensComponent">
-                        <b-form-radio value="all" v-b-popover.hover.top="'Display all tokens'">All</b-form-radio>
-                        <b-form-radio value="owned" v-b-popover.hover.top="'Display tokens owned'">Owned</b-form-radio>
-                      </b-form-radio-group>
-                    </b-form-group>
                     <b-form-group label="Page size: " label-cols="4">
                       <b-input-group prepend="10" append="100" class="mt-3">
                         <b-form-input :value.trim="displayPageSize" @input="updateDisplayPageSize" type="range" min="10" max="100" step="5"></b-form-input>
@@ -37,20 +31,19 @@ const GazeCoinBuilder = {
               </div>
 
               <b-card-group deck v-if="displayMode != 'list'" v-for="(item, key, index) in items" v-bind:key="item.number">
-                <b-card no-body img-top>
+                <b-card no-body img-top style="max-width: 20rem;">
                   <b-card-header>
                     <b-card-title>
-                    <b-link to="/">
-                      #{{ item.number }} TokenId {{ item.tokenId }}
-                    </b-link>
-                    AAARGGH {{ $route.params.param1 }}
+                      <b-link :to="'/gazeCoinBuilder/' + item.tokenId">#{{ item.number }} TokenId {{ item.tokenId }}</b-link>
                     </b-card-title>
                   </b-card-header>
                   <b-card-body>
-                    <b-card-text>Owner {{ item.owner }}</b-card-text>
-                    <b-card-text>Attributes {{ item.attributes }}</b-card-text>
-                    <b-card-img src="https://d33wubrfki0l68.cloudfront.net/ca0061c3c33c88b2b124e64ad341e15e2a17af49/c8765/images/alligator-logo3.svg">
+                    <b-card-img class="mb-3" src="https://placekitten.com/300/300">
                     </b-card-img>
+                    <b-card-text class="truncate">
+                      <b-link :to="'/gazeCoinBuilder/' + item.owner">Owner {{ item.owner }}</b-link>
+                    </b-card-text>
+                    <b-table striped selectable selected-variant="success" hover :items="item.attributes"></b-table>
                   </b-card-body>
                   <b-button href="#" variant="primary">Go somewhere</b-button>
                 </b-card>
@@ -98,6 +91,7 @@ const GazeCoinBuilder = {
   data: function () {
     return {
       show: true,
+      isBusy: true,
       // pages: "10",
       displayMode: "cards", // "list" or "cards"
       fields: [
@@ -127,14 +121,6 @@ const GazeCoinBuilder = {
     balanceOf() {
       return store.getters['gazeCoinBuilder/balanceOf'];
     },
-    displayTokens: {
-      get () {
-        return store.getters['gazeCoinBuilder/displayTokens'];
-      },
-      set (value) {
-        this.$store.commit('gazeCoinBuilder/updateDisplayTokens', value);
-      }
-    },
     displayPageSize() {
       return store.getters['gazeCoinBuilder/displayPageSize'];
     },
@@ -142,11 +128,9 @@ const GazeCoinBuilder = {
       return store.getters['gazeCoinBuilder/displayPage'];
     },
     displayTotalRows() {
-      if (store.getters['gazeCoinBuilder/displayTokens'] == "owned") {
-        console.log("GazeCoinBuilder.displayTotalRows() owned " + store.getters['gazeCoinBuilder/balanceOf']);
+      if (store.getters['gazeCoinBuilder/params'] == "owned") {
         return parseInt(store.getters['gazeCoinBuilder/balanceOf']);
       } else {
-        console.log("GazeCoinBuilder.displayTotalRows() all " + store.getters['gazeCoinBuilder/totalSupply']);
         return parseInt(store.getters['gazeCoinBuilder/totalSupply']);
       }
     },
@@ -161,9 +145,6 @@ const GazeCoinBuilder = {
     },
   },
   methods: {
-    updateDisplayTokens (e) {
-      this.$store.commit('gazeCoinBuilder/updateDisplayTokens', e);
-    },
     updateDisplayPageSize (e) {
       this.$store.commit('gazeCoinBuilder/updateDisplayPageSize', e);
     },
@@ -187,8 +168,8 @@ const gazeCoinBuilderModule = {
     name: "DEFAULTNAME",
     totalSupply: "0",
     balanceOf: "0",
-    displayTokens: "all", // "all" or "owned"
-    displayPageSize: "10",
+    params: null,
+    displayPageSize: "5",
     displayPage: "1",
     items: [],
     executing: false,
@@ -200,7 +181,7 @@ const gazeCoinBuilderModule = {
     name: state => state.name,
     totalSupply: state => state.totalSupply,
     balanceOf: state => state.balanceOf,
-    displayTokens: state => state.displayTokens,
+    params: state => state.params,
     displayPageSize: state => state.displayPageSize,
     displayPage: state => state.displayPage,
     items: state => state.items,
@@ -208,7 +189,7 @@ const gazeCoinBuilderModule = {
   },
   computed: {
     pages() {
-      if (state.displayTokens == "owned") {
+      if (state.params == "owned") {
         var pages = Math.round(((state.balanceOf - 1) / state.displayPageSize), 0) + 1
         return pages.toString();
       } else {
@@ -234,10 +215,9 @@ const gazeCoinBuilderModule = {
       state.balanceOf = balanceOf;
       logIt("gazeCoinBuilderModule", "updateBalanceOf('" + balanceOf + "')")
     },
-    updateDisplayTokens (state, displayTokens) {
-      state.displayTokens = displayTokens;
-      state.refreshRequested = true;
-      logIt("gazeCoinBuilderModule", "updateDisplayTokens('" + displayTokens + "'). refreshRequested true")
+    updateParams (state, params) {
+      state.params = params;
+      logIt("gazeCoinBuilderModule", "updateParams('" + params + "')")
     },
     updateDisplayPageSize (state, displayPageSize) {
       state.displayPageSize = displayPageSize;
@@ -263,12 +243,28 @@ const gazeCoinBuilderModule = {
     },
   },
   actions: {
+
+    // all
+    // owned
+    // 0x123456
+    // new
+    // {tokenId}
+    // TODO {tokenIndexFrom-tokenIndexTo}
+
     async execWeb3 ({state, commit, rootState}, {count, networkChanged, blockChanged, coinbaseChanged}) {
       if (!state.executing) {
         commit('updateExecuting', true);
         logIt("gazeCoinBuilderModule", "execWeb3() start[" + count + ", " + JSON.stringify(rootState.route.params) + ", " + networkChanged + ", " + blockChanged + ", " + coinbaseChanged + ", " + state.refreshRequested + "]");
+
+        var paramsChanged = false;
+        if (state.params != rootState.route.params.param) {
+          logIt("gazeCoinBuilderModule", "execWeb3() params changed from " + state.params + " to " + JSON.stringify(rootState.route.params.param));
+          paramsChanged = true;
+          commit('updateParams', rootState.route.params.param);
+        }
+
         var contract = web3.eth.contract(GAZECOINMETAVERSEASSETABI).at(state.nftAddress);
-        if (networkChanged || blockChanged || coinbaseChanged || state.refreshRequested) {
+        if (networkChanged || blockChanged || coinbaseChanged || paramsChanged || state.refreshRequested) {
           var _symbol = promisify(cb => contract.symbol(cb));
           var symbol = await _symbol;
           if (symbol !== state.symbol) {
@@ -293,20 +289,86 @@ const gazeCoinBuilderModule = {
           var i;
           var numbers = [];
           var tokenIds = {};
-          if (state.displayTokens == "owned") {
-            var pages = Math.round(((balanceOf - 1) / state.displayPageSize), 0) + 1
+          var items = [];
+
+          var paramIsAccount = state.params.toLowerCase().substring(0, 2) == "0x";
+          var numberRangePattern = new RegExp("^[0-9]*-[0-9]*$");
+          var paramIsNumberRange = numberRangePattern.test(state.params);
+          var numberPattern = new RegExp("^[0-9]*$");
+          var paramIsNumber = numberPattern.test(state.params);
+          logIt("gazeCoinBuilderModule", "execWeb3() paramIsNumberRange: " + paramIsNumberRange);
+          logIt("gazeCoinBuilderModule", "execWeb3() paramIsNumber: " + paramIsNumber);
+
+          // Owned or specified accounts
+          if (state.params == "owned" || paramIsAccount) {
+            var account = paramIsAccount ? state.params : coinbase;
+            var accountBalanceOf = balanceOf;
+            if (paramIsAccount) {
+              var _accountBalanceOf = promisify(cb => contract.balanceOf(state.params, cb));
+              var accountBalanceOf = await _accountBalanceOf;
+            }
+
+            var pages = Math.round(((accountBalanceOf - 1) / state.displayPageSize), 0) + 1
             var page = Math.min(Math.max(state.displayPage, 0), pages);
             var start = Math.max((page - 1) * state.displayPageSize, 0);
-            var end = Math.min(page * state.displayPageSize, balanceOf);
-            logIt("gazeCoinBuilderModule", "execWeb3() owned pages " + pages + " page " + page + " start " + start + " end " + end);
+            var end = Math.min(page * state.displayPageSize, accountBalanceOf);
+            logIt("gazeCoinBuilderModule", "execWeb3() " + account + " pages " + pages + " page " + page + " start " + start + " end " + end);
             for (i = start; i < end; i++) {
-              var _tokenId = promisify(cb => contract.tokenOfOwnerByIndex(coinbase, i, cb));
-              var tokenId = await _tokenId;
-              numbers.push(i + 1);
-              tokenIds[i + 1] = { tokenId: tokenId, owner: coinbase };
-              logIt("gazeCoinBuilderModule", "execWeb3() owned token " + i + " with tokenId:" + tokenId);
+              var tokenId;
+              try {
+                var _tokenId = promisify(cb => contract.tokenOfOwnerByIndex(account, i, cb));
+                tokenId = await _tokenId;
+                // TODO: Account for deleted tokenIds
+                if (tokenId > 0 && tokenId < totalSupply) {
+                  numbers.push(i + 1);
+                  tokenIds[i + 1] = { tokenId: tokenId, owner: coinbase };
+                  logIt("gazeCoinBuilderModule", "execWeb3() owned token " + i + " with tokenId:" + tokenId);
+                }
+              } catch (error) {
+                logIt("gazeCoinBuilderModule", "execWeb3() tokenOfOwnerByIndex error " + error);
+              }
             }
-          } else {
+          // All
+          } else if (state.params == "all") {
+            var pages = Math.round(((totalSupply - 1) / state.displayPageSize), 0) + 1
+            var page = Math.min(Math.max(state.displayPage, 0), pages);
+            var start = Math.max((page - 1) * state.displayPageSize, 0);
+            var end = Math.min(page * state.displayPageSize, totalSupply);
+            logIt("gazeCoinBuilderModule", "execWeb3() all pages " + pages + " page " + page + " start " + start + " end " + end);
+            for (i = start; i < end; i++) {
+              var _tokenId = promisify(cb => contract.tokenByIndex(i, cb));
+              var tokenId = await _tokenId;
+              var _ownerOf = promisify(cb => contract.ownerOf(tokenId, cb));
+              var ownerOf = await _ownerOf;
+              numbers.push(i + 1);
+              tokenIds[i + 1] = { tokenId: tokenId, owner: ownerOf };
+              logIt("gazeCoinBuilderModule", "execWeb3() all token " + i + " with tokenId:" + tokenId);
+            }
+
+          // Specific tokenId
+          } else if (paramIsNumber) {
+            var tokenId = parseInt(state.params);
+            logIt("gazeCoinBuilderModule", "execWeb3() tokenId " + tokenId);
+            var ownerOf;
+            i = 0;
+            try {
+              var _ownerOf = promisify(cb => contract.ownerOf(tokenId, cb));
+              ownerOf = await _ownerOf;
+              if (ownerOf != "0x0000000000000000000000000000000000000000") {
+                numbers.push(i + 1);
+                tokenIds[i + 1] = { tokenId: tokenId, owner: ownerOf };
+                logIt("gazeCoinBuilderModule", "execWeb3() all token " + i + " with tokenId:" + tokenId);
+              }
+            } catch (error) {
+              logIt("gazeCoinBuilderModule", "execWeb3() ownerOf error " + error);
+            }
+
+          // TODO - not working
+          // Token index 0 to n-1
+          } else if (paramIsNumberRange) {
+            var numberRangeExtractorPattern = new RegExp("^([0-9])*-([0-9]*)$");
+            var numberRange = state.params.match(numberRangeExtractorPattern);
+            logIt("gazeCoinBuilderModule", "execWeb3() range " + numberRange[1] + " to " + numberRange[2]);
             var pages = Math.round(((totalSupply - 1) / state.displayPageSize), 0) + 1
             var page = Math.min(Math.max(state.displayPage, 0), pages);
             var start = Math.max((page - 1) * state.displayPageSize, 0);
@@ -326,7 +388,6 @@ const gazeCoinBuilderModule = {
           //   var tokenId = tokenIds[number];
           //   console.log(number + " => " + tokenIds[number]);
           // });
-          var items = [];
           for (i = 0; i < numbers.length; i++) {
             var number = numbers[i];
             var tokenId = tokenIds[number].tokenId;
@@ -334,13 +395,13 @@ const gazeCoinBuilderModule = {
             var _numberOfAttributes = promisify(cb => contract.numberOfAttributes(tokenId, cb));
             var numberOfAttributes = await _numberOfAttributes;
             logIt("gazeCoinBuilderModule", "execWeb3() token " + i + " has tokenId #" + tokenId + " with " + numberOfAttributes + " attributes");
-            var attributes = {};
+            var attributes = [];
             var j;
             for (j = 0; j < numberOfAttributes; j++) {
               var _attribute = promisify(cb => contract.getAttributeByIndex(tokenId, j, cb));
               var attribute = await _attribute;
               logIt("gazeCoinBuilderModule", "execWeb3()   attribute " + j + " " + JSON.stringify(attribute));
-              attributes[attribute[1]] = attribute[2];
+              attributes.push({ key: attribute[1], value: attribute[2] });
             }
             items.push({ number: number, tokenId: tokenId, owner: owner, attributes: attributes });
           }
